@@ -1,0 +1,35 @@
+server {
+        listen 443 ssl default_server;
+        listen [::]:443 ssl default_server;
+        include snippets/cert_HOST_IP.conf;
+        include snippets/ssl-params.conf;
+
+        server_name HOST_IP;
+        root /tmp/NOEXIST;
+        access_log /var/log/nginx/dns.access.log;
+
+        location / {
+                include snippets/proxy_forward.conf;
+                proxy_pass http://pihole-frontend;
+        }
+
+        location /admin/ {
+                include snippets/proxy_forward.conf;
+                proxy_pass http://pihole-frontend;
+        }
+
+        location /dns-query {
+                include snippets/proxy_forward.conf;
+                proxy_pass http://dns-backend/dns-query;
+        }
+}
+
+
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        server_name HOST_IP;
+
+        return 301 https://$server_name$request_uri;
+}

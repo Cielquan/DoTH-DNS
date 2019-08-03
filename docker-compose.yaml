@@ -1,0 +1,95 @@
+version: '3.5'
+
+
+services:
+
+  # ngix container
+  nginx:
+    container_name: nginx
+    hostname: ${HOSTNAME}
+    image: nginx:latest
+    volumes:
+      - ./nginx-docker/configs/:/etc/nginx/
+      - ./nginx-docker/certificates/certs/:/etc/ssl/certs/
+      - ./nginx-docker/certificates/private/:/etc/ssl/private/
+    ports:
+      - "80:80"
+      - "443:443"
+      - "853:853"
+    networks:
+      dns_network0:
+        ipv4_address: 172.16.0.2
+    restart: always
+
+  # DoH server container
+  doh_server:
+    container_name: doh_server
+    hostname: ${HOSTNAME}
+    image: goofball222/dns-over-https:latest
+    volumes:
+      - ./doh-docker/configs/doh-server.conf:/opt/dns-over-https/conf/doh-server.conf
+    expose:
+      - "8053"
+    networks:
+      dns_network0:
+        ipv4_address: 172.16.0.3
+    restart: always
+
+  # pihole container
+  pihole:
+    container_name: pihole
+    hostname: ${HOSTNAME}
+    depends_on:
+      - unbound
+    image: pihole/pihole:latest
+    environment:
+      - "ServerIP=${SERVERIP}"
+      - "VIRTUAL_HOST=${VIRTUALHOST}"
+      - "TZ=${TIMEZONE}"
+      - "WEBPASSWORD=${PIHOLE_WEBPASSWORD}"
+    volumes:
+      - ./pihole-docker/resolv.conf:/etc/resolv.conf
+      - ./pihole-docker/configs/pihole/:/etc/pihole/
+      - ./pihole-docker/configs/dnsmasq.d/dnsmasq.conf:/etc/dnsmasq.d/02-custom.conf
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    expose:
+      - "80"
+      - "443"
+    networks:
+      dns_network0:
+        ipv4_address: 172.16.0.4
+    dns:
+      - 127.0.0.1
+    restart: always
+
+  # unbound container
+  unbound:
+    container_name: unbound
+    hostname: ${HOSTNAME}
+    image: mvance/unbound-rpi:latest
+    environment:
+      - "TZ=${TIMEZONE}"
+    volumes:
+      - ./unbound-docker/configs:/opt/unbound/etc/unbound/
+      - ./unbound-docker/var:/opt/unbound/etc/unbound/var/
+      - ./unbound-docker/unbound.log:/opt/unbound/etc/unbound/var/log/unbound/unbound.log
+    expose:
+      - "53"
+    networks:
+      dns_network0:
+        ipv4_address: 172.16.0.5
+    restart: always
+
+
+networks:
+  # Bridge network for internal communication.
+  dns_network0:
+    driver: bridge
+    driver_opts:
+      encrypted: "true"
+    ipam:
+      config:
+        - subnet: 172.16.0.0/24
+    attachable: false

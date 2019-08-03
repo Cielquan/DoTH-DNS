@@ -1,0 +1,2 @@
+ssl_certificate /etc/ssl/certs/HOSTNAME.dns.crt;
+ssl_certificate_key /etc/ssl/private/HOSTNAME.dns.key;

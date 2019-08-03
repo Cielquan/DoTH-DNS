@@ -1,0 +1,19 @@
+upstream dns-servers {
+       server 172.16.0.4:53;
+}
+
+
+server {
+        listen 853 ssl;
+
+        include snippets/cert_HOST_IP.conf;
+        ssl_dhparam             /etc/nginx/dhparam.pem;
+
+        ssl_protocols           TLSv1.2 TLSv1.3;
+        ssl_ciphers             HIGH:!aNULL:!MD5;
+        ssl_handshake_timeout   10s;
+        ssl_session_cache       shared:DoT:20m;
+        ssl_session_timeout     4h;
+
+        proxy_pass              dns-servers;
+}

@@ -1,0 +1,24 @@
+# Backups
+*.bak
+
+# Private configs
+pihole-docker/configs/pihole/adlists.list
+pihole-docker/configs/pihole/blacklist.txt
+pihole-docker/configs/pihole/lan.list
+pihole-docker/configs/pihole/setupVars.conf
+pihole-docker/configs/pihole/whitelist.txt
+
+# Certificate files
+*.pem
+*.crt
+*.csr
+*.ext
+*.key
+*.srl
+
+# Additional setup stuff
+.env
+setup*
+
+# pycharm folder
+.idea/
