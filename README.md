@@ -52,14 +52,9 @@ You may also add the following files to 'pihole-docker/configs/pihole/':
 * `lan.list` - list of addresses for local network 
 * `whitelist.txt` - list of all whitelisted URLs
 
-##### 1.3 .env file
-You can add a '.env' file at the repo's root with following parameters. However this is not recommended 
-because the script will create it for you. See Variable Notes below. 
-* `HOSTNAME`
-* `SERVERIP`
-* `VIRTUALHOST`
-* `TIMEZONE`
-* `PIHOLE_WEBPASSWORD`
+##### 1.3 custom.env file
+You can add a 'custom.env' file in 'pihole-docker' directory with parameters listed [here](https://github.com/pi-hole/docker-pi-hole#environment-variables). 
+However this is not recommended because the script will create it for you. `ServerIP` and `TZ` are required.
 
 ##### 1.4 start_script.conf file
 You can add a 'start_script.conf' file at the repo's root with following parameters. The file can be used to auto fill the prompts. 
@@ -93,31 +88,6 @@ Now you can setup your other devices to use the server.
 
 ### Variable Notes
 Here are some explanations for above mentioned variables.
-
-`HOSTNAME`: 
-- name of the server
-- is set by script automatically if not set
-
-`SERVERIP`:
-- IP of the server
-- is set by script automatically if not set
-
-`VIRTUALHOST`:
-- see docker-pi-hole documentation
-- is set by script automatically if not set
-
-`TIMEZONE`:
-- timezone the server stands in
-- format is like Europe/London
-- if not set script will prompt you
-- if a `.env` file exists the entry in `start_script.conf` will be omitted
-
-`PIHOLE_WEBPASSWORD`:
-- password for the web dashboard of pihole
-- can be empty for no password
-- if not set script will prompt you
-- if a `.env` file exists the entry in `start_script.conf` will be omitted
-
 `ARCHITECTURE`:
 - architecture of the processor used by the server
 - can be 'arm', 'x86' or empty
@@ -133,6 +103,19 @@ because the image on docker hub is not arm compatible
 `INTERFACE`:
 - network interface to use
 - defaults to 'eth0'
+
+`TIMEZONE`:
+- timezone the server stands in
+- format is like 'Europe/London'
+- if not set in either `custom.env` or `start_script.conf` script will prompt you
+- if a `custom.env` file exists the entry in `start_script.conf` will be omitted
+
+`PIHOLE_WEBPASSWORD`:
+- password for the web dashboard of pihole
+- can be empty for no password
+- if not set in either `custom.env` or `start_script.conf` script will prompt you
+- if a `custom.env` file exists the entry in `start_script.conf` will be omitted
+
 
 ### Update
 If you want to update a container with a newer image run following commands on your Pi in the directory with the scripts 
@@ -173,9 +156,9 @@ to the maintainers of the images.
 Christian Riedel
 
 ## Version and State
-Version: 1.0.0
+Version: 1.1.0
 
-State: 02.08.2019
+State: 03.08.2019
 
 ## WIP
 * Scripts are subject to change.
