@@ -7,6 +7,8 @@ pihole-docker/configs/pihole/blacklist.txt
 pihole-docker/configs/pihole/lan.list
 pihole-docker/configs/pihole/setupVars.conf
 pihole-docker/configs/pihole/whitelist.txt
+pihole-docker/custom.env
+start_script.conf
 
 # Certificate files
 *.pem

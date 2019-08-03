@@ -42,11 +42,9 @@ services:
     depends_on:
       - unbound
     image: pihole/pihole:latest
-    environment:
-      - "ServerIP=${SERVERIP}"
-      - "VIRTUAL_HOST=${VIRTUALHOST}"
-      - "TZ=${TIMEZONE}"
-      - "WEBPASSWORD=${PIHOLE_WEBPASSWORD}"
+    env_file:
+      - ./pihole-docker/default.env
+      - ./pihole-docker/custom.env
     volumes:
       - ./pihole-docker/resolv.conf:/etc/resolv.conf
       - ./pihole-docker/configs/pihole/:/etc/pihole/
@@ -70,7 +68,7 @@ services:
     hostname: ${HOSTNAME}
     image: mvance/unbound-rpi:latest
     environment:
-      - "TZ=${TIMEZONE}"
+      - TZ=${TIMEZONE}
     volumes:
       - ./unbound-docker/configs:/opt/unbound/etc/unbound/
       - ./unbound-docker/var:/opt/unbound/etc/unbound/var/

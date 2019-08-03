@@ -25,7 +25,7 @@ else
 fi
 
 
-# Get interface for DNS server
+# Get interface for server
 if [[ -z "${INTERFACE}" ]]; then
     echo "Please enter your network interface (empty => eth0):"
     read -r INTERFACE
@@ -37,15 +37,15 @@ if [[ -z "${INTERFACE}" ]]; then INTERFACE=eth0; fi
 HOST_IP=$(ifconfig "${INTERFACE}" | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
 
 # Get bit length of host's IP subnet
-HOST_IP_W_SUBNET=$(ip -o -4 addr show | grep "${INTERFACE}" | awk '/scope global/ {print $4}')
+#HOST_IP_W_SUBNET=$(ip -o -4 addr show | grep "${INTERFACE}" | awk '/scope global/ {print $4}')
 
 # Get hostname
-HOSTNAME=$(hostname)
+HOST_NAME=$(hostname)
 
 
 # Checking for filled '.env' file.
 echo "# Checking for .env file"
-if ! [ -f .env ]; then
+if ! [ -f pihole-docker/custom.env ]; then
     if [[ -z "${TIMEZONE}" ]]; then
         echo "Please enter your timezone (empty => Europe/London):"
         read -r TIMEZONE
@@ -54,19 +54,25 @@ if ! [ -f .env ]; then
         echo "Please enter a password for the pihole web interface (empty for none):"
         read -r PIHOLE_WEBPASSWORD
     fi
-    echo -e "HOSTNAME=${HOSTNAME}\nSERVERIP=${HOST_IP}\nVIRTUALHOST=${HOST_IP}\nTIMEZONE=${TZ:=Europe/London}\nPIHOLE_WEBPASSWORD=${PIHOLE_WEBPASSWORD}" > .env \
-    && echo "# Created .env file"
+    echo -e "ServerIP=${HOST_IP}\nVIRTUAL_HOST=${HOST_IP}\nTZ=${TIMEZONE:=Europe/London}\nWEBPASSWORD=${PIHOLE_WEBPASSWORD}" > pihole-docker/custom.env \
+    && echo "# Created custom.env file"
 else
-    echo "# Found .env file"
+    echo "# Found custom.env file"
 fi
 
-# Loading env vars
-. .env
-
-if [[ -z "${HOSTNAME}" ]] || [[ -z "${SERVERIP}" ]] || [[ -z "${VIRTUALHOST}" ]] || [[ -z "${TIMEZONE}" ]]; then
-    echo "ERROR! Please fill nessccessary settings inside '.env' file and restart this script. Only 'PIHOLE_WEBPASSWORD' may be empty."
+# Check if ServerIP and TZ are set in custom.env
+if ! [ "$(. pihole-docker/custom.env && [[ -n "${ServerIP}" ]] && [[ -n "${TZ}" ]] && echo "OK")" = "OK" ]; then
+    echo "ERROR! Please fill nessccessary settings (ServerIP and TZ) inside 'custom.env' file and restart this script. Only 'PIHOLE_WEBPASSWORD' may be empty."
     exit 1
 fi
+
+
+# Get TIMEZONE if not set in start_script.conf and custom.env file exists
+[[ -z "${TIMEZONE}" ]] && TIMEZONE=$(grep "TZ" pihole-docker/custom.env | sed 's/TZ=//')
+
+# Create .env file for docker-compose
+echo -e "HOSTNAME=${HOST_NAME}\nTIMEZONE=${TIMEZONE}" | sudo tee .env > /dev/null
+
 
 # Check for at least one certificate and key
 echo "# Checking for SSL crt and key"
@@ -110,33 +116,14 @@ fi
 # Auto create lan.list file
 echo "# Checking for lan.list file"
 if ! [ -f pihole-docker/configs/pihole/lan.list ]; then
-    echo "${HOST_IP}      ${HOSTNAME}.dns   ${HOSTNAME}" | sudo tee pihole-docker/configs/pihole/lan.list > /dev/null \
+    echo "${HOST_IP}      ${HOST_NAME}.dns   ${HOST_NAME}" | sudo tee pihole-docker/configs/pihole/lan.list > /dev/null \
     && echo "# Created lan.list file"
 elif ! [ "$(grep -cw 'pihole-docker/configs/pihole/lan.list' -e "$HOST_IP")" -ge 1 ]; then
 
-    echo -e "\n${HOST_IP}      ${HOSTNAME}.dns   ${HOSTNAME}" | sudo tee -a pihole-docker/configs/pihole/lan.list > /dev/null \
+    echo -e "\n${HOST_IP}      ${HOST_NAME}.dns   ${HOST_NAME}" | sudo tee -a pihole-docker/configs/pihole/lan.list > /dev/null \
     && echo "# Added host to lan.list file"
 else
     echo "# Found lan.list file with host entry"
-fi
-
-
-# Auto create setupVars.conf file
-echo "# Checking for setupVars.conf file"
-if ! [ -f pihole-docker/configs/pihole/setupVars.conf ]; then
-    if [ "${PIHOLE_WEBPASSWORD}" == "" ]; then
-        PIHOLE_WEBPASSWORD_HASH=""
-    else
-        PIHOLE_WEBPASSWORD_HASH=$(echo -n "${PIHOLE_WEBPASSWORD}" | sha256sum | awk '{printf "%s",$1 }' | sha256sum | sed 's/  -/ /g')
-    fi
-    echo -e "PIHOLE_INTERFACE=${INTERFACE}\nIPV4_ADDRESS=${HOST_IP_W_SUBNET}\nIPV6_ADDRESS=\nQUERY_LOGGING=true"`
-        `"\nINSTALL_WEB_SERVER=true\nINSTALL_WEB_INTERFACE=true\nLIGHTTPD_ENABLED=true\nWEBPASSWORD=${PIHOLE_WEBPASSWORD_HASH}"`
-        `"\nDNSMASQ_LISTENING=single\nPIHOLE_DNS_1=172.16.0.5#53\nDNS_FQDN_REQUIRED=true\nDNS_BOGUS_PRIV=true\nDNSSEC=true"`
-        `"\nCONDITIONAL_FORWARDING=false\nBLOCKING_ENABLED=true" | sudo tee pihole-docker/configs/pihole/setupVars.conf \
-        | sudo tee pihole-docker/configs/pihole/setupVars.conf.update.bak  > /dev/null \
-    && echo "# Created setupVars.conf file"
-else
-    echo "# Found setupVars.conf file"
 fi
 
 
@@ -151,9 +138,9 @@ if [ -f nginx-docker/configs/sites-enabled/HOST_IP.conf.template ]; then
     fi
 fi
 if [ -f nginx-docker/configs/sites-enabled/HOSTNAME.dns.conf.template ];then
-    if ! [ -f nginx-docker/configs/sites-enabled/"${HOSTNAME}".dns.conf ]; then
-        sed -i s/HOSTNAME/"${HOSTNAME}"/g nginx-docker/configs/sites-enabled/HOSTNAME.dns.conf.template
-        mv nginx-docker/configs/sites-enabled/HOSTNAME.dns.conf.template nginx-docker/configs/sites-enabled/"${HOSTNAME}".dns.conf
+    if ! [ -f nginx-docker/configs/sites-enabled/"${HOST_NAME}".dns.conf ]; then
+        sed -i s/HOSTNAME/"${HOST_NAME}"/g nginx-docker/configs/sites-enabled/HOSTNAME.dns.conf.template
+        mv nginx-docker/configs/sites-enabled/HOSTNAME.dns.conf.template nginx-docker/configs/sites-enabled/"${HOST_NAME}".dns.conf
     else
         rm -f nginx-docker/configs/sites-enabled/HOSTNAME.dns.conf.template
     fi
@@ -167,9 +154,9 @@ if [ -f nginx-docker/configs/snippets/cert_HOST_IP.conf.template ]; then
     fi
 fi
 if [ -f nginx-docker/configs/snippets/cert_HOSTNAME.dns.conf.template ]; then
-    if ! [ -f nginx-docker/configs/snippets/cert_"${HOSTNAME}".dns.conf ]; then
-        sed -i s/HOSTNAME/"${HOSTNAME}"/g nginx-docker/configs/snippets/cert_HOSTNAME.dns.conf.template
-        mv nginx-docker/configs/snippets/cert_HOSTNAME.dns.conf.template nginx-docker/configs/snippets/cert_"${HOSTNAME}".dns.conf
+    if ! [ -f nginx-docker/configs/snippets/cert_"${HOST_NAME}".dns.conf ]; then
+        sed -i s/HOSTNAME/"${HOST_NAME}"/g nginx-docker/configs/snippets/cert_HOSTNAME.dns.conf.template
+        mv nginx-docker/configs/snippets/cert_HOSTNAME.dns.conf.template nginx-docker/configs/snippets/cert_"${HOST_NAME}".dns.conf
     else
         rm -f nginx-docker/configs/snippets/cert_HOSTNAME.dns.conf.template
     fi
@@ -262,10 +249,10 @@ printf '\nINFO! Starting up pihole container '
 for i in $(seq 1 20); do
     if [ "$(sudo docker inspect -f "{{.State.Health.Status}}" pihole)" == "healthy" ]; then
         printf ' OK'
-        if [[ -z "${PIHOLE_WEBPASSWORD}" ]]; then
+        if [ "$(sudo docker logs pihole 2> /dev/null | grep -c 'password:')" -gt 0 ]; then
             echo -e "\nINFO! $(sudo docker logs pihole 2> /dev/null | grep 'password:') for your pi-hole: https://${HOST_IP}/admin/"
         else
-            echo -e "\nINFO! Password from environment: ${PIHOLE_WEBPASSWORD} for your pi-hole: https://${HOST_IP}/admin/"
+            echo -e "\nINFO! Set given WEBPASSWORD for your pi-hole: https://${HOST_IP}/admin/"
         fi
         break
     else
@@ -287,18 +274,7 @@ printf 'INFO! Waiting for blocklist setup to finish '
 for i in $(seq 1 60); do
     if [ "$(sudo docker logs pihole | grep -c "\[services.d\] done.")" -gt 0 ]; then
         printf ' OK'
-        printf '\nINFO! Checking for setupVars.conf backup.'
-        if [ -f pihole-docker/configs/pihole/setupVars.conf.update.bak ]; then
-            sudo cp pihole-docker/configs/pihole/setupVars.conf.update.bak pihole-docker/configs/pihole/setupVars.conf
-            sudo docker exec pihole pihole restartdns
-            if [[ -z "${PIHOLE_WEBPASSWORD}" ]]; then
-                echo -e "\nSUCCESS! Backup found and restored."
-            else
-                echo -e "\nSUCCESS! Backup found and restored. Set 'WEBPASSWORD' is overwritten by restored settings."
-            fi
-        else
-            echo -e "\nINFO! No backup found."
-        fi
+        echo -e "\n INFO! Blocklists setup finished"
         break
     else
         sleep 10
