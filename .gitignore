@@ -1,4 +1,4 @@
-# Backups
+# Backup files
 *.bak
 
 # Private configs
@@ -7,8 +7,9 @@ pihole-docker/configs/pihole/blacklist.txt
 pihole-docker/configs/pihole/lan.list
 pihole-docker/configs/pihole/setupVars.conf
 pihole-docker/configs/pihole/whitelist.txt
-pihole-docker/custom.env
-start_script.conf
+pihole-docker/configs/server.conf
+setup.conf
+.env
 
 # Certificate files
 *.pem
@@ -17,10 +18,6 @@ start_script.conf
 *.ext
 *.key
 *.srl
-
-# Additional setup stuff
-.env
-setup*
 
 # pycharm folder
 .idea/
