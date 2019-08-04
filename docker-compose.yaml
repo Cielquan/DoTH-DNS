@@ -10,8 +10,9 @@ services:
     image: nginx:latest
     volumes:
       - ./nginx-docker/configs/:/etc/nginx/
-      - ./nginx-docker/certificates/certs/:/etc/ssl/certs/
-      - ./nginx-docker/certificates/private/:/etc/ssl/private/
+      - ./certificates/certs/:/etc/ssl/certs/
+      - ./certificates/private/:/etc/ssl/private/
+      - ./certificates/dhparam.pem:/etc/nginx/dhparam.pem
     ports:
       - "80:80"
       - "443:443"
