@@ -44,8 +44,10 @@ services:
       - unbound
     image: pihole/pihole:latest
     env_file:
-      - ./pihole-docker/default.env
-      - ./pihole-docker/custom.env
+      - ./pihole-docker/configs/default.conf
+      - ./pihole-docker/configs/server.conf
+    environment:
+      - TZ=${TZ:-Europe/London}
     volumes:
       - ./pihole-docker/resolv.conf:/etc/resolv.conf
       - ./pihole-docker/configs/pihole/:/etc/pihole/
@@ -69,7 +71,7 @@ services:
     hostname: ${HOSTNAME}
     image: mvance/unbound-rpi:latest
     environment:
-      - TZ=${TIMEZONE}
+      - TZ=${TZ:-Europe/London}
     volumes:
       - ./unbound-docker/configs:/opt/unbound/etc/unbound/
       - ./unbound-docker/var:/opt/unbound/etc/unbound/var/
