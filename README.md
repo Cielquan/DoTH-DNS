@@ -4,9 +4,11 @@ Utilizes the power of [pi-hole](https://pi-hole.net) and [unbound](https://www.n
 to create a DNS server under your own authority but with the abillity to use DoH 
 ([DNS over HTTPS](https://en.wikipedia.org/wiki/DNS_over_HTTPS)) and DoT ([DNS over TLS](https://en.wikipedia.org/wiki/DNS_over_TLS)).
 
+
 ## Disclaimer
 Currently still work in progress. 
 Use at own risk. This project is made for linux. I run it on my raspberry pi 3b+ with raspbian buster lite. 
+
 
 ## Description
 This project's goal is setup a DNS server inside docker with the option to connect via DoH or DoT. 
@@ -16,7 +18,7 @@ You may ask 'Why use DoH or DoT for an local DNS server?'. Good question! I set 
 DoH if you want to use [ESNI](https://en.wikipedia.org/wiki/Server_Name_Indication). The DoT support was just some lines 
 of code more so I did it also. 
 
-The docker-compose file sets up a bridge network and the following images: 
+The docker-compose file creates a bridge network and the following containers: 
 `pi-hole/pi-hole`, `mvance:unbound`, `nginx`, `goofball222/dns-over-https`. 
 
 Query forwarding: 
@@ -101,6 +103,8 @@ You need to start the script with sudo, because the docker daemon needs root pri
 
     $ sudo ./run.sh
 
+Instead of the `run.sh` script you can also run `sudo docker-compose up -d`. The script does the same, but it also outputs information about the status of the single containers till they are done booting and setting up.
+
 #### 4 use the new DNS server
 Now you can setup your other devices to use the server.
 
@@ -146,7 +150,7 @@ The recommended way is either let the `setup.sh` script prompt you and set it fo
 ### Update
 If you want to update container with a newer image run following commands on your server while inside the repository directory _(via SSH)_. 
 
-_~But be wary of the need to compile the `goofball222/dns-over-https` image yourself for 'ARM' processors!~_
+_But be wary of the need to compile the `goofball222/dns-over-https` image yourself for 'ARM' processors!_
 
 Single container:
 
@@ -159,6 +163,7 @@ All containers:
     sudo docker-compose down
     sudo docker-compose pull
     sudo ./run.sh
+
 
 ## Get help
 * Pi-hole [documentation](https://docs.pi-hole.net/)
@@ -177,22 +182,27 @@ All containers:
 * Pi-hole guide about pi-hole+unbound - 
 [link](https://docs.pi-hole.net/guides/unbound/)
 
+
 ## Rights
 This project is licensed under the MIT License - see [LICENSE](https://github.com/Cielquan/docker-pihole-unbound-encrypted/blob/master/LICENSE)
 
 The rights of the docker images and software lie by their creators.
 
+
 ## Acknowledgements
 Thanks to the creators of docker, pi-hole, unbound, nginx and 'dns-over-https' for their awesome software. Also thanks you 
 to the maintainers of the images.
 
+
 ## Author
 Christian Riedel
 
-## Version and State
-Version: 2.0.0
 
-State: 04.08.2019
+## Version and State
+Version: 2.0.1
+
+State: 05.08.2019
+
 
 ## Planned
-* Encrypt outgoing traffic is planned.
+* Encrypt outgoing traffic
