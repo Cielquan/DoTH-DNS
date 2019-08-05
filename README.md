@@ -193,6 +193,8 @@ The rights of the docker images and software lie by their creators.
 Thanks to the creators of docker, pi-hole, unbound, nginx and 'dns-over-https' for their awesome software. Also thanks you 
 to the maintainers of the images.
 
+Thanks to the creator of this [docker-pihole-unbound](https://github.com/chriscrowe/docker-pihole-unbound) project which inspired me.
+
 
 ## Author
 Christian Riedel
