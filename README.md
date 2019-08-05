@@ -93,7 +93,7 @@ Now cd into the repo on the server via SSH and first start the setup script. `so
 `WEBPASSWORD` environment variable yourself. You can also start the script without sudo, but for the compiling part (when compiling) 
 root privileges are needed. 
 
-    $ sudo source setup.sh
+    $ source setup.sh
 
 If you have not set the `WEBPASSWORD` environment variable or the `PIHOLE_WEBPASSWORD` variable the script will prompt you to set a password. 
 You can either set none or give a password. The random password generator from pihole is not usable. 
