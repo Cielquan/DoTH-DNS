@@ -66,7 +66,6 @@ from the system. See [Variable Notes](https://github.com/Cielquan/docker-pihole-
 * `HOST_NAME` 
 * `TIMEZONE` 
 * `DOMAIN` 
-* `PIHOLE_WEBPASSWORD` _(`WEBPASSWORD` is not allowed)_ 
 
 ##### 1.4 server.conf file
 You can add a 'server.conf' file in 'pihole-docker/configs/' directory with parameters listed 
@@ -78,8 +77,8 @@ However this is not recommended because the `setup.sh` script will create it for
 ##### 1.5 .env file
 You can add a '.env' file to '/' with variables (listed below) used by 'docker-compose.yaml' file. 
 However this is not recommended because the `setup.sh` script will create it for you (rather set given variables in 'setup.conf'). 
-* `HOSTNAME`
-* `TZ`
+* `HOSTNAME` 
+* `TZ` 
 
 #### 2 Send files to server
 Now your setup is done and you can move the files to your server. 
@@ -89,14 +88,10 @@ Now your setup is done and you can move the files to your server.
 Copies the repo from your home directory to the directory of the server. You need to alter the user, IP and paths to your parameters. 
 
 #### 3 run the scripts
-Now cd into the repo on the server via SSH and first start the setup script. `source` is mandatory if you have not set the 
-`WEBPASSWORD` environment variable yourself. You can also start the script without sudo, but for the compiling part (when compiling) 
+Now cd into the repo on the server via SSH and first start the setup script. You can also start the script without sudo, but for the compiling part (when compiling)  
 root privileges are needed. 
 
-    $ source setup.sh
-
-If you have not set the `WEBPASSWORD` environment variable or the `PIHOLE_WEBPASSWORD` variable the script will prompt you to set a password. 
-You can either set none or give a password. The random password generator from pihole is not usable. 
+    $ sudo ./setup.sh
 
 After the script finished successfully you can start the `run.sh` script to actually start the docker containers. 
 You need to start the script with sudo, because the docker daemon needs root privileges. 
@@ -105,8 +100,14 @@ You need to start the script with sudo, because the docker daemon needs root pri
 
 Instead of the `run.sh` script you can also run `sudo docker-compose up -d`. The script does the same, but it also outputs information about the status of the single containers till they are done booting and setting up.
 
-#### 4 use the new DNS server
+#### 4 Secure your pihole dashboard
+If you have not set the '`WEBPASSWORD` variable in `server.conf` file (not recommended) you should now set a secure password for your pihole dashboard or deactivate it.
+
+    $ sudo docker exec pihole -a -p
+
+#### 5 use the new DNS server
 Now you can setup your other devices to use the server.
+You may also install your CA certificate on your other devices.
 
 ### Variable Notes
 Here are some explanations for above mentioned variables.
@@ -140,12 +141,6 @@ Format is like 'Europe/London'.
 
 `DOMAIN`
 If not set created by `setup.sh` script: '`HOST_NAME`.dns'.
-
-`PIHOLE_WEBPASSWORD`:
-Sets the pihole dashboard password but this is not recommended.
-The recommended way is either let the `setup.sh` script prompt you and set it for you or to export it yourself: 
-    
-    $ export WEBPASSWORD=<your password>
 
 ### Update
 If you want to update container with a newer image run following commands on your server while inside the repository directory _(via SSH)_. 
@@ -201,7 +196,7 @@ Christian Riedel
 
 
 ## Version and State
-Version: 2.0.2
+Version: 2.1.0
 
 State: 05.08.2019
 

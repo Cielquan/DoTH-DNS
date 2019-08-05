@@ -5,12 +5,6 @@ echo -e "\n####################\n"
 echo -e "INFO! Starting setup for docker-pihole-unbound-encrypted.\n"
 
 
-# Check for WEBPASSWORD in setup.conf
-if [ "$(. setup.conf && [[ -n "${WEBPASSWORD}" ]] && echo "OK")" = "OK" ]; then
-  echo "ERROR! WEBPASSWORD is not allowed in 'setup.conf' file."
-  exit 1
-fi
-
 # Import setup.conf file if existing
 [ -f setup.conf ] && . setup.conf && echo "INFO! setup.conf loaded"
 
@@ -142,9 +136,9 @@ fi
 # Auto create lan.list file or complement it
 echo "INFO! Checking for 'lan.list' file"
 if [ -f pihole-docker/configs/pihole/lan.list ]; then
-  if ! [ "$(grep -cw 'pihole-docker/configs/pihole/lan.list' -e "$HOST_IP")" -ge 1 ]; then
+  if ! grep -qw -e "${HOST_IP}" 'pihole-docker/configs/pihole/lan.list'; then
     echo -e "\n${HOST_IP}      ${HOST_NAME}.dns   ${HOST_NAME}" | tee -a pihole-docker/configs/pihole/lan.list > /dev/null &&
-    if [ "$(grep -cw 'pihole-docker/configs/pihole/lan.list' -e "$HOST_IP")" -ge 1 ]; then
+    if grep -qw -e "${HOST_IP}" 'pihole-docker/configs/pihole/lan.list'; then
       echo "SUCCESS! Added host to 'lan.list' file"
     else
       echo "ERROR! Host could not be added to 'lan.list' file"
@@ -337,32 +331,6 @@ if wget -nv https://www.internic.net/domain/named.root -O unbound-docker/var/roo
   echo "SUCCESS! 'root.hints' file downloaded."
 else
   echo "ERROR! 'root.hints' file download failed."
-fi
-
-
-# Set WEBPASSWORD if not set
-if [ -z "${WEBPASSWORD+x}" ]; then
-  if [ -z "${PIHOLE_WEBPASSWORD+x}" ]; then
-    echo "WEBPASSWORD not set. Please enter a Password for the pihole dashboard:"
-    if ! read -r PIHOLE_WEBPASSWORD; then
-      echo "ERROR! WEBPASSWORD could not be received."
-    fi
-  fi
-  if export WEBPASSWORD=${PIHOLE_WEBPASSWORD}; then
-    if [ -z "${WEBPASSWORD}" ]; then
-      echo "SUCCESS! WEBPASSWORD deactivated."
-    else
-      echo "SUCCESS! WEBPASSWORD set."
-    fi
-  else
-    echo "ERROR! WEBPASSWORD could not be set."
-  fi
-else
-  if [ -z "${WEBPASSWORD}" ]; then
-    echo "INFO! WEBPASSWORD is deactivated."
-  else
-    echo "INFO! WEBPASSWORD is set."
-  fi
 fi
 
 

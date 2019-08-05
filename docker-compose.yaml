@@ -48,7 +48,6 @@ services:
       - ./pihole-docker/configs/server.conf
     environment:
       - TZ=${TZ:-Europe/London}
-      - WEBPASSWORD=${WEBPASSWORD}
     volumes:
       - ./pihole-docker/resolv.conf:/etc/resolv.conf
       - ./pihole-docker/configs/pihole/:/etc/pihole/
