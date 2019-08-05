@@ -201,7 +201,7 @@ Christian Riedel
 
 
 ## Version and State
-Version: 2.0.1
+Version: 2.0.2
 
 State: 05.08.2019
 
