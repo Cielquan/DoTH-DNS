@@ -1,9 +1,22 @@
 #!/bin/bash
 
 
+# Exit func for docker-compose error
+exit_dc_err() {
+  echo "docker-compose failed. You may need to restart the script with root privileges."
+  exit 1
+}
+
+# Exit func for boot control errors
+exit_err() {
+  echo "Before you restart the script make sure the not working container is stopped, removed and fixed."
+  exit 1
+}
+
+
 # Start docker container
 echo ""
-docker-compose up -d || exit 1
+docker-compose up -d || exit_dc_err
 
 
 echo -e "\n####################\n"
@@ -26,7 +39,7 @@ for i in $(seq 1 20); do
         printf ' FAILED'
         echo -e "\nERROR! Timed out waiting for unbound to start, check your container logs for more info (\`docker logs unbound\`)"
         printf "INFO! Container health status of 'unbound': " && docker inspect -f {{.State.Health.Status}} unbound
-        exit 1
+        exit_err
     fi
 done;
 printf "\nINFO! Container health status of 'unbound': " && docker inspect -f {{.State.Health.Status}} unbound
@@ -71,7 +84,7 @@ for i in $(seq 1 20); do
         printf ' FAILED'
         echo -e "\nERROR! Timed out waiting for Pi-hole to start, check your container logs for more info (\`docker logs pihole\`)"
         printf "INFO! Container health status of 'pihole': " && docker inspect -f {{.State.Health.Status}} pihole
-        exit 1
+        exit_err
     fi
 done;
 printf "INFO! Container health status of 'pihole': " && docker inspect -f {{.State.Health.Status}} pihole
@@ -91,7 +104,7 @@ for i in $(seq 1 60); do
     if [ "$i" -eq 60 ]; then
         printf ' FAILED'
         echo -e "\nERROR! Timed out waiting for blocklists to set up, check your container logs for more info (\`docker logs pihole\`)"
-        exit 1
+        exit_err
     fi
 done;
 
@@ -115,7 +128,7 @@ for i in $(seq 1 20); do
         printf ' FAILED'
         echo -e "\nERROR! Timed out waiting for doh_server to start, check your container logs for more info (\`docker logs doh_server\`)"
         printf "INFO! Container health status of 'doh_server': " && docker inspect -f {{.State.Status}} doh_server
-        exit 1
+        exit_err
     fi
 done;
 printf "\nINFO! Container health status of 'doh_server': " && docker inspect -f {{.State.Status}} doh_server
@@ -140,7 +153,7 @@ for i in $(seq 1 20); do
         printf ' FAILED'
         echo -e "\nERROR! Timed out waiting for nginx to start, check your container logs for more info (\`docker logs nginx\`)"
         printf "INFO! Container health status of 'nginx': " && docker inspect -f {{.State.Status}} nginx
-        exit 1
+        exit_err
     fi
 done;
 printf "\nINFO! Container health status of 'nginx': " && docker inspect -f {{.State.Status}} nginx
