@@ -307,16 +307,15 @@ fi
 
 
 # Download root.hints file
-echo ""
 if ! [ -f unbound-docker/var/root.hints ]; then
-  if wget -nv https://www.internic.net/domain/named.root -O unbound-docker/var/root.hints; then
+  if echo "" && wget -nv https://www.internic.net/domain/named.root -O unbound-docker/var/root.hints; then
     echo "SUCCESS! 'root.hints' file downloaded."
   else
     echo "ERROR! 'root.hints' file download failed."
   fi
 else
-  (( DIFF = ($(date +%s) - $(stat -c %Y new))/3600 ))
-  if [ ${DIFF} -gt 1 ] || echo "${FRESH}" | grep -q 'y'; then
+  (( DIFF = ($(date +%s) - $(stat -c %Z unbound-docker/var/root.hints))/3600 ))
+  if ((DIFF > 1)) || echo "${FRESH}" | grep -q 'y'; then
     if wget -nv https://www.internic.net/domain/named.root -O unbound-docker/var/root.hints; then
       echo "SUCCESS! 'root.hints' file updated."
     else
