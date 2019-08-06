@@ -166,99 +166,74 @@ fi
 # Auto create nginx conf files
 echo "INFO! Checking for nginx configuration files"
 # Conf files based on HOST_IP
-if [ -f nginx-docker/templates/HOST_IP.conf.template ]; then
-  if [ -f nginx-docker/configs/sites-enabled/"${HOST_IP}".conf ]; then
-    echo "SUCCESS! Found '${HOST_IP}.conf' file."
-    if ! rm -f nginx-docker/templates/HOST_IP.conf.template; then
-      echo "WARNING! 'HOST_IP.conf.template' file could not be deleted."
-    fi
-  else
-    if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/templates/HOST_IP.conf.template; then
-      echo "ERROR! 'HOST_IP.conf.template' could not be modified."
-      exit 1
-    fi
-    if ! mv nginx-docker/templates/HOST_IP.conf.template nginx-docker/configs/sites-enabled/"${HOST_IP}".conf; then
-      echo "ERROR! 'HOST_IP.conf.template' could not be renamed."
-      exit 1
-    fi
-    echo "SUCCESS! Created '${HOST_IP}.conf' file."
+if ! [ -f nginx-docker/configs/sites-enabled/"${HOST_IP}".conf ]; then
+  if ! cp nginx-docker/templates/HOST_IP.conf.template nginx-docker/configs/sites-enabled/"${HOST_IP}".conf; then
+    echo "ERROR! 'HOST_IP.conf.template' could not be copied."
+    exit 1
   fi
+  if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/templates/HOST_IP.conf.template; then
+    echo "ERROR! '${HOST_IP}.conf' copy could not be modified."
+    exit 1
+  fi
+  echo "SUCCESS! Created '${HOST_IP}.conf' file."
+else
+  echo "SUCCESS! Found '${HOST_IP}.conf' file."
 fi
-if [ -f nginx-docker/templates/cert_HOST_IP.conf.template ]; then
-  if [ -f nginx-docker/configs/snippets/cert_"${HOST_IP}".conf ]; then
-    echo "SUCCESS! Found 'cert_${HOST_IP}.conf' file."
-    if ! rm -f nginx-docker/templates/cert_HOST_IP.conf.template; then
-      echo "WARNING! 'cert_HOST_IP.conf.template' file could not be deleted."
-    fi
-  else
-    if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/templates/cert_HOST_IP.conf.template; then
-      echo "ERROR! 'cert_HOST_IP.conf.template' could not be modified."
-      exit 1
-    fi
-    if ! mv nginx-docker/templates/cert_HOST_IP.conf.template nginx-docker/configs/snippets/cert_"${HOST_IP}".conf; then
-      echo "ERROR! 'cert_HOST_IP.conf.template' could not be renamed."
-      exit 1
-    fi
-    echo "SUCCESS! Created 'cert_${HOST_IP}.conf' file."
+if [ -f nginx-docker/configs/snippets/cert_"${HOST_IP}".conf ]; then
+  if ! cp nginx-docker/templates/cert_HOST_IP.conf.template nginx-docker/configs/snippets/cert_"${HOST_IP}".conf; then
+    echo "ERROR! 'cert_HOST_IP.conf.template' could not be copied."
+    exit 1
   fi
+  if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/templates/cert_HOST_IP.conf.template; then
+    echo "ERROR! 'cert_${HOST_IP}.conf' copy could not be modified."
+    exit 1
+  fi
+  echo "SUCCESS! Created 'cert_${HOST_IP}.conf' file."
+else
+  echo "SUCCESS! Found 'cert_${HOST_IP}.conf' file."
 fi
 #Conf files based on DOMAIN
-if [ -f nginx-docker/templates/DOMAIN.conf.template ]; then
-  if [ -f nginx-docker/configs/sites-enabled/"${DOMAIN}".conf ]; then
-    echo "SUCCESS! Found '${DOMAIN}.conf' file."
-    if ! rm -f nginx-docker/templates/DOMAIN.conf.template; then
-      echo "WARNING! 'DOMAIN.conf.template' file could not be deleted."
-    fi
-  else
-    if ! sed -i s/DOMAIN/"${DOMAIN}"/g nginx-docker/templates/DOMAIN.conf.template; then
-      echo "ERROR! 'DOMAIN.conf.template' could not be modified."
-      exit 1
-    fi
-    if ! mv nginx-docker/templates/DOMAIN.conf.template nginx-docker/configs/sites-enabled/"${DOMAIN}".conf; then
-      echo "ERROR! 'DOMAIN.conf.template' could not be renamed."
-      exit 1
-    fi
-    echo "SUCCESS! Created '${DOMAIN}.conf' file."
+if [ -f nginx-docker/configs/sites-enabled/"${DOMAIN}".conf ]; then
+  if ! cp nginx-docker/templates/DOMAIN.conf.template nginx-docker/configs/sites-enabled/"${DOMAIN}".conf; then
+    echo "ERROR! 'DOMAIN.conf.template' could not be copied."
+    exit 1
   fi
+  if ! sed -i s/DOMAIN/"${DOMAIN}"/g nginx-docker/templates/DOMAIN.conf.template; then
+    echo "ERROR! '${DOMAIN}.conf' copy could not be modified."
+    exit 1
+  fi
+  echo "SUCCESS! Created '${DOMAIN}.conf' file."
+else
+  echo "SUCCESS! Found '${DOMAIN}.conf' file."
 fi
-if [ -f nginx-docker/templates/cert_DOMAIN.conf.template ]; then
-  if [ -f nginx-docker/configs/snippets/cert_"${DOMAIN}".conf ]; then
-    echo "SUCCESS! Found 'cert_${DOMAIN}.conf' file."
-    if ! rm -f nginx-docker/templates/cert_DOMAIN.conf.template; then
-      echo "WARNING! 'cert_DOMAIN.conf.template' file could not be deleted."
-    fi
-  else
-    if ! sed -i s/DOMAIN/"${DOMAIN}"/g nginx-docker/templates/cert_DOMAIN.conf.template; then
-      echo "ERROR! 'cert_DOMAIN.conf.template' could not be modified."
-      exit 1
-    fi
-    if ! mv nginx-docker/templates/cert_DOMAIN.conf.template nginx-docker/configs/snippets/cert_"${DOMAIN}".conf; then
-      echo "ERROR! 'cert_DOMAIN.conf.template' could not be renamed."
-      exit 1
-    fi
-    echo "SUCCESS! Created 'cert_${DOMAIN}.conf' file."
+if [ -f nginx-docker/configs/snippets/cert_"${DOMAIN}".conf ]; then
+  if ! cp nginx-docker/templates/cert_DOMAIN.conf.template nginx-docker/configs/snippets/cert_"${DOMAIN}".conf; then
+    echo "ERROR! 'cert_DOMAIN.conf' could not be copied."
+    exit 1
   fi
+  if ! sed -i s/DOMAIN/"${DOMAIN}"/g nginx-docker/templates/cert_DOMAIN.conf.template; then
+    echo "ERROR! 'cert_${DOMAIN}.conf' copy could not be modified."
+    exit 1
+  fi
+  echo "SUCCESS! Created 'cert_${DOMAIN}.conf' file."
+else
+  echo "SUCCESS! Found 'cert_${DOMAIN}.conf' file."
 fi
 # Conf file for DoT
-if [ -f nginx-docker/templates/dns-over-tls.conf.template ]; then
-  if [ -f nginx-docker/configs/streams/dns-over-tls.conf ]; then
-    echo "SUCCESS! Found 'dns-over-tls.conf' file."
-    if ! rm -f nginx-docker/templates/dns-over-tls.conf.template; then
-      echo "WARNING! 'dns-over-tls.template.conf' file could not be deleted."
-    fi
-  else
-    if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/templates/dns-over-tls.conf.template; then
-      echo "ERROR! 'dns-over-tls.template.conf' could not be modified."
-      exit 1
-    fi
-    if ! mv nginx-docker/templates/dns-over-tls.conf.template nginx-docker/configs/streams/dns-over-tls.conf; then
-      echo "ERROR! 'dns-over-tls.conf.template' could not be renamed."
-      exit 1
-    fi
-    echo "SUCCESS! Created 'dns-over-tls.conf' file."
+if [ -f nginx-docker/configs/streams/dns-over-tls.conf ]; then
+  if ! cp nginx-docker/templates/dns-over-tls.conf.template nginx-docker/configs/streams/dns-over-tls.conf; then
+    echo "ERROR! 'dns-over-tls.conf.template' could not be copied."
+    exit 1
   fi
+  if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/templates/dns-over-tls.conf.template; then
+    echo "ERROR! 'dns-over-tls.conf' copy could not be modified."
+    exit 1
+  fi
+  echo "SUCCESS! Created 'dns-over-tls.conf' file."
+else
+  echo "SUCCESS! Found 'dns-over-tls.conf' file."
 fi
-echo "SUCCESS! Found or created all necessary nginx configuration files."
+echo "SUCCESS! nginx configuration finished."
 
 
 # TODO: verify the need for 3 crt/key
