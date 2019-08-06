@@ -177,7 +177,7 @@ if ! [ -f nginx-docker/configs/sites-enabled/"${HOST_IP}".conf ] || echo "${FRES
     echo "ERROR! 'HOST_IP.conf.template' could not be copied."
     exit_err
   fi
-  if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/templates/HOST_IP.conf.template; then
+  if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/configs/sites-enabled/"${HOST_IP}".conf; then
     echo "ERROR! '${HOST_IP}.conf' copy could not be modified."
     exit_err
   fi
@@ -190,7 +190,7 @@ if [ -f nginx-docker/configs/snippets/cert_"${HOST_IP}".conf ] || echo "${FRESH}
     echo "ERROR! 'cert_HOST_IP.conf.template' could not be copied."
     exit_err
   fi
-  if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/templates/cert_HOST_IP.conf.template; then
+  if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/configs/snippets/cert_"${HOST_IP}".conf; then
     echo "ERROR! 'cert_${HOST_IP}.conf' copy could not be modified."
     exit_err
   fi
@@ -204,7 +204,7 @@ if [ -f nginx-docker/configs/sites-enabled/"${DOMAIN}".conf ] || echo "${FRESH}"
     echo "ERROR! 'DOMAIN.conf.template' could not be copied."
     exit_err
   fi
-  if ! sed -i s/DOMAIN/"${DOMAIN}"/g nginx-docker/templates/DOMAIN.conf.template; then
+  if ! sed -i s/DOMAIN/"${DOMAIN}"/g nginx-docker/configs/sites-enabled/"${DOMAIN}".conf; then
     echo "ERROR! '${DOMAIN}.conf' copy could not be modified."
     exit_err
   fi
@@ -217,7 +217,7 @@ if [ -f nginx-docker/configs/snippets/cert_"${DOMAIN}".conf ] || echo "${FRESH}"
     echo "ERROR! 'cert_DOMAIN.conf' could not be copied."
     exit_err
   fi
-  if ! sed -i s/DOMAIN/"${DOMAIN}"/g nginx-docker/templates/cert_DOMAIN.conf.template; then
+  if ! sed -i s/DOMAIN/"${DOMAIN}"/g nginx-docker/configs/snippets/cert_"${DOMAIN}".conf; then
     echo "ERROR! 'cert_${DOMAIN}.conf' copy could not be modified."
     exit_err
   fi
@@ -231,7 +231,7 @@ if [ -f nginx-docker/configs/streams/dns-over-tls.conf ] || echo "${FRESH}" | gr
     echo "ERROR! 'dns-over-tls.conf.template' could not be copied."
     exit_err
   fi
-  if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/templates/dns-over-tls.conf.template; then
+  if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/configs/streams/dns-over-tls.conf; then
     echo "ERROR! 'dns-over-tls.conf' copy could not be modified."
     exit_err
   fi
