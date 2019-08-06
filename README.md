@@ -31,7 +31,7 @@ Query forwarding:
 ## Instructions
 
 ### Prerequisites
-Your maschine needs to match the following conditions: 
+Your machine needs to match the following conditions: 
 * Have a static IP 
 * Have `git`, `docker` and `docker-compose` installed 
 * Have valid SSL certificates (`*.crt`) and matching keys (`*.key`) 
@@ -59,6 +59,7 @@ You may also add the following files to 'pihole-docker/configs/pihole/':
 ##### 1.3 setup.conf file
 You can add a 'setup.conf' file at '/' with the following parameters. Every variable not set in this file will be gathered 
 from the system. See [Variable Notes](https://github.com/Cielquan/docker-pihole-unbound-encrypted#variable-notes) below for more information. 
+* `FRESH`
 * `ARCHITECTURE` 
 * `COMPILE` 
 * `INTERFACE` 
@@ -105,12 +106,17 @@ If you have not set the '`WEBPASSWORD` variable in `server.conf` file (not recom
 
     $ sudo docker exec pihole -a -p
 
+_The `run.sh` script also reminds you if a random password was generated from pihole._
+
 #### 5 use the new DNS server
 Now you can setup your other devices to use the server.
 You may also install your CA certificate on your other devices.
 
 ### Variable Notes
 Here are some explanations for above mentioned variables.
+`FRESH`:
+If set to 'y' then all configuration files are overwritten with new ones.
+
 `ARCHITECTURE`:
 If not set, gathered and printed by `setup.sh` script.
 Architecture of the processor ('arm' or 'x86') used by the server.
@@ -196,10 +202,6 @@ Christian Riedel
 
 
 ## Version and State
-Version: 2.1.0
+Version: 2.2.0
 
 State: 05.08.2019
-
-
-## Planned
-* Encrypt outgoing traffic
