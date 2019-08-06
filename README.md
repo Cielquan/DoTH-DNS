@@ -113,39 +113,41 @@ Now you can setup your other devices to use the server.
 You may also install your CA certificate on your other devices.
 
 ### Variable Notes
-Here are some explanations for above mentioned variables.
-`FRESH`:
+Here are some explanations for above mentioned variables. The variables can also be set as flags when calling `setup.sh`. 
+Run `$ ./setup.sh -h` to see the help page.
+
+`FRESH` (flag: `-f`):
 If set to 'y' then all configuration files are overwritten with new ones.
 
-`ARCHITECTURE`:
+`ARCHITECTURE` (flag: `-a`):
 If not set, gathered and printed by `setup.sh` script.
 Architecture of the processor ('arm' or 'x86') used by the server.
 Needed for determining the right docker images.
 
-`COMPILE`:
+`COMPILE` (flag: `-c`):
 Determines if the 'goofball222/dns-over-https' image will rather be compiled than downloaded. 
 The image on docker hub is not compatible with ARM processors. 
 Can be set to 'n' to completely disable the compile part or set to 'y' for always compiling the image.
 If not set then the `ARCHITECTURE` determines if the image will be compiled ('arm' -> yes; 'x86' -> no).
 
-`INTERFACE`:
+`INTERFACE` (flag: `-I`):
 If not set, gathered and printed by `setup.sh` script.
 The network interface used for the server.
 
-`HOST_IP`
+`HOST_IP` (flag: `-i`):
 If not set, gathered and printed by `setup.sh` script.
 IP used with the `INTERFACE`.
 
-`HOST_NAME`
+`HOST_NAME` (flag: `-n`):
 If not set, gathered and printed by `setup.sh` script.
 Name of the host machine `$ hostname`.
 
-`TIMEZONE`:
+`TIMEZONE` (flag: `-t`):
 If not set, gathered and printed by `setup.sh` script.
 Timezone the server is in. Used for e.g. daily resets.
 Format is like 'Europe/London'.
 
-`DOMAIN`
+`DOMAIN` (flag: `-d`):
 If not set created by `setup.sh` script: '`HOST_NAME`.dns'.
 
 ### Update
@@ -202,6 +204,6 @@ Christian Riedel
 
 
 ## Version and State
-Version: 2.2.0
+Version: 2.3.0
 
-State: 05.08.2019
+State: 06.08.2019
