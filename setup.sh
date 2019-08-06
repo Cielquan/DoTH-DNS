@@ -1,18 +1,105 @@
 #!/bin/bash
 
 
+# Func for showing usage string
+usage_string() {
+  echo -e "Usage: $0 [-f <yes|no>] [-a <arm|x86>] [-c <yes|no>] [-I <INTERFACE>] [-i <IP ADDRESS>] `
+        `[-n <HOSTNAME>] [-t <TIMEZONE>] [-d <DOMAIN>] [-h]" 1>&2;
+}
+
+# Func for showing usage
+usage() {
+  usage_string
+  echo -e "Run $0 -h for more detailed usage."
+}
+
+# Func for showing usage help page
+help() {
+  usage_string
+  echo ""
+  echo "$0 flags:" && grep " .)\ #" "$0"
+  exit 0
+}
+
+# Exit func for call errors
+exit_flag_err() {
+  echo -e "Please correct set flags/arguments and restart.\n"
+  usage
+  exit 1
+}
+
 # Exit func for errors
 exit_err() {
   echo "Please correct the error and restart the script."
   exit 1
 }
 
-echo -e "\n####################\n"
-echo -e "INFO! Starting setup for docker-pihole-unbound-encrypted.\n"
-
 
 # Import setup.conf file if existing
-[ -f setup.conf ] && . setup.conf && echo "INFO! setup.conf loaded"
+[ -f setup.conf ] && . setup.conf && _CONF_FILE='y'
+
+
+# Catching flags
+while getopts ":f:a:c:I:i:n:t:d:h" flag; do
+  case $flag in
+    f) # Set FRESH variable with 'yes'/'y' or 'no'/'n' (case insensitive). 'yes' -> Overwrite existing configs with new ones.
+      if ! echo "${OPTARG}" | grep -iq 'yes' && ! echo "${OPTARG}" | grep -iq 'y' &&
+         ! echo "${OPTARG}" | grep -iq 'no' && ! echo "${OPTARG}" | grep -iq 'n'; then
+        echo "No valid argument for '-f'."
+        exit_flag_err
+      fi
+      FRESH=$(echo "${OPTARG:0:1}" | awk '{print tolower($0)}')
+      echo "$FRESH"
+      ;;
+    a) # Set ARCHITECTURE variable with 'ARM' or 'x86' (case insensitive).
+      if ! echo "${OPTARG}" | grep -iq 'arm' && ! echo "${OPTARG}" | grep -iq 'x86'; then
+        echo "No valid argument for '-a'."
+        exit_flag_err
+      fi
+      ARCHITECTURE=${OPTARG}
+      ;;
+    c) # Set COMPILE variable with 'yes'/'y' or 'no'/'n' (case insensitive). 'yes' -> Compile the 'goofball222/dns-over-https' docker image.
+      if ! echo "${OPTARG}" | grep -iq 'yes' && ! echo "${OPTARG}" | grep -iq 'y' &&
+         ! echo "${OPTARG}" | grep -iq 'no' && ! echo "${OPTARG}" | grep -iq 'n'; then
+        echo "No valid argument for '-c'."
+        exit_flag_err
+      fi
+      COMPILE=$(echo "${OPTARG:0:1}" | awk '{print tolower($0)}')
+      echo "$COMPILE"
+      ;;
+    I) # Set INTERFACE variable with <INTERFACE>. E.g. eth0
+      INTERFACE=${OPTARG}
+      ;;
+    i) # Set HOST_IP variable with <IP ADDRESS>. E.g. 192.168.0.1
+      HOST_IP=${OPTARG}
+      ;;
+    n) # Set HOST_NAME variable with <HOSTNAME>. E.g. raspberry
+      HOST_NAME=${OPTARG}
+      ;;
+    t) # Set TIMEZONE variable with <TIMEZONE>. Format e.g. Europe/London
+      TIMEZONE=${OPTARG}
+      ;;
+    d) # Set DOMAIN variable with <DOMAIN>. E.g. example.com
+      DOMAIN=${OPTARG}
+      ;;
+    h) # Shows this help page.
+      help
+      ;;
+    \?)
+      echo "Invalid option: -${OPTARG}" >&2
+      exit_flag_err
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit_flag_err
+      ;;
+  esac
+done
+
+
+echo -e "\n####################\n"
+echo -e "INFO! Starting setup for docker-pihole-unbound-encrypted.\n"
+if echo "${_CONF_FILE}" | grep -q 'y'; then echo "INFO! setup.conf loaded";fi
 
 
 # Get architecture if not set
