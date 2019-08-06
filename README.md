@@ -114,7 +114,7 @@ You may also install your CA certificate on your other devices.
 
 ### Variable Notes
 Here are some explanations for above mentioned variables. The variables can also be set as flags when calling `setup.sh`. 
-Run `$ ./setup.sh -h` to see the help page.
+Run `$ ./setup.sh -h` to see the help page. Flags overwrite variables from 'setup.conf'.
 
 `FRESH` (flag: `-f`):
 If set to 'y' then all configuration files are overwritten with new ones.
