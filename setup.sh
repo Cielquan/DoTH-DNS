@@ -87,13 +87,7 @@ fi
 
 # Checking for 'server.conf' file and if necessary settings (ServerIP and TZ) are set
 echo "INFO! Checking for 'server.conf' file"
-if [ -f pihole-docker/configs/server.conf ]; then
-  echo "SUCCESS! Found 'server.conf' file"
-  if ! [ "$(. pihole-docker/configs/server.conf && [[ -n "${ServerIP}" ]] && [[ -n "${TZ}" ]] && echo "OK")" = "OK" ]; then
-    echo "ERROR! Please fill necessary settings (ServerIP and TZ) in 'server.conf' file and restart this script."
-    exit 1
-  fi
-else
+if ! [ -f pihole-docker/configs/server.conf ] || echo "${FRESH}" | grep -q 'y'; then
   if echo -e "ServerIP=${HOST_IP}\nTZ=${TIMEZONE}" | tee pihole-docker/configs/server.conf > /dev/null; then
     echo "SUCCESS! Created 'server.conf' file"
   else
@@ -102,22 +96,22 @@ else
            "Please add necessary settings (ServerIP and TZ) manually."
       exit 1
     else
-      echo "ERROR! Error while creating 'server.conf' file. The file not created."
+      echo "ERROR! Error while creating 'server.conf' file. The file was not created."
       exit 1
     fi
+  fi
+else
+  echo "SUCCESS! Found 'server.conf' file"
+  if ! [ "$(. pihole-docker/configs/server.conf && [[ -n "${ServerIP}" ]] && [[ -n "${TZ}" ]] && echo "OK")" = "OK" ]; then
+    echo "ERROR! Please fill necessary settings (ServerIP and TZ) in 'server.conf' file and restart this script."
+    exit 1
   fi
 fi
 
 
 # Checking for '.env' file for compose and if necessary settings (HOSTNAME and TZ) are set
 echo "INFO! Checking for '.env' file"
-if [ -f .env ]; then
-  echo "SUCCESS! Found '.env' file"
-  if ! [ "$(. .env && [[ -n "${HOSTNAME}" ]] && [[ -n "${TZ}" ]] && echo "OK")" = "OK" ]; then
-    echo "ERROR! Please fill necessary settings (ServerIP and TZ) in '.env' file and restart this script."
-    exit 1
-  fi
-else
+if ! [ -f .env ] || echo "${FRESH}" | grep -q 'y'; then
   if echo -e "HOSTNAME=${HOST_NAME}\nTZ=${TIMEZONE}" | tee .env > /dev/null; then
     echo "SUCCESS! Created '.env' file"
   else
@@ -126,16 +120,35 @@ else
            "Please add necessary settings (ServerIP and TZ) manually."
       exit 1
     else
-      echo "ERROR! Error while creating '.env' file. The file not created."
+      echo "ERROR! Error while creating '.env' file. The file was not created."
       exit 1
     fi
+  fi
+else
+  echo "SUCCESS! Found '.env' file"
+  if ! [ "$(. .env && [[ -n "${HOSTNAME}" ]] && [[ -n "${TZ}" ]] && echo "OK")" = "OK" ]; then
+    echo "ERROR! Please fill necessary settings (ServerIP and TZ) in '.env' file and restart this script."
+    exit 1
   fi
 fi
 
 
 # Auto create lan.list file or complement it
 echo "INFO! Checking for 'lan.list' file"
-if [ -f pihole-docker/configs/pihole/lan.list ]; then
+if ! [ -f pihole-docker/configs/pihole/lan.list ] || echo "${FRESH}" | grep -q 'y'; then
+  if echo "${HOST_IP}      ${HOST_NAME}.dns   ${HOST_NAME}" | tee pihole-docker/configs/pihole/lan.list > /dev/null; then
+    echo "SUCCESS! Created 'lan.list' file"
+  else
+    if [ -f pihole-docker/configs/pihole/lan.list ]; then
+      echo "ERROR! Error while creating 'lan.list' file. Data could not be gathered and empty file was created." \
+           "Please add necessary host data manually."
+      exit 1
+    else
+      echo "ERROR! Error while creating 'lan.list' file. The file was not created."
+      exit 1
+    fi
+  fi
+else
   if ! grep -qw -e "${HOST_IP}" 'pihole-docker/configs/pihole/lan.list'; then
     echo -e "\n${HOST_IP}      ${HOST_NAME}.dns   ${HOST_NAME}" | tee -a pihole-docker/configs/pihole/lan.list > /dev/null &&
     if grep -qw -e "${HOST_IP}" 'pihole-docker/configs/pihole/lan.list'; then
@@ -147,26 +160,13 @@ if [ -f pihole-docker/configs/pihole/lan.list ]; then
   else
     echo "SUCCESS! Found 'lan.list' file"
   fi
-else
-  if echo "${HOST_IP}      ${HOST_NAME}.dns   ${HOST_NAME}" | tee pihole-docker/configs/pihole/lan.list > /dev/null; then
-    echo "SUCCESS! Created 'lan.list' file"
-  else
-    if [ -f pihole-docker/configs/pihole/lan.list ]; then
-      echo "ERROR! Error while creating 'lan.list' file. Data could not be gathered and empty file was created." \
-           "Please add necessary host data manually."
-      exit 1
-    else
-      echo "ERROR! Error while creating 'lan.list' file. The file not created."
-      exit 1
-    fi
-  fi
 fi
 
 
 # Auto create nginx conf files
 echo "INFO! Checking for nginx configuration files"
 # Conf files based on HOST_IP
-if ! [ -f nginx-docker/configs/sites-enabled/"${HOST_IP}".conf ]; then
+if ! [ -f nginx-docker/configs/sites-enabled/"${HOST_IP}".conf ] || echo "${FRESH}" | grep -q 'y'; then
   if ! cp nginx-docker/templates/HOST_IP.conf.template nginx-docker/configs/sites-enabled/"${HOST_IP}".conf; then
     echo "ERROR! 'HOST_IP.conf.template' could not be copied."
     exit 1
@@ -179,7 +179,7 @@ if ! [ -f nginx-docker/configs/sites-enabled/"${HOST_IP}".conf ]; then
 else
   echo "SUCCESS! Found '${HOST_IP}.conf' file."
 fi
-if [ -f nginx-docker/configs/snippets/cert_"${HOST_IP}".conf ]; then
+if [ -f nginx-docker/configs/snippets/cert_"${HOST_IP}".conf ] || echo "${FRESH}" | grep -q 'y'; then
   if ! cp nginx-docker/templates/cert_HOST_IP.conf.template nginx-docker/configs/snippets/cert_"${HOST_IP}".conf; then
     echo "ERROR! 'cert_HOST_IP.conf.template' could not be copied."
     exit 1
@@ -193,7 +193,7 @@ else
   echo "SUCCESS! Found 'cert_${HOST_IP}.conf' file."
 fi
 #Conf files based on DOMAIN
-if [ -f nginx-docker/configs/sites-enabled/"${DOMAIN}".conf ]; then
+if [ -f nginx-docker/configs/sites-enabled/"${DOMAIN}".conf ] || echo "${FRESH}" | grep -q 'y'; then
   if ! cp nginx-docker/templates/DOMAIN.conf.template nginx-docker/configs/sites-enabled/"${DOMAIN}".conf; then
     echo "ERROR! 'DOMAIN.conf.template' could not be copied."
     exit 1
@@ -206,7 +206,7 @@ if [ -f nginx-docker/configs/sites-enabled/"${DOMAIN}".conf ]; then
 else
   echo "SUCCESS! Found '${DOMAIN}.conf' file."
 fi
-if [ -f nginx-docker/configs/snippets/cert_"${DOMAIN}".conf ]; then
+if [ -f nginx-docker/configs/snippets/cert_"${DOMAIN}".conf ] || echo "${FRESH}" | grep -q 'y'; then
   if ! cp nginx-docker/templates/cert_DOMAIN.conf.template nginx-docker/configs/snippets/cert_"${DOMAIN}".conf; then
     echo "ERROR! 'cert_DOMAIN.conf' could not be copied."
     exit 1
@@ -220,7 +220,7 @@ else
   echo "SUCCESS! Found 'cert_${DOMAIN}.conf' file."
 fi
 # Conf file for DoT
-if [ -f nginx-docker/configs/streams/dns-over-tls.conf ]; then
+if [ -f nginx-docker/configs/streams/dns-over-tls.conf ] || echo "${FRESH}" | grep -q 'y'; then
   if ! cp nginx-docker/templates/dns-over-tls.conf.template nginx-docker/configs/streams/dns-over-tls.conf; then
     echo "ERROR! 'dns-over-tls.conf.template' could not be copied."
     exit 1
@@ -302,10 +302,21 @@ fi
 
 # Download root.hints file
 echo ""
-if wget -nv https://www.internic.net/domain/named.root -O unbound-docker/var/root.hints; then
-  echo "SUCCESS! 'root.hints' file downloaded."
+if ! [ -f unbound-docker/var/root.hints ]; then
+  if wget -nv https://www.internic.net/domain/named.root -O unbound-docker/var/root.hints; then
+    echo "SUCCESS! 'root.hints' file downloaded."
+  else
+    echo "ERROR! 'root.hints' file download failed."
+  fi
 else
-  echo "ERROR! 'root.hints' file download failed."
+  (( DIFF = ($(date +%s) - $(stat -c %Y new))/3600 ))
+  if [ ${DIFF} -gt 1 ] || echo "${FRESH}" | grep -q 'y'; then
+    if wget -nv https://www.internic.net/domain/named.root -O unbound-docker/var/root.hints; then
+      echo "SUCCESS! 'root.hints' file updated."
+    else
+      echo "ERROR! 'root.hints' file update failed."
+    fi
+  fi
 fi
 
 
