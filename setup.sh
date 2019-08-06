@@ -166,36 +166,36 @@ fi
 # Auto create nginx conf files
 echo "INFO! Checking for nginx configuration files"
 # Conf files based on HOST_IP
-if [ -f nginx-docker/configs/sites-enabled/HOST_IP.conf.template ]; then
+if [ -f nginx-docker/templates/HOST_IP.conf.template ]; then
   if [ -f nginx-docker/configs/sites-enabled/"${HOST_IP}".conf ]; then
     echo "SUCCESS! Found '${HOST_IP}.conf' file."
-    if ! rm -f nginx-docker/configs/sites-enabled/HOST_IP.conf.template; then
+    if ! rm -f nginx-docker/templates/HOST_IP.conf.template; then
       echo "WARNING! 'HOST_IP.conf.template' file could not be deleted."
     fi
   else
-    if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/configs/sites-enabled/HOST_IP.conf.template; then
+    if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/templates/HOST_IP.conf.template; then
       echo "ERROR! 'HOST_IP.conf.template' could not be modified."
       exit 1
     fi
-    if ! mv nginx-docker/configs/sites-enabled/HOST_IP.conf.template nginx-docker/configs/sites-enabled/"${HOST_IP}".conf; then
+    if ! mv nginx-docker/templates/HOST_IP.conf.template nginx-docker/configs/sites-enabled/"${HOST_IP}".conf; then
       echo "ERROR! 'HOST_IP.conf.template' could not be renamed."
       exit 1
     fi
     echo "SUCCESS! Created '${HOST_IP}.conf' file."
   fi
 fi
-if [ -f nginx-docker/configs/snippets/cert_HOST_IP.conf.template ]; then
+if [ -f nginx-docker/templates/cert_HOST_IP.conf.template ]; then
   if [ -f nginx-docker/configs/snippets/cert_"${HOST_IP}".conf ]; then
     echo "SUCCESS! Found 'cert_${HOST_IP}.conf' file."
-    if ! rm -f nginx-docker/configs/snippets/cert_HOST_IP.conf.template; then
+    if ! rm -f nginx-docker/templates/cert_HOST_IP.conf.template; then
       echo "WARNING! 'cert_HOST_IP.conf.template' file could not be deleted."
     fi
   else
-    if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/configs/snippets/cert_HOST_IP.conf.template; then
+    if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/templates/cert_HOST_IP.conf.template; then
       echo "ERROR! 'cert_HOST_IP.conf.template' could not be modified."
       exit 1
     fi
-    if ! mv nginx-docker/configs/snippets/cert_HOST_IP.conf.template nginx-docker/configs/snippets/cert_"${HOST_IP}".conf; then
+    if ! mv nginx-docker/templates/cert_HOST_IP.conf.template nginx-docker/configs/snippets/cert_"${HOST_IP}".conf; then
       echo "ERROR! 'cert_HOST_IP.conf.template' could not be renamed."
       exit 1
     fi
@@ -203,36 +203,36 @@ if [ -f nginx-docker/configs/snippets/cert_HOST_IP.conf.template ]; then
   fi
 fi
 #Conf files based on DOMAIN
-if [ -f nginx-docker/configs/sites-enabled/DOMAIN.conf.template ]; then
+if [ -f nginx-docker/templates/DOMAIN.conf.template ]; then
   if [ -f nginx-docker/configs/sites-enabled/"${DOMAIN}".conf ]; then
     echo "SUCCESS! Found '${DOMAIN}.conf' file."
-    if ! rm -f nginx-docker/configs/sites-enabled/DOMAIN.conf.template; then
+    if ! rm -f nginx-docker/templates/DOMAIN.conf.template; then
       echo "WARNING! 'DOMAIN.conf.template' file could not be deleted."
     fi
   else
-    if ! sed -i s/DOMAIN/"${DOMAIN}"/g nginx-docker/configs/sites-enabled/DOMAIN.conf.template; then
+    if ! sed -i s/DOMAIN/"${DOMAIN}"/g nginx-docker/templates/DOMAIN.conf.template; then
       echo "ERROR! 'DOMAIN.conf.template' could not be modified."
       exit 1
     fi
-    if ! mv nginx-docker/configs/sites-enabled/DOMAIN.conf.template nginx-docker/configs/sites-enabled/"${DOMAIN}".conf; then
+    if ! mv nginx-docker/templates/DOMAIN.conf.template nginx-docker/configs/sites-enabled/"${DOMAIN}".conf; then
       echo "ERROR! 'DOMAIN.conf.template' could not be renamed."
       exit 1
     fi
     echo "SUCCESS! Created '${DOMAIN}.conf' file."
   fi
 fi
-if [ -f nginx-docker/configs/snippets/cert_DOMAIN.conf.template ]; then
+if [ -f nginx-docker/templates/cert_DOMAIN.conf.template ]; then
   if [ -f nginx-docker/configs/snippets/cert_"${DOMAIN}".conf ]; then
     echo "SUCCESS! Found 'cert_${DOMAIN}.conf' file."
-    if ! rm -f nginx-docker/configs/snippets/cert_DOMAIN.conf.template; then
+    if ! rm -f nginx-docker/templates/cert_DOMAIN.conf.template; then
       echo "WARNING! 'cert_DOMAIN.conf.template' file could not be deleted."
     fi
   else
-    if ! sed -i s/DOMAIN/"${DOMAIN}"/g nginx-docker/configs/snippets/cert_DOMAIN.conf.template; then
+    if ! sed -i s/DOMAIN/"${DOMAIN}"/g nginx-docker/templates/cert_DOMAIN.conf.template; then
       echo "ERROR! 'cert_DOMAIN.conf.template' could not be modified."
       exit 1
     fi
-    if ! mv nginx-docker/configs/snippets/cert_DOMAIN.conf.template nginx-docker/configs/snippets/cert_"${DOMAIN}".conf; then
+    if ! mv nginx-docker/templates/cert_DOMAIN.conf.template nginx-docker/configs/snippets/cert_"${DOMAIN}".conf; then
       echo "ERROR! 'cert_DOMAIN.conf.template' could not be renamed."
       exit 1
     fi
@@ -240,22 +240,22 @@ if [ -f nginx-docker/configs/snippets/cert_DOMAIN.conf.template ]; then
   fi
 fi
 # Conf file for DoT
-if [ -f nginx-docker/configs/streams/dns-over-tls.template ]; then
-  if [ -f nginx-docker/configs/streams/dns-over-tls ]; then
-    echo "SUCCESS! Found 'dns-over-tls' file."
-    if ! rm -f nginx-docker/configs/streams/dns-over-tls.template; then
-      echo "WARNING! 'dns-over-tls.template' file could not be deleted."
+if [ -f nginx-docker/templates/dns-over-tls.conf.template ]; then
+  if [ -f nginx-docker/configs/streams/dns-over-tls.conf ]; then
+    echo "SUCCESS! Found 'dns-over-tls.conf' file."
+    if ! rm -f nginx-docker/templates/dns-over-tls.conf.template; then
+      echo "WARNING! 'dns-over-tls.template.conf' file could not be deleted."
     fi
   else
-    if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/configs/streams/dns-over-tls.template; then
-      echo "ERROR! 'dns-over-tls.template' could not be modified."
+    if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/templates/dns-over-tls.conf.template; then
+      echo "ERROR! 'dns-over-tls.template.conf' could not be modified."
       exit 1
     fi
-    if ! mv nginx-docker/configs/streams/dns-over-tls.template nginx-docker/configs/streams/dns-over-tls; then
-      echo "ERROR! 'dns-over-tls.template' could not be renamed."
+    if ! mv nginx-docker/templates/dns-over-tls.conf.template nginx-docker/configs/streams/dns-over-tls.conf; then
+      echo "ERROR! 'dns-over-tls.conf.template' could not be renamed."
       exit 1
     fi
-    echo "SUCCESS! Created 'dns-over-tls' file."
+    echo "SUCCESS! Created 'dns-over-tls.conf' file."
   fi
 fi
 echo "SUCCESS! Found or created all necessary nginx configuration files."
