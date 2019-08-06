@@ -3,7 +3,7 @@
 
 # Start docker container
 echo ""
-docker-compose up -d
+docker-compose up -d || exit 1
 
 
 echo -e "\n####################\n"
@@ -53,10 +53,13 @@ printf '\nINFO! Starting up pihole container '
 for i in $(seq 1 20); do
     if [ "$(docker inspect -f "{{.State.Health.Status}}" pihole)" == "healthy" ]; then
         printf ' OK'
+        HOST_IP=$(grep 'ServerIP' pihole-docker/configs/server.conf | sed 's/ServerIP=//')
         if [ "$(docker logs pihole 2> /dev/null | grep -c 'password:')" -gt 0 ]; then
             echo -e "\nINFO! $(docker logs pihole 2> /dev/null | grep 'password:') for your pi-hole: https://${HOST_IP}/admin/"
+            RAN_PW='y'
         else
             echo -e "\nINFO! Set given WEBPASSWORD for your pi-hole: https://${HOST_IP}/admin/"
+            RAN_PW='n'
         fi
         break
     else
@@ -145,3 +148,7 @@ printf "\nINFO! Container health status of 'nginx': " && docker inspect -f {{.St
 
 echo -e "\nSUCCESS! docker-pihole-unbound-encrypted is up and running."
 echo -e "\n####################"
+
+if echo ${RAN_PW} | grep -q 'y'; then
+  echo -e "\nPlease don't forget to set a secure password for your pihole dashboard.\nRun 'sudo docker exec pihole pihole -a -p' to change it."
+fi
