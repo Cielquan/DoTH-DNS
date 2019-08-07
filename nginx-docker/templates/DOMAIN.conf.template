@@ -1,6 +1,6 @@
 server {
-        listen 443 ssl;
-        listen [::]:443 ssl;
+        listen 443 ssl default_server;
+        listen [::]:443 ssl default_server;
         include snippets/cert_DOMAIN.conf;
         include snippets/ssl-params.conf;
 
@@ -22,14 +22,5 @@ server {
                 include snippets/proxy_forward.conf;
                 proxy_pass http://dns-backend/dns-query;
         }
-}
 
-
-server {
-        listen 80;
-        listen [::]:80;
-
-        server_name DOMAIN;
-
-        return 301 https://$server_name$request_uri;
 }

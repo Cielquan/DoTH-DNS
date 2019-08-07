@@ -258,35 +258,8 @@ fi
 
 # Auto create nginx conf files
 echo "INFO! Checking for nginx configuration files"
-# Conf files based on HOST_IP
-if ! [ -f nginx-docker/configs/sites-enabled/"${HOST_IP}".conf ] || echo "${FRESH}" | grep -q 'y'; then
-  if ! cp nginx-docker/templates/HOST_IP.conf.template nginx-docker/configs/sites-enabled/"${HOST_IP}".conf; then
-    echo "ERROR! 'HOST_IP.conf.template' could not be copied."
-    exit_err
-  fi
-  if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/configs/sites-enabled/"${HOST_IP}".conf; then
-    echo "ERROR! '${HOST_IP}.conf' copy could not be modified."
-    exit_err
-  fi
-  echo "SUCCESS! Created '${HOST_IP}.conf' file."
-else
-  echo "SUCCESS! Found '${HOST_IP}.conf' file."
-fi
-if [ -f nginx-docker/configs/snippets/cert_"${HOST_IP}".conf ] || echo "${FRESH}" | grep -q 'y'; then
-  if ! cp nginx-docker/templates/cert_HOST_IP.conf.template nginx-docker/configs/snippets/cert_"${HOST_IP}".conf; then
-    echo "ERROR! 'cert_HOST_IP.conf.template' could not be copied."
-    exit_err
-  fi
-  if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/configs/snippets/cert_"${HOST_IP}".conf; then
-    echo "ERROR! 'cert_${HOST_IP}.conf' copy could not be modified."
-    exit_err
-  fi
-  echo "SUCCESS! Created 'cert_${HOST_IP}.conf' file."
-else
-  echo "SUCCESS! Found 'cert_${HOST_IP}.conf' file."
-fi
 #Conf files based on DOMAIN
-if [ -f nginx-docker/configs/sites-enabled/"${DOMAIN}".conf ] || echo "${FRESH}" | grep -q 'y'; then
+if ! [ -f nginx-docker/configs/sites-enabled/"${DOMAIN}".conf ] || echo "${FRESH}" | grep -q 'y'; then
   if ! cp nginx-docker/templates/DOMAIN.conf.template nginx-docker/configs/sites-enabled/"${DOMAIN}".conf; then
     echo "ERROR! 'DOMAIN.conf.template' could not be copied."
     exit_err
@@ -299,7 +272,7 @@ if [ -f nginx-docker/configs/sites-enabled/"${DOMAIN}".conf ] || echo "${FRESH}"
 else
   echo "SUCCESS! Found '${DOMAIN}.conf' file."
 fi
-if [ -f nginx-docker/configs/snippets/cert_"${DOMAIN}".conf ] || echo "${FRESH}" | grep -q 'y'; then
+if ! [ -f nginx-docker/configs/snippets/cert_"${DOMAIN}".conf ] || echo "${FRESH}" | grep -q 'y'; then
   if ! cp nginx-docker/templates/cert_DOMAIN.conf.template nginx-docker/configs/snippets/cert_"${DOMAIN}".conf; then
     echo "ERROR! 'cert_DOMAIN.conf' could not be copied."
     exit_err
@@ -312,13 +285,27 @@ if [ -f nginx-docker/configs/snippets/cert_"${DOMAIN}".conf ] || echo "${FRESH}"
 else
   echo "SUCCESS! Found 'cert_${DOMAIN}.conf' file."
 fi
+# Conf file for HTTP redirect
+if ! [ -f nginx-docker/configs/sites-enabled/http_redirect.conf ] || echo "${FRESH}" | grep -q 'y'; then
+  if ! cp nginx-docker/templates/http_redirect.conf.template nginx-docker/configs//sites-enabled/http_redirect.conf; then
+    echo "ERROR! 'http_redirect.conf.template' could not be copied."
+    exit_err
+  fi
+  if ! sed -i s/DOMAIN/"${DOMAIN}"/g nginx-docker/configs//sites-enabled/http_redirect.conf; then
+    echo "ERROR! 'http_redirect.conf' copy could not be modified."
+    exit_err
+  fi
+  echo "SUCCESS! Created 'http_redirect.conf' file."
+else
+  echo "SUCCESS! Found 'http_redirect.conf' file."
+fi
 # Conf file for DoT
-if [ -f nginx-docker/configs/streams/dns-over-tls.conf ] || echo "${FRESH}" | grep -q 'y'; then
+if ! [ -f nginx-docker/configs/streams/dns-over-tls.conf ] || echo "${FRESH}" | grep -q 'y'; then
   if ! cp nginx-docker/templates/dns-over-tls.conf.template nginx-docker/configs/streams/dns-over-tls.conf; then
     echo "ERROR! 'dns-over-tls.conf.template' could not be copied."
     exit_err
   fi
-  if ! sed -i s/HOST_IP/"${HOST_IP}"/g nginx-docker/configs/streams/dns-over-tls.conf; then
+  if ! sed -i s/DOMAIN/"${DOMAIN}"/g nginx-docker/configs/streams/dns-over-tls.conf; then
     echo "ERROR! 'dns-over-tls.conf' copy could not be modified."
     exit_err
   fi
@@ -329,7 +316,6 @@ fi
 echo "SUCCESS! nginx configuration finished."
 
 
-# TODO: verify the need for 3 crt/key
 # Check for certificates and keys
 echo "INFO! Checking for SSL certificates and keys"
 CERT_COUNT=0
@@ -348,14 +334,14 @@ do
     fi
 done
 
-if (( CERT_COUNT < 3))  || (( KEY_COUNT < 3 )); then
+if (( CERT_COUNT < 1))  || (( KEY_COUNT < 1 )); then
   echo "ERROR! Add at least one certificate to 'certificates/certs/' and the matching key to " \
-       "'certificates/' for pi.hole, your HOSTNAME and the server's IP. Then restart the script."
+       "'certificates/' for your DOMAIN. Then restart the script."
   exit_err
 elif ! (( CERT_COUNT = KEY_COUNT )); then
   echo "WARNING! There is an uneven amount of certificates and keys."
 else
-  echo "SUCCESS! Found SSL certificates and keys"
+  echo "SUCCESS! Found SSL certificate and key."
 fi
 
 
