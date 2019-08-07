@@ -272,7 +272,7 @@ if ! [ -f nginx-docker/configs/sites-enabled/"${HOST_IP}".conf ] || echo "${FRES
 else
   echo "SUCCESS! Found '${HOST_IP}.conf' file."
 fi
-if [ -f nginx-docker/configs/snippets/cert_"${HOST_IP}".conf ] || echo "${FRESH}" | grep -q 'y'; then
+if ! [ -f nginx-docker/configs/snippets/cert_"${HOST_IP}".conf ] || echo "${FRESH}" | grep -q 'y'; then
   if ! cp nginx-docker/templates/cert_HOST_IP.conf.template nginx-docker/configs/snippets/cert_"${HOST_IP}".conf; then
     echo "ERROR! 'cert_HOST_IP.conf.template' could not be copied."
     exit_err
@@ -286,7 +286,7 @@ else
   echo "SUCCESS! Found 'cert_${HOST_IP}.conf' file."
 fi
 #Conf files based on DOMAIN
-if [ -f nginx-docker/configs/sites-enabled/"${DOMAIN}".conf ] || echo "${FRESH}" | grep -q 'y'; then
+if ! [ -f nginx-docker/configs/sites-enabled/"${DOMAIN}".conf ] || echo "${FRESH}" | grep -q 'y'; then
   if ! cp nginx-docker/templates/DOMAIN.conf.template nginx-docker/configs/sites-enabled/"${DOMAIN}".conf; then
     echo "ERROR! 'DOMAIN.conf.template' could not be copied."
     exit_err
@@ -299,7 +299,7 @@ if [ -f nginx-docker/configs/sites-enabled/"${DOMAIN}".conf ] || echo "${FRESH}"
 else
   echo "SUCCESS! Found '${DOMAIN}.conf' file."
 fi
-if [ -f nginx-docker/configs/snippets/cert_"${DOMAIN}".conf ] || echo "${FRESH}" | grep -q 'y'; then
+if ! [ -f nginx-docker/configs/snippets/cert_"${DOMAIN}".conf ] || echo "${FRESH}" | grep -q 'y'; then
   if ! cp nginx-docker/templates/cert_DOMAIN.conf.template nginx-docker/configs/snippets/cert_"${DOMAIN}".conf; then
     echo "ERROR! 'cert_DOMAIN.conf' could not be copied."
     exit_err
@@ -313,7 +313,7 @@ else
   echo "SUCCESS! Found 'cert_${DOMAIN}.conf' file."
 fi
 # Conf file for DoT
-if [ -f nginx-docker/configs/streams/dns-over-tls.conf ] || echo "${FRESH}" | grep -q 'y'; then
+if ! [ -f nginx-docker/configs/streams/dns-over-tls.conf ] || echo "${FRESH}" | grep -q 'y'; then
   if ! cp nginx-docker/templates/dns-over-tls.conf.template nginx-docker/configs/streams/dns-over-tls.conf; then
     echo "ERROR! 'dns-over-tls.conf.template' could not be copied."
     exit_err
