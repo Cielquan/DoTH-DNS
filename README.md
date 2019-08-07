@@ -76,7 +76,7 @@ However this is not recommended because the `setup.sh` script will create it for
 `DNS1` and `DNS2` are set in default.conf, but are overwritten by server.conf if set. 
 
 ##### 1.5 .env file
-You can add a '.env' file to '/' with variables (listed below) used by 'docker-compose.yaml' file. 
+You can add a '.env' file to '/' with variables used by 'docker-compose.yaml' file (listed below) . 
 However this is not recommended because the `setup.sh` script will create it for you (rather set given variables in 'setup.conf'). 
 * `HOSTNAME` 
 * `TZ` 
@@ -90,12 +90,14 @@ Copies the repo from your home directory to the directory of the server. You nee
 
 #### 3 run the scripts
 Now cd into the repo on the server via SSH and first start the setup script. You can also start the script without sudo, but for the compiling part (when compiling)  
-root privileges are needed. 
+root privileges are needed. The script supports flags see 
+[Variable Notes](https://github.com/Cielquan/docker-pihole-unbound-encrypted#variable-notes) below for more information.
 
     $ sudo ./setup.sh
 
 After the script finished successfully you can start the `run.sh` script to actually start the docker containers. 
-You need to start the script with sudo, because the docker daemon needs root privileges. 
+You need to start the script with sudo, because the docker daemon needs root privileges. The script supports flags see 
+[Variable Notes](https://github.com/Cielquan/docker-pihole-unbound-encrypted#variable-notes) below for more information.
 
     $ sudo ./run.sh
 
@@ -204,6 +206,6 @@ Christian Riedel
 
 
 ## Version and State
-Version: 2.3.0
+Version: 2.4.0
 
-State: 06.08.2019
+State: 07.08.2019
