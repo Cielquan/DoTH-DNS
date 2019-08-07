@@ -1,7 +1,7 @@
 server {
         listen 853 ssl;
 
-        include snippets/cert_HOST_IP.conf;
+        include snippets/cert_DOMAIN.conf;
         ssl_dhparam             /etc/nginx/dhparam.pem;
 
         ssl_protocols           TLSv1.2 TLSv1.3;

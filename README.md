@@ -34,7 +34,7 @@ Query forwarding:
 Your machine needs to match the following conditions: 
 * Have a static IP 
 * Have `git`, `docker` and `docker-compose` installed 
-* Have valid SSL certificates (`*.crt`) and matching keys (`*.key`) 
+* Have valid SSL certificate (`*.crt`) and matching key (`*.key`) 
 * Have a `dhparam.pem` file 
 
 ### Setup
@@ -45,8 +45,8 @@ Given paths are relative to this repositories root.
 Firstly clone this repo to your SSH machine 
 
 ##### 1.1 SSL certificate files
-* copy your SSL `*.crt` files to 'certificates/certs/' 
-* copy your SSL `*.key` files to 'certificates/private/' 
+* copy your SSL `*.crt` file to 'certificates/certs/' 
+* copy your SSL `*.key` file to 'certificates/private/' 
 * copy your `dhparam.pem` file to 'certificates/' 
 
 ##### 1.2 pihole config files
@@ -96,8 +96,7 @@ root privileges are needed. The script supports flags see
     $ sudo ./setup.sh
 
 After the script finished successfully you can start the `run.sh` script to actually start the docker containers. 
-You need to start the script with sudo, because the docker daemon needs root privileges. The script supports flags see 
-[Variable Notes](https://github.com/Cielquan/docker-pihole-unbound-encrypted#variable-notes) below for more information.
+You need to start the script with sudo, because the docker daemon needs root privileges. The script supports flags run `$ ./run.sh -h` to see the help page.
 
     $ sudo ./run.sh
 
@@ -206,6 +205,6 @@ Christian Riedel
 
 
 ## Version and State
-Version: 2.4.0
+Version: 2.5.0
 
 State: 07.08.2019
