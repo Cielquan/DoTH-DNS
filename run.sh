@@ -1,9 +1,35 @@
 #!/bin/bash
 
 
+# Func for showing usage string
+usage_string() {
+  echo -e "Usage: $0 [-R] [-U] [-h]" 1>&2;
+}
+
+# Func for showing usage
+usage() {
+  usage_string
+  echo -e "Run $0 -h for more detailed usage."
+}
+
+# Func for showing usage help page
+help() {
+  usage_string
+  echo ""
+  echo "$0 flags:" && grep " .)\ #" "$0"
+  exit 0
+}
+
+# Exit func for call errors
+exit_flag_err() {
+  echo -e "Please correct set flags/arguments and restart.\n"
+  usage
+  exit 1
+}
+
 # Exit func for docker-compose error
 exit_dc_err() {
-  echo "docker-compose failed. You may need to restart the script with root privileges."
+  echo "docker(-compose) failed. You may need to restart the script with root privileges."
   exit 1
 }
 
@@ -14,9 +40,44 @@ exit_err() {
 }
 
 
-# Start docker container
-echo ""
-docker-compose up -d || exit_dc_err
+# Catching flags
+while getopts ":RUh" flag; do
+  case $flag in
+    R) # Restart conatiners. Accutally a recreation of the containers taking in changed configs.
+      RECREATE_ALL='y'
+      ;;
+    U) # Update containers.
+      UPDATE_ALL='y'
+      ;;
+    h) # Shows this help page.
+      help
+      ;;
+    \?)
+      echo "Invalid option: -${OPTARG}" >&2
+      exit_flag_err
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit_flag_err
+      ;;
+  esac
+done
+
+
+# docker-compose commands
+if echo "${UPDATE_ALL}" | grep -q 'y'; then
+  echo ""
+  docker-compose down || exit_dc_err
+  docker-compose pull || exit_dc_err
+  docker-compose up -d --force-recreate || exit_dc_err
+elif echo "${RECREATE_ALL}" | grep -q 'y'; then
+  echo ""
+  docker-compose down || exit_dc_err
+  docker-compose up -d --force-recreate || exit_dc_err
+else
+  echo ""
+  docker-compose up -d --quiet-pull || exit_dc_err
+fi
 
 
 echo -e "\n####################\n"
