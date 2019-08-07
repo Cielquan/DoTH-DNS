@@ -49,7 +49,6 @@ while getopts ":f:a:c:I:i:n:t:d:h" flag; do
         exit_flag_err
       fi
       FRESH=$(echo "${OPTARG:0:1}" | awk '{print tolower($0)}')
-      echo "$FRESH"
       ;;
     a) # Set ARCHITECTURE variable with 'ARM' or 'x86' (case insensitive).
       if ! echo "${OPTARG}" | grep -iq 'arm' && ! echo "${OPTARG}" | grep -iq 'x86'; then
@@ -65,7 +64,6 @@ while getopts ":f:a:c:I:i:n:t:d:h" flag; do
         exit_flag_err
       fi
       COMPILE=$(echo "${OPTARG:0:1}" | awk '{print tolower($0)}')
-      echo "$COMPILE"
       ;;
     I) # Set INTERFACE variable with <INTERFACE>. E.g. eth0
       INTERFACE=${OPTARG}
