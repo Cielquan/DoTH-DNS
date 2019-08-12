@@ -203,12 +203,12 @@ fi
 # Checking for '.env' file for compose and if necessary settings (HOSTNAME and TZ) are set
 echo "INFO! Checking for '.env' file"
 if ! [ -f .env ] || echo "${FRESH}" | grep -q 'y'; then
-  if echo -e "HOSTNAME=${HOST_NAME}\nTZ=${TIMEZONE}" | tee .env > /dev/null; then
+  if echo -e "HOSTNAME=${HOST_NAME}\nDOMAIN=${DOMAIN}\nTZ=${TIMEZONE}" | tee .env > /dev/null; then
     echo "SUCCESS! Created '.env' file"
   else
     if [ -f .env ]; then
       echo "ERROR! Error while creating '.env' file. Data could not be gathered and empty file was created." \
-           "Please add necessary settings (ServerIP and TZ) manually."
+           "Please add necessary settings (ServerIP, DOMAIN and TZ) manually."
       exit_err
     else
       echo "ERROR! Error while creating '.env' file. The file was not created."
@@ -217,8 +217,8 @@ if ! [ -f .env ] || echo "${FRESH}" | grep -q 'y'; then
   fi
 else
   echo "SUCCESS! Found '.env' file"
-  if ! [ "$(. .env && [[ -n "${HOSTNAME}" ]] && [[ -n "${TZ}" ]] && echo "OK")" = "OK" ]; then
-    echo "ERROR! Please fill necessary settings (ServerIP and TZ) in '.env' file and restart this script."
+  if ! [ "$(. .env && [[ -n "${HOSTNAME}" ]] && [[ -n "${DOMAIN}" ]] && [[ -n "${TZ}" ]] && echo "OK")" = "OK" ]; then
+    echo "ERROR! Please fill necessary settings (ServerIP, DOMAIN and TZ) in '.env' file and restart this script."
     exit_err
   fi
 fi
