@@ -1,0 +1,26 @@
+########################################################################################################################
+#
+# Configuration file for Traefik v2.0.
+#
+########################################################################################################################
+
+
+
+########################################################################################################################
+# Redirect configuration
+########################################################################################################################
+
+[http.middlewares]
+
+  [http.middlewares.secure_headers.headers]
+    forceSTSHeader=true
+    STSIncludeSubdomains=true
+    STSSeconds=63072000
+    STSPreload=true
+    browserXSSFilter=true
+    contentTypeNosniff=true
+    frameDeny=true
+
+  [http.middlewares.https_redirect.redirectscheme]
+    permanent=true
+    scheme = "https"
