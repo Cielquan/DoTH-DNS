@@ -172,6 +172,7 @@ All containers:
 
 ### Reverse proxy
 You have three options for the reverse proxy. None, the old one `ngnix` and the new one `traefik`. 
+Traefik 2.0 is used which is currently in beta.
 If you want to use none you have to set the flag `-P` when running the `run.sh` script. For setting `nginx` or `traefik`
 you have to set the flag `-p` followed by `ngnix` or `traefik` (case insensitive). The latter is the default.
 
