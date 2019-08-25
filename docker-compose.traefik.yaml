@@ -1,0 +1,104 @@
+version: '3.5'
+
+
+services:
+
+  # DoH server container
+  doh_server:
+    networks:
+      traefik_proxy:
+        ipv4_address: 172.16.0.3
+
+  # pihole container
+  pihole:
+    networks:
+      traefik_proxy:
+        ipv4_address: 172.16.0.4
+
+  # nginx container
+  nginx:
+    container_name: nginx
+    hostname: ${HOSTNAME}
+    image: nginx:latest
+    volumes:
+      - ./nginx-docker/configs/:/etc/nginx/
+      - ./certificates/certs/:/etc/ssl/certs/
+      - ./certificates/private/:/etc/ssl/private/
+      - ./certificates/dhparam.pem:/etc/nginx/dhparam.pem
+    expose:
+      - 853
+    networks:
+      dns_network0:
+        ipv4_address: 172.16.1.2
+      traefik_proxy:
+        ipv4_address: 172.16.0.2
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik_proxy
+  ##### tcp
+    ### services
+      # backend port
+      - traefik.tcp.services.svc-nginx_dot.loadbalancer.server.port=853
+    ### routers
+      # DoT forward
+      - traefik.tcp.routers.rou_encr-nginx_dot.entrypoints=dot
+      - traefik.tcp.routers.rou_encr-nginx_dot.rule=HostSNI(`*`)
+      - traefik.tcp.routers.rou_encr-nginx_dot.tls.passthrough=true
+      - traefik.tcp.routers.rou_encr-nginx_dot.service=svc-nginx_dot
+
+  # træfik container
+  traefik:
+    container_name: traefik
+    hostname: ${HOSTNAME}
+    image: traefik:v2.0
+    environment:
+      - TZ=${TZ:-Europe/London}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik-docker/configs/:/etc/traefik/
+      - ./traefik-docker/shared/:/shared/:ro
+      - ./certificates/certs:/etc/ssl/certs/
+      - ./certificates/private/:/etc/ssl/private/
+    ports:
+      - "80:80"
+      - "443:443"
+      - "853:853"
+      - "8080:8080"
+    networks:
+      traefik_proxy:
+        ipv4_address: 172.16.0.250
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik_proxy
+  ##### http
+    ### services
+      # backend port
+      - traefik.http.services.svc-traefik.loadbalancer.server.port=8080
+    ### routers
+      # redirect http to https
+      - traefik.http.routers.rou-traefik.entrypoints=http
+      - traefik.http.routers.rou-traefik.rule=Host(`traefik.${DOMAIN}`)
+      - traefik.http.routers.rou-traefik.middlewares=https_redirect@file
+      # traefik dashboard
+      - traefik.http.routers.rou_encr-traefik.entrypoints=https
+      - traefik.http.routers.rou_encr-traefik.rule=Host(`traefik.${DOMAIN}`)
+      - traefik.http.routers.rou_encr-traefik.tls=true
+      - traefik.http.routers.rou_encr-traefik.tls.options=default
+      - traefik.http.routers.rou_encr-traefik.middlewares=secure_headers@file
+      - traefik.http.routers.rou_encr-traefik.service=svc-traefik
+
+
+networks:
+  # Bridge network for træfik's communication
+  traefik_proxy:
+    name: traefik_proxy
+    driver: bridge
+    driver_opts:
+      encrypted: "true"
+    ipam:
+      config:
+        - subnet: 172.16.0.0/24
+    attachable: false

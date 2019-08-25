@@ -1,0 +1,23 @@
+version: '3.5'
+
+
+services:
+
+  # nginx container
+  nginx:
+    container_name: nginx
+    hostname: ${HOSTNAME}
+    image: nginx:latest
+    volumes:
+      - ./nginx-docker/configs/:/etc/nginx/
+      - ./certificates/certs/:/etc/ssl/certs/
+      - ./certificates/private/:/etc/ssl/private/
+      - ./certificates/dhparam.pem:/etc/nginx/dhparam.pem
+    ports:
+      - "80:80"
+      - "443:443"
+      - "853:853"
+    networks:
+      dns_network0:
+        ipv4_address: 172.16.1.2
+    restart: always

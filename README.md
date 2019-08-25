@@ -12,20 +12,21 @@ Use at own risk. This project is made for linux. I run it on my raspberry pi 3b+
 
 ## Description
 This project's goal is setup a DNS server inside docker with the option to connect via DoH or DoT. 
-Therefor pi-hole, unbound, nginx and a [DoH-server](https://github.com/m13253/dns-over-https) are utilized. 
+Therefor pi-hole, unbound, traefik/nginx and a [DoH-server](https://github.com/m13253/dns-over-https) are utilized. 
 
 You may ask 'Why use DoH or DoT for an local DNS server?'. Good question! I set this up because firefox needs you to use 
 DoH if you want to use [ESNI](https://en.wikipedia.org/wiki/Server_Name_Indication). The DoT support was just some lines 
 of code more so I did it also. 
 
 The docker-compose file creates a bridge network and the following containers: 
-`pi-hole/pi-hole`, `mvance:unbound`, `nginx`, `goofball222/dns-over-https`. 
+`pi-hole/pi-hole`, `mvance:unbound`, `nginx`, `traefik`, `goofball222/dns-over-https`. 
+When using traefik a second bridge network will be created.
 
 Query forwarding: 
 * Normal DNS query: port 53 -> pihole -> unbound 
-* DoT query: port 853 -> nginx -> pihole -> unbound 
-* DoH query: port 443 -> nginx -> DoH-server -> pihole -> unbound 
-* pihole dashboard query: port 80/443 -> nginx -> pihole (HTTP is forwarded to HTTPS) 
+* DoT query: port 853 -> nginx/traefik -> pihole -> unbound 
+* DoH query: port 443 -> nginx/traefik -> DoH-server -> pihole -> unbound 
+* pihole dashboard query: port 80/443 -> nginx/traefik -> pihole (HTTP is forwarded to HTTPS) 
 
 
 ## Instructions
@@ -81,35 +82,36 @@ However this is not recommended because the `setup.sh` script will create it for
 * `HOSTNAME` 
 * `TZ` 
 
-#### 2 Send files to server
+#### 2. Send files to server
 Now your setup is done and you can move the files to your server. 
 
     $ scp -r ~/docker-pihole-unbound-encrypted/ pi@192.168.0.1:~
 
 Copies the repo from your home directory to the directory of the server. You need to alter the user, IP and paths to your parameters. 
 
-#### 3 run the scripts
+#### 3. run the scripts
 Now cd into the repo on the server via SSH and first start the setup script. You can also start the script without sudo, but for the compiling part (when compiling)  
 root privileges are needed. The script supports flags see 
 [Variable Notes](https://github.com/Cielquan/docker-pihole-unbound-encrypted#variable-notes) below for more information.
 
-    $ sudo ./setup.sh
+    $ ./setup.sh
 
 After the script finished successfully you can start the `run.sh` script to actually start the docker containers. 
-You need to start the script with sudo, because the docker daemon needs root privileges. The script supports flags run `$ ./run.sh -h` to see the help page.
+You may need to start the script with sudo, because the docker daemon needs root privileges. The script supports flags run `$ ./run.sh -h` to see the help page.
 
-    $ sudo ./run.sh
+    $ ./run.sh
 
-Instead of the `run.sh` script you can also run `sudo docker-compose up -d`. The script does the same, but it also outputs information about the status of the single containers till they are done booting and setting up.
+Instead of the `run.sh` script you can also run `docker-compose up -d`. 
+The script does the same, but it also outputs information about the status of the single containers till they are done booting and setting up.
 
-#### 4 Secure your pihole dashboard
+#### 4. Secure your pihole dashboard
 If you have not set the '`WEBPASSWORD` variable in `server.conf` file (not recommended) you should now set a secure password for your pihole dashboard or deactivate it.
 
-    $ sudo docker exec pihole -a -p
+    $ docker exec pihole -a -p
 
 _The `run.sh` script also reminds you if a random password was generated from pihole._
 
-#### 5 use the new DNS server
+#### 5. Use the new DNS server
 Now you can setup your other devices to use the server.
 You may also install your CA certificate on your other devices.
 
@@ -158,15 +160,25 @@ _But be wary of the need to compile the `goofball222/dns-over-https` image yours
 
 Single container:
 
-    sudo docker stop CONTAINER && sudo rm CONTAINER
-    docker-compose pull CONTAINER
-    sudo ./run.sh
+    $ docker stop CONTAINER && docker rm CONTAINER
+    $ docker-compose pull CONTAINER
+    $ ./run.sh
 
 All containers:
     
-    sudo docker-compose down
-    sudo docker-compose pull
-    sudo ./run.sh
+    $ docker-compose down
+    $ docker-compose pull
+    $ ./run.sh
+
+### Reverse proxy
+You have three options for the reverse proxy. None, the old one `ngnix` and the new one `traefik`. 
+Traefik 2.0 is used which is currently in beta.
+If you want to use none you have to set the flag `-P` when running the `run.sh` script. For setting `nginx` or `traefik`
+you have to set the flag `-p` followed by `ngnix` or `traefik` (case insensitive). The latter is the default.
+
+Currently traefik does not work solo. I am working on getting the DoT part to work. 
+Till then DoT traffic is passed through by traefik to ngnix to handle.
+When traefik works solo ngnix may be deprecated.
 
 
 ## Get help
@@ -176,6 +188,7 @@ All containers:
 * Unbound image [documentation](https://github.com/MatthewVance/unbound-docker-rpi/blob/master/README.md)
 * nginx [documentation](https://nginx.org/en/docs/)
 * nginx image [documentation](https://github.com/docker-library/docs/blob/master/nginx/README.md)
+* traefik [documentation](https://docs.traefik.io/v2.0/)
 * dns-over-https [documentation](https://github.com/m13253/dns-over-https/blob/master/Readme.md)
 * dns-over-https image [documentation](https://github.com/goofball222/dns-over-https/blob/master/README.md)
 * Docker [documentation](https://docs.docker.com/)
@@ -194,7 +207,7 @@ The rights of the docker images and software lie by their creators.
 
 
 ## Acknowledgements
-Thanks to the creators of docker, pi-hole, unbound, nginx and 'dns-over-https' for their awesome software. Also thanks you 
+Thanks to the creators of docker, pi-hole, unbound, nginx, traefik and 'dns-over-https' for their awesome software. Also thanks you 
 to the maintainers of the images.
 
 Thanks to the creator of this [docker-pihole-unbound](https://github.com/chriscrowe/docker-pihole-unbound) project which inspired me.
@@ -205,6 +218,6 @@ Christian Riedel
 
 
 ## Version and State
-Version: 2.5.0
+Version: 2.6.0
 
-State: 07.08.2019
+State: 25.08.2019

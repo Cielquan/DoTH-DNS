@@ -7,6 +7,8 @@
 .env
 setup.conf
 server.conf
+certs.toml
+.htpasswd
 
 # Certificate files
 *.pem
@@ -18,7 +20,3 @@ server.conf
 
 # pycharm folder
 .idea/
-
-# traefik test stuff
-traefik-docker/
-*traefik*
