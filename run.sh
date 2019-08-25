@@ -167,8 +167,8 @@ for i in $(seq 1 20); do
     if [ "$(docker inspect -f "{{.State.Health.Status}}" pihole)" == "healthy" ]; then
         echo -e -n " ${GREEN}OK${BLANK}"
         HOST_IP=$(grep 'ServerIP' pihole-docker/configs/server.conf | sed 's/ServerIP=//')
-        if [ "$(docker logs pihole 2> /dev/null | grep -c 'password:')" -gt 0 ]; then
-            echo -e "\n${CYAN}INFO${BLANK}: $(docker logs pihole 2> /dev/null | grep 'password:') for your pi-hole: https://${HOST_IP}/admin/."
+        if [ "$(docker logs pihole 2> /dev/null | grep -c 'Setting password:')" -gt 0 ]; then
+            echo -e "\n${CYAN}INFO${BLANK}: $(docker logs pihole 2> /dev/null | grep 'Setting password:') for your pi-hole: https://${HOST_IP}/admin/."
             RAN_PW='y'
         else
             echo -e "\n${CYAN}INFO${BLANK}: Set given WEBPASSWORD for your pi-hole: https://${HOST_IP}/admin/."
@@ -289,9 +289,9 @@ fi
 
 
 echo -e "\n${GREEN}SUCCESS${BLANK}: docker-pihole-unbound-encrypted is up and running."
-echo -e "\n####################"
+echo -e "\n####################\n"
 
 
 if echo "${RAN_PW}" | grep -q 'y'; then
-  echo -e "\n${ORANGE}ATTENTION${BLANK}:\nPlease don't forget to set a secure password for your pihole dashboard.\nRun 'sudo docker exec pihole pihole -a -p <NEW PASSWORD>' to change it."
+  echo -e "${ORANGE}ATTENTION${BLANK}:\nPlease don't forget to set a secure password for your pihole dashboard.\nRun 'sudo docker exec pihole pihole -a -p <NEW PASSWORD>' to change it.\n"
 fi

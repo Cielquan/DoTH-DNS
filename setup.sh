@@ -105,7 +105,7 @@ done
 
 echo -e "\n####################\n"
 echo -e "${CYAN}INFO${BLANK}: Starting setup for docker-pihole-unbound-encrypted.\n"
-if echo "${_CONF_FILE}" | grep -q 'y'; then echo -e "${CYAN}INFO${BLANK}: setup.conf loaded.";fi
+if echo "${_CONF_FILE}" | grep -q 'y'; then echo -e "${CYAN}INFO${BLANK}: setup.conf loaded.\n";fi
 
 
 # Get architecture if not set
@@ -114,7 +114,7 @@ if [ -z "${ARCHITECTURE}" ]; then
   echo -e "${RED}ERROR${BLANK}: No ARCHITECTURE set and none could be determined. Please set the variable in 'setup.conf' and restart the script."
   exit_err
 else
-  echo -e "${CYAN}INFO${BLANK}: No ARCHITECTURE set found and using ${ARCHITECTURE}."
+  echo -e "${CYAN}INFO${BLANK}: No ARCHITECTURE set found and using '${ARCHITECTURE}'."
 fi
 
 # Get default interface if not set
@@ -123,7 +123,7 @@ if [ -z "${INTERFACE}" ]; then
   echo -e "${RED}ERROR${BLANK}: No INTERFACE set and none could be determined. Please set the variable in 'setup.conf' and restart the script."
   exit_err
 else
-  echo -e "${CYAN}INFO${BLANK}: No INTERFACE set found and using ${INTERFACE}."
+  echo -e "${CYAN}INFO${BLANK}: No INTERFACE set found and using '${INTERFACE}'."
 fi
 
 # Get IP for given INTERFACE if not set
@@ -132,7 +132,7 @@ if [ -z "${HOST_IP}" ]; then
   echo -e "${RED}ERROR${BLANK}: No HOST_IP set and none could be determined. Please set the variable in 'setup.conf' and restart the script."
   exit_err
 else
-  echo -e "${CYAN}INFO${BLANK}: No HOST_IP set found and using ${HOST_IP}."
+  echo -e "${CYAN}INFO${BLANK}: No HOST_IP set found and using '${HOST_IP}'."
 fi
 
 ## Get IP + bit length of subnet for given INTERFACE if not set
@@ -141,7 +141,7 @@ fi
 #  echo -e "${RED}ERROR${BLANK}: No HOST_IP_W_SUBNET set and none could be determined. Please set the variable in 'setup.conf' and restart the script."
 #  exit_err
 #else
-#  echo -e "${CYAN}INFO${BLANK}: No HOST_IP_W_SUBNET set found and using ${HOST_IP_W_SUBNET}."
+#  echo -e "${CYAN}INFO${BLANK}: No HOST_IP_W_SUBNET set found and using '${HOST_IP_W_SUBNET}'."
 #fi
 
 # Get hostname if not set
@@ -150,7 +150,7 @@ if [ -z "${HOST_NAME}" ]; then
   echo -e "${RED}ERROR${BLANK}: No HOST_NAME set and none could be determined. Please set the variable in 'setup.conf' and restart the script."
   exit_err
 else
-  echo -e "${CYAN}INFO${BLANK}: No HOST_NAME set found and using ${HOST_NAME}."
+  echo -e "${CYAN}INFO${BLANK}: No HOST_NAME set found and using '${HOST_NAME}'."
 fi
 
 # Get timezone if not set
@@ -159,7 +159,7 @@ if [ -z "${TIMEZONE}" ]; then
   echo -e "${RED}ERROR${BLANK}: No TIMEZONE set and none could be determined. Please set the variable in 'setup.conf' and restart the script."
   exit_err
 else
-  echo -e "${CYAN}INFO${BLANK}: No TIMEZONE set found and using ${TIMEZONE}."
+  echo -e "${CYAN}INFO${BLANK}: No TIMEZONE set found and using '${TIMEZONE}'."
 fi
 
 # Create domain if not set
@@ -168,7 +168,7 @@ if [ -z "${DOMAIN}" ]; then
   echo -e "${RED}ERROR${BLANK}: No DOMAIN set and none could be created. Please set the variable in 'setup.conf' and restart the script."
   exit_err
 else
-  echo -e "${CYAN}INFO${BLANK}: No DOMAIN set found and using ${DOMAIN}."
+  echo -e "${CYAN}INFO${BLANK}: No DOMAIN set found and using '${DOMAIN}'."
 fi
 
 
@@ -184,7 +184,7 @@ fi
 
 
 # Checking for 'server.conf' file and if necessary settings (ServerIP and TZ) are set
-echo -e "${CYAN}INFO${BLANK}: Checking for 'server.conf' file."
+echo -e "\n${CYAN}INFO${BLANK}: Checking for 'server.conf' file."
 if ! [ -f pihole-docker/configs/server.conf ] || echo "${FRESH}" | grep -q 'y'; then
   if echo -e "ServerIP=${HOST_IP}\nTZ=${TIMEZONE}" | tee pihole-docker/configs/server.conf > /dev/null; then
     echo -e "${GREEN}SUCCESS${BLANK}: Created 'server.conf' file."
@@ -208,7 +208,7 @@ fi
 
 
 # Checking for '.env' file for compose and if necessary settings (HOSTNAME and TZ) are set
-echo -e "${CYAN}INFO${BLANK}: Checking for '.env' file."
+echo -e "\n${CYAN}INFO${BLANK}: Checking for '.env' file."
 if ! [ -f .env ] || echo "${FRESH}" | grep -q 'y'; then
   if echo -e "HOSTNAME=${HOST_NAME}\nDOMAIN=${DOMAIN}\nTZ=${TIMEZONE}" | tee .env > /dev/null; then
     echo -e "${GREEN}SUCCESS${BLANK}: Created '.env' file."
@@ -232,7 +232,7 @@ fi
 
 
 # Auto create lan.list file or complement it
-echo -e "${CYAN}INFO${BLANK}: Checking for 'lan.list' file."
+echo -e "\n${CYAN}INFO${BLANK}: Checking for 'lan.list' file."
 if ! [ -f pihole-docker/configs/pihole/lan.list ] || echo "${FRESH}" | grep -q 'y'; then
   if echo "${HOST_IP}      ${HOST_NAME}.dns   ${HOST_NAME}" | tee pihole-docker/configs/pihole/lan.list > /dev/null; then
     echo -e "${GREEN}SUCCESS${BLANK}: Created 'lan.list' file."
@@ -262,22 +262,24 @@ fi
 
 
 # Check for host IP address mapping in dnsmasq.conf
-echo -e "${CYAN}INFO${BLANK}: Checking for domain mapping in 'dnsmasq.conf' file."
-if ! grep -qw -e "address=/${DOMAIN}/${HOST_IP}" 'pihole-docker/configs/dnsmasq.d/dnsmasq.conf'; then
-  echo -e "address=/${DOMAIN}/${HOST_IP}" | tee -a pihole-docker/configs/dnsmasq.d/dnsmasq.conf > /dev/null
-  if grep -qw -e "address=/${DOMAIN}/${HOST_IP}" 'pihole-docker/configs/dnsmasq.d/dnsmasq.conf'; then
-    echo -e "${GREEN}SUCCESS${BLANK}: Added domain mapping to 'dnsmasq.conf' file."
-  else
-    echo -e "${RED}ERROR${BLANK}: Domain mapping could not be added to 'dnsmasq.conf' file."
+echo -e "\n${CYAN}INFO${BLANK}: Checking for 'dnsmasq.conf' file."
+if ! [ -f pihole-docker/configs/dnsmasq.d/dnsmasq.conf ] || echo "${FRESH}" | grep -q 'y'; then
+  if ! cp pihole-docker/templates/dnsmasq.conf.template pihole-docker/configs/dnsmasq.d/dnsmasq.conf; then
+    echo -e "${RED}ERROR${BLANK}: 'dnsmasq.conf.template' could not be copied."
     exit_err
   fi
+  if ! sed -i -e s/DOMAIN/"${DOMAIN}"/g -e s/HOST_IP/"${HOST_IP}"/g pihole-docker/configs/dnsmasq.d/dnsmasq.conf; then
+    echo -e "${RED}ERROR${BLANK}: 'dnsmasq.conf' copy could not be modified."
+    exit_err
+  fi
+  echo -e "${GREEN}SUCCESS${BLANK}: Created 'dnsmasq.conf' file."
 else
-  echo -e "${GREEN}SUCCESS${BLANK}: Found domain mapping in 'dnsmasq.conf' file."
+  echo -e "${GREEN}SUCCESS${BLANK}: Found 'dnsmasq.conf' file."
 fi
 
 
 # Auto create nginx conf files
-echo -e "${CYAN}INFO${BLANK}: Checking for nginx configuration files."
+echo -e "\n${CYAN}INFO${BLANK}: Checking for nginx configuration files."
 # Conf files based on DOMAIN
 if ! [ -f nginx-docker/configs/sites-enabled/"${DOMAIN}".conf ] || echo "${FRESH}" | grep -q 'y'; then
   if ! cp nginx-docker/templates/DOMAIN.conf.template nginx-docker/configs/sites-enabled/"${DOMAIN}".conf; then
@@ -333,11 +335,10 @@ if ! [ -f nginx-docker/configs/streams/dns-over-tls.conf ] || echo "${FRESH}" | 
 else
   echo -e "${GREEN}SUCCESS${BLANK}: Found 'dns-over-tls.conf' file."
 fi
-echo -e "${GREEN}SUCCESS${BLANK}: nginx configuration finished."
 
 
 # Check for certificates and keys
-echo -e "${CYAN}INFO${BLANK}: Checking for SSL certificates and keys."
+echo -e "\n${CYAN}INFO${BLANK}: Checking for SSL certificates and keys."
 CERT_COUNT=0
 for cert in certificates/certs/*.crt
 do
@@ -366,7 +367,7 @@ fi
 
 
 # Check for 'dhparam.pem' file
-echo -e "${CYAN}INFO${BLANK}: Checking for dhparam.pem file."
+echo -e "\n${CYAN}INFO${BLANK}: Checking for dhparam.pem file."
 if [ -f certificates/dhparam.pem ]; then
   echo -e "${GREEN}SUCCESS${BLANK}: Found dhparam.pem file."
 else
@@ -376,7 +377,7 @@ fi
 
 
 # Traefik conf file for certs
-echo -e "${GREEN}SUCCESS${BLANK}: Checking for traefik configuration files."
+echo -e "\n${CYAN}INFO${BLANK}: Checking for traefik configuration files."
 if ! [ -f traefik-docker/configs/traefik.conf.d/certs.toml ] || echo "${FRESH}" | grep -q 'y'; then
   if ! cp traefik-docker/templates/certs.toml.template traefik-docker/configs/traefik.conf.d/certs.toml; then
     echo -e "${RED}ERROR${BLANK}: 'certs.toml.template' could not be copied."
@@ -390,11 +391,11 @@ if ! [ -f traefik-docker/configs/traefik.conf.d/certs.toml ] || echo "${FRESH}" 
 else
   echo -e "${GREEN}SUCCESS${BLANK}: Found 'certs.toml' file."
 fi
-echo -e "${GREEN}SUCCESS${BLANK}: traefik configuration finished."
 
 
 # Compile doh server image
-if echo "${COMPILE}" | grep -q 'n'; then
+echo -e "\n${CYAN}INFO${BLANK}: Checking for compiling doh_server."
+if echo -e "${COMPILE}" | grep -q 'n'; then
   echo -e "${CYAN}INFO${BLANK}: COMPILE set to 'n'. Not compiling 'goofball222/dns-over-https'."
 else
   if echo "${COMPILE}" | grep -q 'y' || echo "${ARCHITECTURE}" | grep -iq arm; then
@@ -418,7 +419,7 @@ fi
 
 
 # Download root.hints file
-echo -e "${CYAN}INFO${BLANK}: Checking for 'root.hints' file."
+echo -e "\n${CYAN}INFO${BLANK}: Checking for 'root.hints' file."
 if ! [ -f unbound-docker/var/root.hints ]; then
   if echo "" && wget -nv https://www.internic.net/domain/named.root -O unbound-docker/var/root.hints; then
     echo -e "${GREEN}SUCCESS${BLANK}: 'root.hints' file downloaded."
@@ -441,4 +442,4 @@ fi
 
 
 echo -e "\n${GREEN}SUCCESS${BLANK}: Setup for docker-pihole-unbound-encrypted finished."
-echo -e "\n####################"
+echo -e "\n####################\n"
