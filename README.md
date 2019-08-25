@@ -218,6 +218,6 @@ Christian Riedel
 
 
 ## Version and State
-Version: 2.6.0
+Version: 2.6.1
 
 State: 25.08.2019
