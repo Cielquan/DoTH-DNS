@@ -1,7 +1,8 @@
 # DoTH DNS Change Log
 
 **Release 3.0.0** -
-* Added `CHANGELOG.md` ([commit](tba))
+- Renamed project from `docker-pihole-unbound-encrypted` to `DoTH-DNS`
+- Added `CHANGELOG.md` ([commit](https://github.com/Cielquan/docker-pihole-unbound-encrypted/commit/6e8dada6eaa2316508b4d95bc658cde900969d0b))
 
 **Release 2.6.1** - 25.08.2019
 - Fixed `dnsmasq.conf` setup ([commit](https://github.com/Cielquan/docker-pihole-unbound-encrypted/commit/5e7f2b0526accb7f2e1faf892962b0a697906c38))
