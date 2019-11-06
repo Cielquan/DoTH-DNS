@@ -1,4 +1,4 @@
-# [docker-pihole-unbound-encrypted](https://github.com/Cielquan/docker-pihole-unbound-encrypted)
+# [DoTH-DNS](https://github.com/Cielquan/DoTH-DNS)
 
 Utilizes the power of [pi-hole](https://pi-hole.net) and [unbound](https://www.nlnetlabs.nl/projects/unbound/about) 
 to create a DNS server under your own authority but with the abillity to use DoH 
@@ -59,7 +59,7 @@ You may also add the following files to 'pihole-docker/configs/pihole/':
 
 ##### 1.3 setup.conf file
 You can add a 'setup.conf' file at '/' with the following parameters. Every variable not set in this file will be gathered 
-from the system. See [Variable Notes](https://github.com/Cielquan/docker-pihole-unbound-encrypted#variable-notes) below for more information. 
+from the system. See [Variable Notes](https://github.com/Cielquan/DoTH-DNS#variable-notes) below for more information. 
 * `FRESH`
 * `ARCHITECTURE` 
 * `COMPILE` 
@@ -85,14 +85,14 @@ However this is not recommended because the `setup.sh` script will create it for
 #### 2. Send files to server
 Now your setup is done and you can move the files to your server. 
 
-    $ scp -r ~/docker-pihole-unbound-encrypted/ pi@192.168.0.1:~
+    $ scp -r ~/DoTH-DNS/ pi@192.168.0.1:~
 
 Copies the repo from your home directory to the directory of the server. You need to alter the user, IP and paths to your parameters. 
 
 #### 3. run the scripts
 Now cd into the repo on the server via SSH and first start the setup script. You can also start the script without sudo, but for the compiling part (when compiling)  
 root privileges are needed. The script supports flags see 
-[Variable Notes](https://github.com/Cielquan/docker-pihole-unbound-encrypted#variable-notes) below for more information.
+[Variable Notes](https://github.com/Cielquan/DoTH-DNS#variable-notes) below for more information.
 
     $ ./setup.sh
 
@@ -201,7 +201,7 @@ When traefik works solo ngnix may be deprecated.
 
 
 ## Rights
-This project is licensed under the MIT License - see [LICENSE](https://github.com/Cielquan/docker-pihole-unbound-encrypted/blob/master/LICENSE)
+This project is licensed under the MIT License - see [LICENSE](https://github.com/Cielquan/DoTH-DNS/blob/master/LICENSE)
 
 The rights of the docker images and software lie by their creators.
 

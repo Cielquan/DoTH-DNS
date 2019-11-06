@@ -104,7 +104,7 @@ done
 
 
 echo -e "\n####################\n"
-echo -e "${CYAN}INFO${BLANK}: Starting setup for docker-pihole-unbound-encrypted.\n"
+echo -e "${CYAN}INFO${BLANK}: Starting setup for DoTH-DNS.\n"
 if echo "${_CONF_FILE}" | grep -q 'y'; then echo -e "${CYAN}INFO${BLANK}: setup.conf loaded.\n";fi
 
 
@@ -441,5 +441,5 @@ else
 fi
 
 
-echo -e "\n${GREEN}SUCCESS${BLANK}: Setup for docker-pihole-unbound-encrypted finished."
+echo -e "\n${GREEN}SUCCESS${BLANK}: Setup for DoTH-DNS finished."
 echo -e "\n####################\n"
