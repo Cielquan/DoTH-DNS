@@ -293,5 +293,5 @@ echo -e "\n####################\n"
 
 
 if echo "${RAN_PW}" | grep -q 'y'; then
-  echo -e "${ORANGE}ATTENTION${BLANK}:\nPlease don't forget to set a secure password for your pihole dashboard.\nRun 'sudo docker exec pihole pihole -a -p <NEW PASSWORD>' to change it.\n"
+  echo -e "${ORANGE}ATTENTION${BLANK}:\nPlease don't forget to set a secure password for your pihole dashboard.\nRun 'docker exec pihole pihole -a -p <NEW PASSWORD>' to change it.\n"
 fi
