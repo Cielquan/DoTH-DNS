@@ -7,7 +7,7 @@
 
 
 ########################################################################################################################
-# Redirect configuration
+# Header configuration
 ########################################################################################################################
 
 [http.middlewares]
@@ -21,7 +21,3 @@
     browserXSSFilter=true
     contentTypeNosniff=true
     frameDeny=true
-
-  [http.middlewares.https_redirect.redirectscheme]
-    permanent=true
-    scheme = "https"
