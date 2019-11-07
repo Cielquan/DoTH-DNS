@@ -15,38 +15,6 @@ services:
       traefik_proxy:
         ipv4_address: 172.16.0.4
 
-  # nginx container
-  nginx:
-    container_name: nginx
-    hostname: ${HOSTNAME}
-    image: nginx:latest
-    volumes:
-      - ./nginx-docker/configs/:/etc/nginx/
-      - ./certificates/certs/:/etc/ssl/certs/
-      - ./certificates/private/:/etc/ssl/private/
-      - ./certificates/dhparam.pem:/etc/nginx/dhparam.pem
-    expose:
-      - 853
-    networks:
-      dns_network0:
-        ipv4_address: 172.16.1.2
-      traefik_proxy:
-        ipv4_address: 172.16.0.2
-    restart: always
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=traefik_proxy
-  ##### tcp
-    ### services
-      # backend port
-      - traefik.tcp.services.svc-nginx_dot.loadbalancer.server.port=853
-    ### routers
-      # DoT forward
-      - traefik.tcp.routers.rou_encr-nginx_dot.entrypoints=dot
-      - traefik.tcp.routers.rou_encr-nginx_dot.rule=HostSNI(`*`)
-      - traefik.tcp.routers.rou_encr-nginx_dot.tls.passthrough=true
-      - traefik.tcp.routers.rou_encr-nginx_dot.service=svc-nginx_dot
-
   # træfik container
   traefik:
     container_name: traefik
