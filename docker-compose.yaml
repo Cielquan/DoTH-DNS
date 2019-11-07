@@ -72,28 +72,16 @@ services:
       - traefik.http.middlewares.redirect_pihole.redirectregex.regex=^.*pi\.hole(.*)
       - traefik.http.middlewares.redirect_pihole.redirectregex.replacement=https://pihole.${DOMAIN}$$1
       # remove and add /admin
-      - traefik.http.middlewares.add_admin.addprefix.prefix=/admin
+      - traefik.http.middlewares.add_admin_path.replacepathregex.regex=^/((?i:(admin)/{0,1}|.{0})(.*))
+      - traefik.http.middlewares.add_admin_path.replacepathregex.replacement=/admin/$$3
     ### routers
       # pihole dashboard
-      - traefik.http.routers.rou_encr_admin-pihole_gui.entrypoints=https
-      - traefik.http.routers.rou_encr_admin-pihole_gui.rule=Host(`pihole.${DOMAIN}`,`pi.hole`) && PathPrefix(`/admin`)
-      - traefik.http.routers.rou_encr_admin-pihole_gui.tls=true
-      - traefik.http.routers.rou_encr_admin-pihole_gui.tls.options=default
-      - traefik.http.middlewares.chain2.chain.middlewares=redirect_pihole,secure_headers@file
-      - traefik.http.routers.rou_encr_admin-pihole_gui.middlewares=chain2
-      - traefik.http.routers.rou_encr_admin-pihole_gui.service=svc-pihole_gui
-      # redirect http to https; without /admin
-      - traefik.http.routers.rou-pihole_gui.entrypoints=http
-      - traefik.http.routers.rou-pihole_gui.rule=Host(`pihole.${DOMAIN}`,`pi.hole`)
-      - traefik.http.middlewares.chain3.chain.middlewares=redirect_pihole,https_redirect@file,add_admin
-      - traefik.http.routers.rou-pihole_gui.middlewares=chain3
-      # pihole dashboard; without /admin
       - traefik.http.routers.rou_encr-pihole_gui.entrypoints=https
       - traefik.http.routers.rou_encr-pihole_gui.rule=Host(`pihole.${DOMAIN}`,`pi.hole`)
       - traefik.http.routers.rou_encr-pihole_gui.tls=true
       - traefik.http.routers.rou_encr-pihole_gui.tls.options=default
-      - traefik.http.middlewares.chain4.chain.middlewares=redirect_pihole,add_admin,secure_headers@file
-      - traefik.http.routers.rou_encr-pihole_gui.middlewares=chain4
+      - traefik.http.middlewares.chain6.chain.middlewares=redirect_pihole,add_admin_path,secure_headers@file
+      - traefik.http.routers.rou_encr-pihole_gui.middlewares=chain6
       - traefik.http.routers.rou_encr-pihole_gui.service=svc-pihole_gui
 #  ##### tcp
 #    ### services
