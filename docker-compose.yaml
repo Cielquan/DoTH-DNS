@@ -22,15 +22,15 @@ services:
   ##### http
     ### services
       # backend port
-      - traefik.http.services.svc-doh_server.loadbalancer.server.port=8053
+      - traefik.http.services.svc_DohServer.loadbalancer.server.port=8053
     ### routers
       # DoH forward
-      - traefik.http.routers.rou_encr-doh_server.entrypoints=https
-      - traefik.http.routers.rou_encr-doh_server.rule=Host(`doh.${DOMAIN}`) && Path(`/dns-query`)
-      - traefik.http.routers.rou_encr-doh_server.tls=true
-      - traefik.http.routers.rou_encr-doh_server.tls.options=default
-      - traefik.http.routers.rou_encr-doh_server.middlewares=secure_headers@file
-      - traefik.http.routers.rou_encr-doh_server.service=svc-doh_server
+      - traefik.http.routers.rou_DohServer.entrypoints=https
+      - traefik.http.routers.rou_DohServer.rule=Host(`doh.${DOMAIN}`) && Path(`/dns-query`)
+      - traefik.http.routers.rou_DohServer.tls=true
+      - traefik.http.routers.rou_DohServer.tls.options=default
+      - traefik.http.routers.rou_DohServer.middlewares=mdw_SecureHeaders@file
+      - traefik.http.routers.rou_DohServer.service=svc_DohServer
 
   # pihole container
   pihole:
@@ -65,36 +65,36 @@ services:
   ##### http
     ### services
       # backend port
-      - traefik.http.services.svc-pihole_gui.loadbalancer.server.port=80
+      - traefik.http.services.svc_PiholeGui.loadbalancer.server.port=80
     ### middleware
       # redirecting pi.hole
-      - traefik.http.middlewares.redirect_pihole.redirectregex.permanent=true
-      - traefik.http.middlewares.redirect_pihole.redirectregex.regex=^.*pi\.hole(.*)
-      - traefik.http.middlewares.redirect_pihole.redirectregex.replacement=https://pihole.${DOMAIN}$$1
+      - traefik.http.middlewares.mdw_RedirectPihole.redirectregex.permanent=true
+      - traefik.http.middlewares.mdw_RedirectPihole.redirectregex.regex=^.*pi\.hole(.*)
+      - traefik.http.middlewares.mdw_RedirectPihole.redirectregex.replacement=https://pihole.${DOMAIN}$$1
       # make sure `/admin` is there
-      - traefik.http.middlewares.add_admin_path.replacepathregex.regex=^/((?i:(admin)/{0,1}|.{0})(.*))
-      - traefik.http.middlewares.add_admin_path.replacepathregex.replacement=/admin/$$3
+      - traefik.http.middlewares.mdw_AddAdminPath.replacepathregex.regex=^/((?i:(admin)/{0,1}|.{0})(.*))
+      - traefik.http.middlewares.mdw_AddAdminPath.replacepathregex.replacement=/admin/$$3
     ### routers
       # pihole dashboard
-      - traefik.http.routers.rou_encr-pihole_gui.entrypoints=https
-      - traefik.http.routers.rou_encr-pihole_gui.rule=Host(`pihole.${DOMAIN}`,`pi.hole`)
-      - traefik.http.routers.rou_encr-pihole_gui.tls=true
-      - traefik.http.routers.rou_encr-pihole_gui.tls.options=default
-      - traefik.http.middlewares.chain6.chain.middlewares=redirect_pihole,add_admin_path,secure_headers@file
-      - traefik.http.routers.rou_encr-pihole_gui.middlewares=chain6
-      - traefik.http.routers.rou_encr-pihole_gui.service=svc-pihole_gui
+      - traefik.http.routers.rou_PiholeGui.entrypoints=https
+      - traefik.http.routers.rou_PiholeGui.rule=Host(`pihole.${DOMAIN}`,`pi.hole`)
+      - traefik.http.routers.rou_PiholeGui.tls=true
+      - traefik.http.routers.rou_PiholeGui.tls.options=default
+      - traefik.http.middlewares.mdw_PiholeChain.chain.middlewares=mdw_RedirectPihole,mdw_AddAdminPath,mdw_SecureHeaders@file
+      - traefik.http.routers.rou_PiholeGui.middlewares=mdw_PiholeChain
+      - traefik.http.routers.rou_PiholeGui.service=svc_PiholeGui
 #  ##### tcp
 #    ### services
 #      # backend port
-#      - traefik.tcp.services.svc-pihole_dns.loadbalancer.server.port=53
+#      - traefik.tcp.services.svc_PiholeDns.loadbalancer.server.port=53
 #    ### routers
 #      # DoT forward
-#      - traefik.tcp.routers.rou_encr-pihole_dns.entrypoints=dot
-##      - traefik.tcp.routers.rou_encr-pihole_dns.rule=HostSNI(`dot.${DOMAIN}`)
-#      - traefik.tcp.routers.rou_encr-pihole_dns.rule=HostSNI(`*`)
-#      - traefik.tcp.routers.rou_encr-pihole_dns.tls=true
-#      - traefik.tcp.routers.rou_encr-pihole_dns.tls.options=default
-#      - traefik.tcp.routers.rou_encr-pihole_dns.service=svc-pihole_dns
+#      - traefik.tcp.routers.rou_PiholeDns.entrypoints=dot
+##      - traefik.tcp.routers.rou_PiholeDns.rule=HostSNI(`dot.${DOMAIN}`)
+#      - traefik.tcp.routers.rou_PiholeDns.rule=HostSNI(`*`)
+#      - traefik.tcp.routers.rou_PiholeDns.tls=true
+#      - traefik.tcp.routers.rou_PiholeDns.tls.options=default
+#      - traefik.tcp.routers.rou_PiholeDns.service=svc_PiholeDns
 
   # unbound container
   unbound:

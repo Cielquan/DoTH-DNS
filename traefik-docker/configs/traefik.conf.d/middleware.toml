@@ -12,7 +12,7 @@
 
 [http.middlewares]
 
-  [http.middlewares.secure_headers.headers]
+  [http.middlewares.mdw_SecureHeaders.headers]
     sslRedirect=true
     forceSTSHeader=true
     STSIncludeSubdomains=true
