@@ -71,7 +71,7 @@ services:
       - traefik.http.middlewares.redirect_pihole.redirectregex.permanent=true
       - traefik.http.middlewares.redirect_pihole.redirectregex.regex=^.*pi\.hole(.*)
       - traefik.http.middlewares.redirect_pihole.redirectregex.replacement=https://pihole.${DOMAIN}$$1
-      # remove and add /admin
+      # make sure `/admin` is there
       - traefik.http.middlewares.add_admin_path.replacepathregex.regex=^/((?i:(admin)/{0,1}|.{0})(.*))
       - traefik.http.middlewares.add_admin_path.replacepathregex.replacement=/admin/$$3
     ### routers
