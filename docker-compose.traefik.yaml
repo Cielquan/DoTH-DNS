@@ -46,10 +46,6 @@ services:
       # backend port
       - traefik.http.services.svc-traefik.loadbalancer.server.port=8080
     ### routers
-      # redirect http to https
-      - traefik.http.routers.rou-traefik.entrypoints=http
-      - traefik.http.routers.rou-traefik.rule=Host(`traefik.${DOMAIN}`)
-      - traefik.http.routers.rou-traefik.middlewares=https_redirect@file
       # traefik dashboard
       - traefik.http.routers.rou_encr-traefik.entrypoints=https
       - traefik.http.routers.rou_encr-traefik.rule=Host(`traefik.${DOMAIN}`)

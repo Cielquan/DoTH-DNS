@@ -74,11 +74,6 @@ services:
       # remove and add /admin
       - traefik.http.middlewares.add_admin.addprefix.prefix=/admin
     ### routers
-      # redirect http to https
-      - traefik.http.routers.rou_admin-pihole_gui.entrypoints=http
-      - traefik.http.routers.rou_admin-pihole_gui.rule=Host(`pihole.${DOMAIN}`,`pi.hole`) && PathPrefix(`/admin`)
-      - traefik.http.middlewares.chain1.chain.middlewares=redirect_pihole,https_redirect@file
-      - traefik.http.routers.rou_admin-pihole_gui.middlewares=chain1
       # pihole dashboard
       - traefik.http.routers.rou_encr_admin-pihole_gui.entrypoints=https
       - traefik.http.routers.rou_encr_admin-pihole_gui.rule=Host(`pihole.${DOMAIN}`,`pi.hole`) && PathPrefix(`/admin`)
