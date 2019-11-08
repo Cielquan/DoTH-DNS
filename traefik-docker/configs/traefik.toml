@@ -21,6 +21,8 @@
 
 [api]
   dashboard = true
+  insecure = false
+  debug = false
 
 [ping]
   entryPoint = "http"
@@ -32,8 +34,12 @@
 
 [log]
   level = "INFO" #DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+  format = "common" #json
+#  filePath = "/path/to/traefik.log"
 
 [accessLog]
+  format = "common" #json
+#  filePath = "/path/to/traefik_access.log"
 
 
 ########################################################################################################################
