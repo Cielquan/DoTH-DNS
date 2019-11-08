@@ -42,9 +42,6 @@ services:
       - traefik.enable=true
       - traefik.docker.network=traefik_proxy
   ##### http
-    ### services
-      # backend port
-      - traefik.http.services.svc_Traefik.loadbalancer.server.port=8080
     ### routers
       # traefik dashboard
       - traefik.http.routers.rou_Traefik.entrypoints=https
@@ -52,7 +49,7 @@ services:
       - traefik.http.routers.rou_Traefik.tls=true
       - traefik.http.routers.rou_Traefik.tls.options=default
       - traefik.http.routers.rou_Traefik.middlewares=mdw_SecureHeaders@file
-      - traefik.http.routers.rou_Traefik.service=svc_Traefik
+      - traefik.http.routers.rou_Traefik.service=api@internal
 
 
 networks:
