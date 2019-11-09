@@ -89,12 +89,11 @@ services:
 #      - traefik.tcp.services.svc_PiholeDns.loadbalancer.server.port=53
 #    ### routers
 #      # DoT forward
-#      - traefik.tcp.routers.rou_PiholeDns.entrypoints=dot
-##      - traefik.tcp.routers.rou_PiholeDns.rule=HostSNI(`dot.${DOMAIN}`)
-#      - traefik.tcp.routers.rou_PiholeDns.rule=HostSNI(`*`)
-#      - traefik.tcp.routers.rou_PiholeDns.tls=true
-#      - traefik.tcp.routers.rou_PiholeDns.tls.options=default
-#      - traefik.tcp.routers.rou_PiholeDns.service=svc_PiholeDns
+#      - traefik.tcp.routers.rou_PiholeDot.entrypoints=dot
+#      - traefik.tcp.routers.rou_PiholeDot.rule=HostSNI(`dot.${DOMAIN}`)
+#      - traefik.tcp.routers.rou_PiholeDot.tls=true
+#      - traefik.tcp.routers.rou_PiholeDot.tls.options=default
+#      - traefik.tcp.routers.rou_PiholeDot.service=svc_PiholeDns
 
   # unbound container
   unbound:
