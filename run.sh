@@ -54,7 +54,7 @@ exit_err() {
 
 
 # Catching flags
-while getopts ":RUhpP" flag; do
+while getopts ":RUhp:P" flag; do
   case $flag in
     R) # Restart conatiners. Accutally a recreation of the containers taking in changed configs.
       RECREATE_ALL='y'
