@@ -19,7 +19,7 @@ services:
   traefik:
     container_name: traefik
     hostname: ${HOSTNAME}
-    image: traefik:latest
+    image: traefik:v2.0
     environment:
       - TZ=${TZ:-Europe/London}
     volumes:
