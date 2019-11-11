@@ -1,7 +1,7 @@
 # DoTH DNS Change Log
 
 **Release 3.0.0** -
-- Renamed project from `DoTH-DNS` to `DoTH-DNS`
+- Renamed project to `DoTH-DNS`
 - Added `CHANGELOG.md` ([commit](https://github.com/Cielquan/DoTH-DNS/commit/6e8dada6eaa2316508b4d95bc658cde900969d0b))
 - Dropped TLSv1.2 in nginx stream config ([commit](https://github.com/Cielquan/DoTH-DNS/commit/0ab8f5f83ac02a7ccc70df8d7b7e0508ba2cb008))
 - Added global https redirect config ([commit](https://github.com/Cielquan/DoTH-DNS/commit/05a2cd61040724960348a3a5d879056f84734530))
