@@ -3,6 +3,14 @@
 **Release 3.0.0** -
 - Renamed project from `DoTH-DNS` to `DoTH-DNS`
 - Added `CHANGELOG.md` ([commit](https://github.com/Cielquan/DoTH-DNS/commit/6e8dada6eaa2316508b4d95bc658cde900969d0b))
+- Dropped TLSv1.2 in nginx stream config ([commit](https://github.com/Cielquan/DoTH-DNS/commit/0ab8f5f83ac02a7ccc70df8d7b7e0508ba2cb008))
+- Added global https redirect config ([commit](https://github.com/Cielquan/DoTH-DNS/commit/05a2cd61040724960348a3a5d879056f84734530))
+- Deleted old configs from `cert.toml` ([commit](https://github.com/Cielquan/DoTH-DNS/commit/84375bccb4141bbb80267582a3211e29ee155d52))
+- Changed middleware für adding `/admin` for pihole urls ([commit](https://github.com/Cielquan/DoTH-DNS/commit/34f6dde5f46a8f4b6500dcd2f0ef7dd8ee95040b))
+- Changed traefik custom name format to `xxx_XxxXxx` (3 letters of category, underscore, name in camelcase) ([commit](https://github.com/Cielquan/DoTH-DNS/commit/f90d70f4941edcf2f4d34c2cc3f78508249ac17e))
+- Updated traefik config for v2.0
+- Updated DoH server config to version 2.2.1 ([commit](https://github.com/Cielquan/DoTH-DNS/commit/212c9e6f3a5688ba40a071b75fb7081a619a1c1c))
+- Fixed error for `-p` flag in `run.sh` script ([commit](https://github.com/Cielquan/DoTH-DNS/commit/1eae3b5fb8658022153dc02743887994aa59b447))
 
 **Release 2.6.1** - 25.08.2019
 - Fixed `dnsmasq.conf` setup ([commit](https://github.com/Cielquan/DoTH-DNS/commit/5e7f2b0526accb7f2e1faf892962b0a697906c38))
