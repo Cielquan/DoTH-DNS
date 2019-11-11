@@ -1,5 +1,8 @@
 # [DoTH-DNS](https://github.com/Cielquan/DoTH-DNS)
 
+[![License: MIT](https://img.shields.io/github/license/Cielquan/DoTH-DNS)](https://github.com/Cielquan/DoTH-DNS/blob/master/LICENSE.md)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/Cielquan/DoTH-DNS)](https://github.com/Cielquan/DoTH-DNS/releases/latest)
+
 Utilizes the power of [pi-hole](https://pi-hole.net) and [unbound](https://www.nlnetlabs.nl/projects/unbound/about) 
 to create a DNS server under your own authority but with the abillity to use DoH 
 ([DNS over HTTPS](https://en.wikipedia.org/wiki/DNS_over_HTTPS)) and DoT ([DNS over TLS](https://en.wikipedia.org/wiki/DNS_over_TLS)).
@@ -217,7 +220,5 @@ Thanks to the creator of this [docker-pihole-unbound](https://github.com/chriscr
 Christian Riedel
 
 
-## Version and State
-Version: 2.6.1
-
-State: 25.08.2019
+## Versioning
+[SemVer](http://semver.org/) is used for versioning. For the versions available, see the [tags on this repository](https://github.com/Cielquan/DoTH-DNS/tags).
