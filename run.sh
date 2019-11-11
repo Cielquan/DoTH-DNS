@@ -54,7 +54,7 @@ exit_err() {
 
 
 # Catching flags
-while getopts ":RUhpP" flag; do
+while getopts ":RUhp:P" flag; do
   case $flag in
     R) # Restart conatiners. Accutally a recreation of the containers taking in changed configs.
       RECREATE_ALL='y'
@@ -90,37 +90,37 @@ done
 # Different start compositions
 if echo "${NO_PROXY}" | grep -q 'y'; then
   if echo "${UPDATE_ALL}" | grep -q 'y'; then
-    echo -e "\n${CYAN}INFO${BLANK}: Updating docker-pihole-unbound-encrypted without reverse proxy.\n"
+    echo -e "\n${CYAN}INFO${BLANK}: Updating DoTH-DNS without reverse proxy.\n"
     docker-compose down || exit_dc_err
     docker-compose pull || exit_dc_err
     docker-compose up -d --force-recreate || exit_dc_err
   elif echo "${RECREATE_ALL}" | grep -q 'y'; then
-    echo -e "\n${CYAN}INFO${BLANK}: Recreating docker-pihole-unbound-encrypted without reverse proxy.\n"
+    echo -e "\n${CYAN}INFO${BLANK}: Recreating DoTH-DNS without reverse proxy.\n"
     docker-compose down || exit_dc_err
     docker-compose up -d --force-recreate || exit_dc_err
   else
-    echo -e "\n${CYAN}INFO${BLANK}: Creating docker-pihole-unbound-encrypted without reverse proxy.\n"
+    echo -e "\n${CYAN}INFO${BLANK}: Creating DoTH-DNS without reverse proxy.\n"
     docker-compose up -d --quiet-pull || exit_dc_err
   fi
 else
   if echo "${UPDATE_ALL}" | grep -q 'y'; then
-    echo -e "\n${CYAN}INFO${BLANK}: Updating docker-pihole-unbound-encrypted with ${PROXY} reverse proxy.\n"
+    echo -e "\n${CYAN}INFO${BLANK}: Updating DoTH-DNS with ${PROXY} reverse proxy.\n"
     docker-compose -f docker-compose.yaml -f docker-compose."${PROXY}".yaml down || exit_dc_err
     docker-compose -f docker-compose.yaml -f docker-compose."${PROXY}".yaml pull || exit_dc_err
     docker-compose -f docker-compose.yaml -f docker-compose."${PROXY}".yaml up -d --force-recreate || exit_dc_err
   elif echo "${RECREATE_ALL}" | grep -q 'y'; then
-    echo -e "\n${CYAN}INFO${BLANK}: Rereating docker-pihole-unbound-encrypted with ${PROXY} reverse proxy.\n"
+    echo -e "\n${CYAN}INFO${BLANK}: Recreating DoTH-DNS with ${PROXY} reverse proxy.\n"
     docker-compose -f docker-compose.yaml -f docker-compose."${PROXY}".yaml down || exit_dc_err
     docker-compose -f docker-compose.yaml -f docker-compose."${PROXY}".yaml up -d --force-recreate || exit_dc_err
   else
-    echo -e "\n${CYAN}INFO${BLANK}: Creating docker-pihole-unbound-encrypted with ${PROXY} reverse proxy.\n"
+    echo -e "\n${CYAN}INFO${BLANK}: Creating DoTH-DNS with ${PROXY} reverse proxy.\n"
     docker-compose -f docker-compose.yaml -f docker-compose."${PROXY}".yaml up -d --quiet-pull || exit_dc_err
   fi
 fi
 
 
 echo -e "\n####################\n"
-echo -e "${CYAN}INFO${BLANK}: Starting docker-pihole-unbound-encrypted.\n"
+echo -e "${CYAN}INFO${BLANK}: Starting DoTH-DNS.\n"
 
 
 # Testing unbound-docker
@@ -288,10 +288,10 @@ if echo "${PROXY}" | grep -q 'traefik'; then
 fi
 
 
-echo -e "\n${GREEN}SUCCESS${BLANK}: docker-pihole-unbound-encrypted is up and running."
+echo -e "\n${GREEN}SUCCESS${BLANK}: DoTH-DNS is up and running."
 echo -e "\n####################\n"
 
 
 if echo "${RAN_PW}" | grep -q 'y'; then
-  echo -e "${ORANGE}ATTENTION${BLANK}:\nPlease don't forget to set a secure password for your pihole dashboard.\nRun 'sudo docker exec pihole pihole -a -p <NEW PASSWORD>' to change it.\n"
+  echo -e "${ORANGE}ATTENTION${BLANK}:\nPlease don't forget to set a secure password for your pihole dashboard.\nRun 'docker exec pihole pihole -a -p <NEW PASSWORD>' to change it.\n"
 fi

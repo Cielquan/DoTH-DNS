@@ -19,7 +19,7 @@ services:
   nginx:
     container_name: nginx
     hostname: ${HOSTNAME}
-    image: nginx:latest
+    image: nginx:1.17
     volumes:
       - ./nginx-docker/configs/:/etc/nginx/
       - ./certificates/certs/:/etc/ssl/certs/
@@ -39,13 +39,13 @@ services:
   ##### tcp
     ### services
       # backend port
-      - traefik.tcp.services.svc-nginx_dot.loadbalancer.server.port=853
+      - traefik.tcp.services.svc_NginxDot.loadbalancer.server.port=853
     ### routers
       # DoT forward
-      - traefik.tcp.routers.rou_encr-nginx_dot.entrypoints=dot
-      - traefik.tcp.routers.rou_encr-nginx_dot.rule=HostSNI(`*`)
-      - traefik.tcp.routers.rou_encr-nginx_dot.tls.passthrough=true
-      - traefik.tcp.routers.rou_encr-nginx_dot.service=svc-nginx_dot
+      - traefik.tcp.routers.rou_NginxDot.entrypoints=dot
+      - traefik.tcp.routers.rou_NginxDot.rule=HostSNI(`dot.${DOMAIN}`)
+      - traefik.tcp.routers.rou_NginxDot.tls.passthrough=true
+      - traefik.tcp.routers.rou_NginxDot.service=svc_NginxDot
 
   # træfik container
   traefik:
@@ -74,21 +74,14 @@ services:
       - traefik.enable=true
       - traefik.docker.network=traefik_proxy
   ##### http
-    ### services
-      # backend port
-      - traefik.http.services.svc-traefik.loadbalancer.server.port=8080
     ### routers
-      # redirect http to https
-      - traefik.http.routers.rou-traefik.entrypoints=http
-      - traefik.http.routers.rou-traefik.rule=Host(`traefik.${DOMAIN}`)
-      - traefik.http.routers.rou-traefik.middlewares=https_redirect@file
       # traefik dashboard
-      - traefik.http.routers.rou_encr-traefik.entrypoints=https
-      - traefik.http.routers.rou_encr-traefik.rule=Host(`traefik.${DOMAIN}`)
-      - traefik.http.routers.rou_encr-traefik.tls=true
-      - traefik.http.routers.rou_encr-traefik.tls.options=default
-      - traefik.http.routers.rou_encr-traefik.middlewares=secure_headers@file
-      - traefik.http.routers.rou_encr-traefik.service=svc-traefik
+      - traefik.http.routers.rou_Traefik.entrypoints=https
+      - traefik.http.routers.rou_Traefik.rule=Host(`traefik.${DOMAIN}`)
+      - traefik.http.routers.rou_Traefik.tls=true
+      - traefik.http.routers.rou_Traefik.tls.options=default
+      - traefik.http.routers.rou_Traefik.middlewares=mdw_SecureHeaders@file
+      - traefik.http.routers.rou_Traefik.service=api@internal
 
 
 networks:

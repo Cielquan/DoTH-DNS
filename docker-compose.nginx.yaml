@@ -7,7 +7,7 @@ services:
   nginx:
     container_name: nginx
     hostname: ${HOSTNAME}
-    image: nginx:latest
+    image: nginx:v1.17
     volumes:
       - ./nginx-docker/configs/:/etc/nginx/
       - ./certificates/certs/:/etc/ssl/certs/

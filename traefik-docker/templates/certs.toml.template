@@ -10,11 +10,9 @@
 # TLS certificates configuration
 ########################################################################################################################
 
-[tls.stores]
-  [tls.stores.default]
-    [tls.stores.default.defaultCertificate]
-      certFile = "/etc/ssl/certs/DOMAIN.crt"
-      keyFile = "/etc/ssl/private/DOMAIN.key"
+[[tls.certificates]]
+  certFile = "/etc/ssl/certs/DOMAIN.crt"
+  keyFile = "/etc/ssl/private/DOMAIN.key"
 
 [tls.options]
   [tls.options.default]
@@ -27,18 +25,9 @@
       "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
       "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
     ]
-#    cipherSuites = [
-#      "TLS_AES_256_GCM_SHA384",
-#      "TLS_CHACHA20_POLY1305_SHA256",
-#      "TLS_AES_128_GCM_SHA256",
-#    ]
-#    cipherSuites = [
-#      "HIGH:!aNULL:!MD5"
-#    ]
-# https://stackoverflow.com/questions/52128979/recommended-tls-ciphers-for-traefik
 
-
-[[tls.certificates]]
-  certFile = "/etc/ssl/certs/DOMAIN.crt"
-  keyFile = "/etc/ssl/private/DOMAIN.key"
-  stores = ["default"]
+[tls.stores]
+  [tls.stores.default]
+    [tls.stores.default.defaultCertificate]
+      certFile = "/etc/ssl/certs/DOMAIN.crt"
+      keyFile = "/etc/ssl/private/DOMAIN.key"

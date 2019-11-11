@@ -7,17 +7,23 @@
 
 
 ########################################################################################################################
-# Header configuration
+# HTTPS redirect configuration
 ########################################################################################################################
 
-[http.middlewares]
+[http.routers]
+  [http.routers.rou_GlobalHttps]
+    entryPoints = ["http"]
+    rule = "Host(`*`)"
+    priority = 1
+    middlewares =  ["mdw_HttpsRedirect"]
+    service = "svc_DummyService"
 
-  [http.middlewares.mdw_SecureHeaders.headers]
-    sslRedirect=true
-    forceSTSHeader=true
-    STSIncludeSubdomains=true
-    STSSeconds=63072000
-    STSPreload=true
-    browserXSSFilter=true
-    contentTypeNosniff=true
-    frameDeny=true
+[http.middlewares]
+  [http.middlewares.mdw_HttpsRedirect.redirectscheme]
+    permanent = true
+    scheme = "https"
+
+[http.services]
+  [http.services.svc_DummyService.loadBalancer]
+    [[http.services.svc_DummyService.loadBalancer.servers]]
+      url = "dummy.service"
