@@ -132,7 +132,7 @@ for i in $(seq 1 20); do
         break
     else
         sleep 3
-        echo -e -n "."
+        echo -n "."
     fi
 
     if [ "$i" -eq 20 ]; then
@@ -177,7 +177,7 @@ for i in $(seq 1 20); do
         break
     else
         sleep 3
-        echo -e -n "."
+        echo -n "."
     fi
 
     if [ "$i" -eq 20 ]; then
@@ -198,7 +198,7 @@ for i in $(seq 1 60); do
         break
     else
         sleep 10
-        echo -e -n "."
+        echo -n "."
     fi
 
     if [ "$i" -eq 60 ]; then
@@ -221,7 +221,7 @@ for i in $(seq 1 20); do
         break
     else
         sleep 3
-        echo -e -n "."
+        echo -n "."
     fi
 
     if [ "$i" -eq 20 ]; then
@@ -247,7 +247,7 @@ if echo "${PROXY}" | grep -q 'traefik' || echo "${PROXY}" | grep -q 'nginx'; the
           fi
       else
           sleep 3
-          echo -e -n "."
+          echo -n "."
       fi
 
       if [ "$i" -eq 20 ]; then
@@ -274,7 +274,7 @@ if echo "${PROXY}" | grep -q 'traefik'; then
           break
       else
           sleep 3
-          echo -e -n "."
+          echo -n "."
       fi
 
       if [ "$i" -eq 20 ]; then
