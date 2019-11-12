@@ -114,7 +114,7 @@ else
     docker-compose -f docker-compose.yaml -f docker-compose."${PROXY}".yaml up -d --force-recreate || exit_dc_err
   else
     echo -e "\n${CYAN}INFO${BLANK}: Creating DoTH-DNS with ${PROXY} reverse proxy.\n"
-    docker-compose -f docker-compose.yaml -f docker-compose."${PROXY}".yaml up -d --quiet-pull || exit_dc_err
+    docker-compose -f docker-compose.yaml -f docker-compose."${PROXY}".yaml up -d || exit_dc_err
   fi
 fi
 
