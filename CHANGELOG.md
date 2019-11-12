@@ -1,6 +1,11 @@
 # DoTH DNS Change Log
 
-**Release 3.0.0** -
+**Release 3.0.1** - 12.11.2019
+- Changed urls in `run.sh` script output from IP address to 'pi.hole' ([commit](https://github.com/Cielquan/DoTH-DNS/commit/cca5f92366388119563c9a5bb33039c702205f6f)) ([commit](https://github.com/Cielquan/DoTH-DNS/commit/28b2536bd7d493a0d61c19b2c2bcdff51f1484d9))
+- Fixed issue with `run.sh` script output while checking for pihole blocklist setup ([commit](https://github.com/Cielquan/DoTH-DNS/commit/7498f82113ff8f613268ecbad5c1f0429eb8dfc8))
+- Minor code clean up
+
+**Release 3.0.0** - 11.11.2019
 - Renamed project to `DoTH-DNS`
 - Added `CHANGELOG.md` ([commit](https://github.com/Cielquan/DoTH-DNS/commit/6e8dada6eaa2316508b4d95bc658cde900969d0b))
 - Dropped TLSv1.2 in nginx stream config ([commit](https://github.com/Cielquan/DoTH-DNS/commit/0ab8f5f83ac02a7ccc70df8d7b7e0508ba2cb008))
