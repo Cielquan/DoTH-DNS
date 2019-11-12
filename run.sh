@@ -192,9 +192,9 @@ echo -e -n "${CYAN}INFO${BLANK}: Container health status of 'pihole': " && docke
 # Check if blocklist setup is finished and when then restore custom conf; timeout after 10 min
 echo -e -n "${CYAN}INFO${BLANK}: Waiting for blocklist setup to finish "
 for i in $(seq 1 60); do
-    if [ "$(docker logs pihole | grep -c "\[services.d\] done.")" -gt 0 ]; then
+    if [ "$(docker logs pihole 2> /dev/null | grep -c "\[services.d\] done.")" -gt 0 ]; then
         echo -e -n " ${GREEN}OK${BLANK}"
-        echo -e "\n ${CYAN}INFO${BLANK}: Blocklists setup finished."
+        echo -e "\n${CYAN}INFO${BLANK}: Blocklists setup finished."
         break
     else
         sleep 10
