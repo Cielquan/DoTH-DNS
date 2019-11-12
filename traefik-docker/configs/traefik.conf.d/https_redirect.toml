@@ -13,7 +13,7 @@
 [http.routers]
   [http.routers.rou_GlobalHttps]
     entryPoints = ["http"]
-    rule = "Host(`*`)"
+    rule = "HostRegexp(`{host:.+}`)"
     priority = 1
     middlewares =  ["mdw_HttpsRedirect"]
     service = "svc_DummyService"
