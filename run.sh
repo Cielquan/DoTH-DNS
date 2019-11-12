@@ -168,7 +168,7 @@ for i in $(seq 1 20); do
         echo -e -n " ${GREEN}OK${BLANK}"
         HOST_IP=$(grep 'ServerIP' pihole-docker/configs/server.conf | sed 's/ServerIP=//')
         if [ "$(docker logs pihole 2> /dev/null | grep -c 'Setting password:')" -gt 0 ]; then
-            echo -e "\n${CYAN}INFO${BLANK}: $(docker logs pihole 2> /dev/null | grep 'Setting password:') for your pi-hole: https://${HOST_IP}/admin/."
+            echo -e "\n${CYAN}INFO${BLANK}: $(docker logs pihole 2> /dev/null | grep 'Setting password:') for your pi-hole: https://pi.hole/admin/."
             RAN_PW='y'
         else
             echo -e "\n${CYAN}INFO${BLANK}: Set given WEBPASSWORD for your pi-hole: https://${HOST_IP}/admin/."
