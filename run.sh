@@ -171,7 +171,7 @@ for i in $(seq 1 20); do
             echo -e "\n${CYAN}INFO${BLANK}: $(docker logs pihole 2> /dev/null | grep 'Setting password:') for your pi-hole: https://pi.hole/admin/."
             RAN_PW='y'
         else
-            echo -e "\n${CYAN}INFO${BLANK}: Set given WEBPASSWORD for your pi-hole: https://${HOST_IP}/admin/."
+            echo -e "\n${CYAN}INFO${BLANK}: Set given WEBPASSWORD for your pi-hole: https://pi.hole/admin/."
             RAN_PW='n'
         fi
         break
