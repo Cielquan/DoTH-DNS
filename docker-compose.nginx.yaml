@@ -6,7 +6,7 @@ services:
   # nginx container
   nginx:
     container_name: nginx
-    hostname: ${HOSTNAME}
+    hostname: ${HOST_NAME}
     image: nginx:v1.17
     volumes:
       - ./nginx-docker/configs/:/etc/nginx/

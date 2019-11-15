@@ -18,7 +18,7 @@ services:
   # nginx container
   nginx:
     container_name: nginx
-    hostname: ${HOSTNAME}
+    hostname: ${HOST_NAME}
     image: nginx:1.17
     volumes:
       - ./nginx-docker/configs/:/etc/nginx/
@@ -50,10 +50,10 @@ services:
   # træfik container
   traefik:
     container_name: traefik
-    hostname: ${HOSTNAME}
+    hostname: ${HOST_NAME}
     image: traefik:v2.0
     environment:
-      - TZ=${TZ:-Europe/London}
+      - TZ=${TIMEZONE:-Europe/London}
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock
