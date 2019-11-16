@@ -5,9 +5,6 @@
 *.list
 *.txt
 .env
-setup.conf
-server.conf
-certs.toml
 .htpasswd
 
 # Certificate files
