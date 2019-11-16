@@ -1,1 +1,1 @@
-Add your dhparam.pem file here.
+Add your `dhparam.pem`, `cert.crt` and `key.key` files here.
