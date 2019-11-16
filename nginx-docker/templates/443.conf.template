@@ -1,7 +1,7 @@
 server {
         listen 443 ssl default_server;
         listen [::]:443 ssl default_server;
-        include snippets/cert_${DOMAIN}.conf;
+        include snippets/cert.conf;
         include snippets/ssl-params.conf;
 
         server_name ${DOMAIN};

@@ -1,2 +1,0 @@
-ssl_certificate /etc/ssl/certs/${DOMAIN}.crt;
-ssl_certificate_key /etc/ssl/private/${DOMAIN}.key;
