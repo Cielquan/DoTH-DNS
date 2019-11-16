@@ -1,10 +1,10 @@
 server {
         listen 443 ssl default_server;
         listen [::]:443 ssl default_server;
-        include snippets/cert_DOMAIN.conf;
+        include snippets/cert_${DOMAIN}.conf;
         include snippets/ssl-params.conf;
 
-        server_name DOMAIN;
+        server_name ${DOMAIN};
         root /tmp/NOEXIST;
         access_log /var/log/nginx/dns.access.log;
 
