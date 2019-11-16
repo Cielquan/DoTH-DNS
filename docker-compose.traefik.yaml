@@ -38,9 +38,7 @@ services:
     restart: always
     command: >-
       /bin/bash -c
-      "envsubst < /etc/nginx/templates/cert_DOMAIN.conf.template > /etc/nginx/snippets/cert_${DOMAIN}.conf &&
-      envsubst < /etc/nginx/templates/dns-over-tls.conf.template > /etc/nginx/streams/dns-over-tls.conf &&
-      envsubst < /etc/nginx/templates/DOMAIN.conf.template > /etc/nginx/sites-enabled/${DOMAIN}.conf &&
+      "envsubst < /etc/nginx/templates/443.conf.template > /etc/nginx/sites-enabled/443.conf &&
       nginx -g 'daemon off;'"
     labels:
       - traefik.enable=true
