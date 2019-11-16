@@ -7,9 +7,12 @@ services:
   nginx:
     container_name: nginx
     hostname: ${HOST_NAME}
-    image: nginx:v1.17
+    image: nginx:1.17
+    environment:
+      - DOMAIN=${DOMAIN}
     volumes:
       - ./nginx-docker/configs/:/etc/nginx/
+      - ./nginx-docker/templates/:/etc/nginx/templates/
       - ./certificates/certs/:/etc/ssl/certs/
       - ./certificates/private/:/etc/ssl/private/
       - ./certificates/dhparam.pem:/etc/nginx/dhparam.pem
@@ -21,3 +24,9 @@ services:
       dns_network0:
         ipv4_address: 172.16.1.2
     restart: always
+    command: >-
+      /bin/bash -c
+      "envsubst < /etc/nginx/templates/cert_DOMAIN.conf.template > /etc/nginx/snippets/cert_${DOMAIN}.conf &&
+      envsubst < /etc/nginx/templates/dns-over-tls.conf.template > /etc/nginx/streams/dns-over-tls.conf &&
+      envsubst < /etc/nginx/templates/DOMAIN.conf.template > /etc/nginx/sites-enabled/${DOMAIN}.conf &&
+      nginx -g 'daemon off;'"
