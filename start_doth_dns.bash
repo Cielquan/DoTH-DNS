@@ -330,7 +330,7 @@ else
 fi
 
 # Compile doh server image
-if [[ ${_FLAG_COMPILE} == 'y' ]] ||
+if [[ "${_FLAG_COMPILE}" == 'y' ]] ||
     ! docker images | grep -q 'goofball222/dns-over-https' && printf "%s" "${ARCHITECTURE}" | grep -iq arm; then
   if
     VERSION="$(git ls-remote -t --refs  https://github.com/m13253/dns-over-https.git | tail -n1 |
