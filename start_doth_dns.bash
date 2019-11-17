@@ -61,7 +61,7 @@ exit_dc_err() {
 usage_string() {
   printf "\nUsage: %s [-f] [-a <arm|x86>] [-c] [-I <INTERFACE>] [-i <IP ADDRESS>] `
           `[-n <HOSTNAME>] [-t <TIMEZONE>] [-d <DOMAIN>] [-R] [-U] `
-          `[-p <traefik|nginx>] [-P] [-h]\n" "$0" 1>&2;
+          `[-p <traefik|nginx>] [-P] [-N] [-h]\n" "$0" 1>&2;
 }
 
 # Func for showing usage
@@ -80,7 +80,7 @@ help() {
 
 # ##########################################################################################
 # Catching flags
-while getopts ":fa:cI:i:n:t:d:RUp:Ph" flag; do
+while getopts ":fa:cI:i:n:t:d:RUp:PNh" flag; do
   case ${flag} in
     f) # Set for overwriting existing configs with new ones.
       _FLAG_FRESH='y'
@@ -125,6 +125,9 @@ while getopts ":fa:cI:i:n:t:d:RUp:Ph" flag; do
       ;;
     P) # Start without a reverse proxy. Overwrites '-p'.
       _FLAG_NO_PROXY='y'
+      ;;
+    N) # Deactivate traefik dashboard authorization
+      _FLAG_TRAEFIK_NOAUTH='y'
       ;;
     h) # Shows this help page.
       help
@@ -295,6 +298,17 @@ else
   fi
 fi
 
+# Set TRAEFIK_AUTH
+if ! [ -f traefik-docker/shared/.htpasswd ] || [[ "${_FLAG_TRAEFIK_NOAUTH}" == 'y' ]]; then
+  TRAEFIK_AUTH="NoAuth"
+  printf "%bINFO:   %b Treafik dashboard authorization is set to %bINACTIVE%b.\n" \
+          "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+else
+  TRAEFIK_AUTH="Auth"
+  printf "%bINFO:   %b Treafik dashboard authorization is set to %bACTIVE%b.\n" \
+          "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+fi
+
 
 # ##########################################################################################
 ### Change architecture specific stuff based on ARCHITECTURE
@@ -399,9 +413,9 @@ else
   printf "\n%bINFO:   %b Creating '.env' file.\n" "${CYAN}" "${BLANK}"
   _NEW_ENV='Created new'
 fi
-if printf "HOST_NAME=%s\nDOMAIN=%s\nTIMEZONE=%s\nUNBOUND_VARIANT=%s\nARCHITECTURE=%s\nINTERFACE=%s\nHOST_IP=%s" \
-            "${HOST_NAME}" "${DOMAIN}" "${TIMEZONE}" "${UNBOUND_VARIANT}" "${ARCHITECTURE}" \
-            "${INTERFACE}" "${HOST_IP}" | tee .env > /dev/null; then
+if printf "HOST_NAME=%s\nDOMAIN=%s\nTIMEZONE=%s\nUNBOUND_VARIANT=%s\nARCHITECTURE=%s\nINTERFACE=%s\nHOST_IP=%s`
+            `\nTRAEFIK_AUTH=%s" "${HOST_NAME}" "${DOMAIN}" "${TIMEZONE}" "${UNBOUND_VARIANT}" "${ARCHITECTURE}" \
+            "${INTERFACE}" "${HOST_IP}" "${TRAEFIK_AUTH}" | tee .env > /dev/null; then
   printf "%bSUCCESS:%b ${_NEW_ENV} '.env' file.\n" "${GREEN}" "${BLANK}"
 else
   if [ -f .env ]; then
