@@ -60,8 +60,8 @@ exit_dc_err() {
 # Func for showing usage string
 usage_string() {
   printf "\nUsage: %s [-f] [-a <arm|x86>] [-c] [-I <INTERFACE>] [-i <IP ADDRESS>] `
-          `[-n <HOSTNAME>] [-t <TIMEZONE>] [-d <DOMAIN>] [-R] [-U] `
-          `[-p <traefik|nginx>] [-P] [-N] [-h]\n" "$0" 1>&2;
+          `[-n <HOSTNAME>] [-t <TIMEZONE>] [-d <DOMAIN>] [-N] [-R] [-U] `
+          `[-p <traefik|nginx>] [-P] [-h]\n" "$0" 1>&2;
 }
 
 # Func for showing usage
