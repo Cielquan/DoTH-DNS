@@ -412,22 +412,6 @@ fi
 
 
 # ##########################################################################################
-# Auto create 'pihole-docker/configs/pihole/lan.list' file if not there
-printf "\n%bINFO:   %b Checking for 'pihole-docker/configs/pihole/lan.list' file.\n" "${CYAN}" "${BLANK}"
-if ! [ -f pihole-docker/configs/pihole/lan.list ] || [[ "${_FLAG_FRESH}" == 'y' ]]; then
-  if touch pihole-docker/configs/pihole/lan.list; then
-    printf "%bSUCCESS:%b Created 'pihole-docker/configs/pihole/lan.list' file.\n" "${GREEN}" "${BLANK}"
-  else
-    printf "%bERROR:  %b Error while creating 'pihole-docker/configs/pihole/lan.list' file. The file was not `
-            `created.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-else
-  printf "%bSUCCESS:%b Found 'pihole-docker/configs/pihole/lan.list' file.\n" "${GREEN}" "${BLANK}"
-fi
-
-
-# ##########################################################################################
 # Check for host IP/DOMAIN mapping in 'pihole-docker/configs/dnsmasq.d/dnsmasq.conf'
 printf "\n%bINFO:   %b Checking for 'pihole-docker/configs/dnsmasq.d/dnsmasq.conf' file.\n" "${CYAN}" "${BLANK}"
 if ! [ -f pihole-docker/configs/dnsmasq.d/dnsmasq.conf ] || [[ "${_FLAG_FRESH}" == 'y' ]] ||
