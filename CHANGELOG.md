@@ -1,5 +1,18 @@
 # DoTH DNS Change Log
 
+**Release 4.0.0** - 17.11.2019
+- Added detection for `.htpasswd` file and auto setting traefik dashboard authZ on or off & added `-N` flag to deactivate ([commit](https://github.com/Cielquan/DoTH-DNS/commit/51d24cef59aeb485e7b403fea9e996424d34bd9b))
+- Moved dnsmasq's conf setup from script to container via script for s6 ([commit](https://github.com/Cielquan/DoTH-DNS/commit/0971352710634728599221745460ed3260b2419e))
+- Merged `setup.sh` and `run.sh` into new simplified `start_doth_dns.bash` script ([commit](https://github.com/Cielquan/DoTH-DNS/commit/1442597736ff25eeeafc587345d2500a824d7d6e))
+- Restructured `certificates` directory ([commit](https://github.com/Cielquan/DoTH-DNS/commit/43991d4091c3df069d7e3ba16f8aed83b8537cae)) 
+- Changed cert and key file from being dynamic to being static & renamed `cert.toml` to `tls.toml` ([commit](https://github.com/Cielquan/DoTH-DNS/commit/32ae66d1b0290c04129e4c8f3a412c341bf4393d))
+- Moved nginx conf setup from script into docker command ([commit](https://github.com/Cielquan/DoTH-DNS/commit/4848143d21287dda2605724b45d3c4b16cf0c3ae))
+- Renamed some Env Vars in compose files to match script Vars & moved pihole Env Vars from conf files to compose ([commit](https://github.com/Cielquan/DoTH-DNS/commit/a54283a593ce9252f6756cec90a9fec67003e6fd))
+- Made nginx HTTPS redirect a global static setting ([commit](https://github.com/Cielquan/DoTH-DNS/commit/b0ff0723df0cef27712d5e016621842bbea23599))
+- Updated README ([commit](https://github.com/Cielquan/DoTH-DNS/commit/490a72a0dfd25ec88fe76535edf6ea7724fed556))
+- Smaller code and file cleanups
+- Smaller fixes
+
 **Release 3.0.2** - 12.11.2019
 - Fixed catchall rule for global HTTPS redirect ([commit](https://github.com/Cielquan/DoTH-DNS/commit/15cc7c9306e05c4361d8477272db0dc50af29d0c))
 
