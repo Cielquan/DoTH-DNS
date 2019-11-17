@@ -412,24 +412,6 @@ fi
 
 
 # ##########################################################################################
-# Check for host IP/DOMAIN mapping in 'pihole-docker/configs/dnsmasq.d/dnsmasq.conf'
-printf "\n%bINFO:   %b Checking for 'pihole-docker/configs/dnsmasq.d/dnsmasq.conf' file.\n" "${CYAN}" "${BLANK}"
-if ! [ -f pihole-docker/configs/dnsmasq.d/dnsmasq.conf ] || [[ "${_FLAG_FRESH}" == 'y' ]] ||
-    ! grep -qw -e "${DOMAIN}" 'pihole-docker/configs/dnsmasq.d/dnsmasq.conf'; then
-  if printf "addn-hosts=/etc/pihole/lan.list\naddress=/%s/%s" "${DOMAIN}" "${HOST_IP}" \
-        > pihole-docker/configs/dnsmasq.d/dnsmasq.conf; then
-    printf "%bSUCCESS:%b Created/Overwrote 'pihole-docker/configs/dnsmasq.d/dnsmasq.conf' file.\n" "${GREEN}" "${BLANK}"
-  else
-    printf "%bERROR:  %b 'pihole-docker/configs/dnsmasq.d/dnsmasq.conf' file could not be created/overwritten.\n" \
-            "${RED}" "${BLANK}"
-    exit_err
-  fi
-else
-  printf "%bSUCCESS:%b Found 'pihole-docker/configs/dnsmasq.d/dnsmasq.conf' file.\n" "${GREEN}" "${BLANK}"
-fi
-
-
-# ##########################################################################################
 # Creating/Overwriting '.env' file
 if [ -f .env ]; then
   printf "\n%bINFO:   %b Overwriting '.env' file.\n" "${CYAN}" "${BLANK}"

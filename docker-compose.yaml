@@ -44,10 +44,13 @@ services:
       - ServerIP=${HOST_IP}
       - DNS1=172.16.1.5#53
       - DNS2=no
+      - DOMAIN=${DOMAIN}
+      - HOST_IP=${HOST_IP}
     volumes:
       - ./pihole-docker/resolv.conf:/etc/resolv.conf
       - ./pihole-docker/configs/pihole/:/etc/pihole/
       - ./pihole-docker/configs/dnsmasq.d/dnsmasq.conf:/etc/dnsmasq.d/02-custom.conf
+      - ./pihole-docker/01-conf-dnsmasq.sh:/etc/cont-init.d/01-conf-dnsmasq.sh
     ports:
       - "53:53/tcp"
       - "53:53/udp"
