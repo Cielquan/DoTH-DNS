@@ -74,13 +74,14 @@ services:
       # make sure `/admin` is there
       - traefik.http.middlewares.mdw_AddAdminPath.replacepathregex.regex=^/((?i:(admin)/{0,1}|.{0})(.*))
       - traefik.http.middlewares.mdw_AddAdminPath.replacepathregex.replacement=/admin/$$3
+      # pihole chain
+      - traefik.http.middlewares.mdw_PiholeChain.chain.middlewares=mdw_RedirectPihole,mdw_AddAdminPath,mdw_SecureHeaders@file
     ### routers
       # pihole dashboard
       - traefik.http.routers.rou_PiholeGui.entrypoints=https
       - traefik.http.routers.rou_PiholeGui.rule=Host(`pihole.${DOMAIN}`,`pi.hole`)
       - traefik.http.routers.rou_PiholeGui.tls=true
       - traefik.http.routers.rou_PiholeGui.tls.options=default
-      - traefik.http.middlewares.mdw_PiholeChain.chain.middlewares=mdw_RedirectPihole,mdw_AddAdminPath,mdw_SecureHeaders@file
       - traefik.http.routers.rou_PiholeGui.middlewares=mdw_PiholeChain
       - traefik.http.routers.rou_PiholeGui.service=svc_PiholeGui
 #  ##### tcp
