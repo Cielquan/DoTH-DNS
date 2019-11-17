@@ -713,6 +713,6 @@ printf "\n####################\n\n"
 # ##########################################################################################
 # Warning when default random password is set at pihole
 if echo "${RAN_PW}" | grep -q 'y'; then
-  printf "%sATTENTION:%s\nPlease don't forget to set a secure password for your pihole dashboard.\n`
+  printf "%bATTENTION:%b\nPlease don't forget to set a secure password for your pihole dashboard.\n`
           `Run 'docker exec pihole pihole -a -p <NEW PASSWORD>' to change it.\n\n" "${ORANGE}" "${BLANK}"
 fi
