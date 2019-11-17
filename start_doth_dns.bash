@@ -228,27 +228,6 @@ else
   fi
 fi
 
-## Get IP + bit length of subnet for given INTERFACE if not set
-#if [[ -n "${_FLAG_HOST_IP_W_SUBNET}" ]]; then
-#  if HOST_IP_W_SUBNET="${_FLAG_HOST_IP_W_SUBNET}"; then
-#    printf "%bINFO:   %b HOST_IP_W_SUBNET set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${HOST_IP_W_SUBNET}"
-#  else
-#    printf "%bERROR:  %b Failed to set HOST_IP_W_SUBNET by CLI argument.\n" "${RED}" "${BLANK}"
-#    exit_err
-#  fi
-#else
-#  if [[ -n "${HOST_IP_W_SUBNET}" ]]; then
-#    printf "%bINFO:   %b HOST_IP_W_SUBNET set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${HOST_IP_W_SUBNET}"
-#  else
-#    if HOST_IP_W_SUBNET=$(ip -o -4 addr show | grep "${INTERFACE}" | awk '/scope global/ {print $4}'); then
-#      printf "%bINFO:   %b HOST_IP_W_SUBNET was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${HOST_IP_W_SUBNET}"
-#    else
-#      printf "%bERROR:  %b HOST_IP_W_SUBNET was not set und could not be determined. `
-#              `Please set HOST_IP_W_SUBNET in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
-#      exit_err
-#    fi
-#  fi
-#fi
 
 # Set HOSTNAME
 if [[ -n "${_FLAG_HOST_NAME}" ]]; then
