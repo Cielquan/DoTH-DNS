@@ -3,57 +3,6 @@ version: '3.5'
 
 services:
 
-  # DoH server container
-  doh_server:
-    networks:
-      traefik_proxy:
-        ipv4_address: 172.16.0.3
-
-  # pihole container
-  pihole:
-    networks:
-      traefik_proxy:
-        ipv4_address: 172.16.0.4
-
-  # nginx container
-  nginx:
-    container_name: nginx
-    hostname: ${HOST_NAME}
-    image: nginx:1.17
-    environment:
-      - DOMAIN=${DOMAIN}
-    volumes:
-      - ./nginx-docker/configs/:/etc/nginx/
-      - ./nginx-docker/templates/:/etc/nginx/templates/
-      - ./certificates/cert.crt:/etc/ssl/certs/cert.crt
-      - ./certificates/key.key:/etc/ssl/private/key.key
-      - ./certificates/dhparam.pem:/etc/nginx/dhparam.pem
-    expose:
-      - 853
-    networks:
-      dns_network0:
-        ipv4_address: 172.16.1.2
-      traefik_proxy:
-        ipv4_address: 172.16.0.2
-    restart: always
-    command: >-
-      /bin/bash -c
-      "envsubst < /etc/nginx/templates/443.conf.template > /etc/nginx/sites-enabled/443.conf &&
-      nginx -g 'daemon off;'"
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=traefik_proxy
-  ##### tcp
-    ### services
-      # backend port
-      - traefik.tcp.services.svc_NginxDot.loadbalancer.server.port=853
-    ### routers
-      # DoT forward
-      - traefik.tcp.routers.rou_NginxDot.entrypoints=dot
-      - traefik.tcp.routers.rou_NginxDot.rule=HostSNI(`dot.${DOMAIN}`)
-      - traefik.tcp.routers.rou_NginxDot.tls.passthrough=true
-      - traefik.tcp.routers.rou_NginxDot.service=svc_NginxDot
-
   # træfik container
   traefik:
     container_name: traefik
