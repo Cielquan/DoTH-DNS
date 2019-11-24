@@ -9,26 +9,25 @@ to create a DNS server under your own authority but with the abillity to use DoH
 
 
 ## Disclaimer
-Use at own risk. This project is made for linux. I run it on my raspberry pi 3b+ with raspbian buster lite. 
+Use at own risk. This project is made for docker. I run it on my raspberry pi 3b+ with raspbian buster lite. 
 
 
 ## Description
 This project's goal is setup a DNS server inside docker with the option to connect via DoH or DoT. 
-Therefor pi-hole, unbound, traefik/nginx and a [DoH-server](https://github.com/m13253/dns-over-https) are utilized. 
+Therefor pi-hole, unbound, traefik and a [DoH-server](https://github.com/m13253/dns-over-https) are utilized. 
 
 You may ask 'Why use DoH or DoT for an local DNS server?'. Good question! I set this up because firefox needs you to use 
 DoH if you want to use [ESNI](https://en.wikipedia.org/wiki/Server_Name_Indication). The DoT support was just some lines 
 of code more so I did it also. 
 
 The docker-compose file creates a bridge network and the following containers: 
-`pi-hole/pi-hole`, `mvance:unbound`, `nginx`, `traefik`, `goofball222/dns-over-https`. 
-When using traefik a second bridge network will be created.
+`pi-hole/pi-hole`, `mvance:unbound`, `traefik`, `goofball222/dns-over-https`. 
 
 Query forwarding: 
 * Normal DNS query: port 53 -> pihole -> unbound 
-* DoT query: port 853 -> nginx/traefik -> pihole -> unbound 
-* DoH query: port 443 -> nginx/traefik -> DoH-server -> pihole -> unbound 
-* pihole dashboard query: port 80/443 -> nginx/traefik -> pihole (HTTP is forwarded to HTTPS) 
+* DoT query: port 853 -> traefik -> pihole -> unbound 
+* DoH query: port 443 -> traefik -> DoH-server -> pihole -> unbound 
+* pihole dashboard query: port 80/443 -> traefik -> pihole (HTTP is forwarded to HTTPS) 
 
 
 ## Instructions
@@ -110,18 +109,11 @@ Here is an overview of the available flags for running when calling the script. 
 
 * `-U`): Set to recreate and update all containers.
 
-* `-p`): Set with either `traefik` or `nginx` to use either reverse proxy. Default: `traefik`
-
-* `-P`): Set to start without a reverse proxy. Overwrites `-p` flag.
+* `-P`): Set to start without reverse proxy (`traefik`).
 
 ### Reverse proxy
-You have three options for the reverse proxy. None, the old one `ngnix` and the new one `traefik`. 
-If you want to use none you have to set the flag `-P` when running the script. For setting `nginx` or `traefik`
-you have to set the flag `-p` followed by `ngnix` or `traefik` (case insensitive). The latter is the default.
-
-Currently traefik does not work solo. I am working on getting the DoT part to work. 
-Till then DoT traffic is passed through by traefik to ngnix to handle.
-When traefik works solo ngnix may be deprecated.
+You have two options for the reverse proxy: `None` or `traefik`. 
+If you want to use `None` you have to set the flag `-P` when running the script else `traefik` will be used.
 
 
 ## Get help
@@ -129,8 +121,6 @@ When traefik works solo ngnix may be deprecated.
 * Pi-hole image [documentation](https://github.com/pi-hole/docker-pi-hole/blob/master/README.md)
 * Unbound [documentation](https://www.nlnetlabs.nl/documentation/unbound/)
 * Unbound image [documentation](https://github.com/MatthewVance/unbound-docker-rpi/blob/master/README.md)
-* nginx [documentation](https://nginx.org/en/docs/)
-* nginx image [documentation](https://github.com/docker-library/docs/blob/master/nginx/README.md)
 * traefik [documentation](https://docs.traefik.io/v2.0/)
 * dns-over-https [documentation](https://github.com/m13253/dns-over-https/blob/master/Readme.md)
 * dns-over-https image [documentation](https://github.com/goofball222/dns-over-https/blob/master/README.md)
@@ -150,7 +140,7 @@ The rights of the docker images and software lie by their creators.
 
 
 ## Acknowledgements
-Thanks to the creators of docker, pi-hole, unbound, nginx, traefik and 'dns-over-https' for their awesome software. Also thanks you 
+Thanks to the creators of docker, pi-hole, unbound, traefik and 'dns-over-https' for their awesome software. Also thanks you 
 to the maintainers of the images.
 
 Thanks to the creator of this [docker-pihole-unbound](https://github.com/chriscrowe/docker-pihole-unbound) project which inspired me.
