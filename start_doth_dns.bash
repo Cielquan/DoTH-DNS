@@ -601,7 +601,7 @@ printf "%bINFO:   %b Container health status of 'doh_server': `
 
 # ##########################################################################################
 ### Testing nginx-docker
-if [[ "${_FLAG_PROXY}" == 'traefik' ]] || [[ "${_FLAG_PROXY}" == 'nginx' ]]; then
+if [[ "${_FLAG_PROXY}" == 'nginx' ]]; then
   # Check if container started and is running; timeout after 1 min
   printf "\n%bINFO:   %b Starting up nginx container " "${CYAN}" "${BLANK}"
   for i in $(seq 1 20); do
