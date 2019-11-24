@@ -1,5 +1,9 @@
 # DoTH DNS Change Log
 
+**Release 5.0.0** - 24.11.2019
+- Removed `nginx` support ([commit](https://github.com/Cielquan/DoTH-DNS/commit/e63567409815e0c511353baee5593a9d888f4d43))
+- Removed second docker network ([commit](https://github.com/Cielquan/DoTH-DNS/commit/4beb000a6d79e01eff459d09816aa3fc3ae2d60b))
+
 **Release 4.0.0** - 17.11.2019
 - Added detection for `.htpasswd` file and auto setting traefik dashboard authZ on or off & added `-N` flag to deactivate ([commit](https://github.com/Cielquan/DoTH-DNS/commit/51d24cef59aeb485e7b403fea9e996424d34bd9b))
 - Moved dnsmasq's conf setup from script to container via script for s6 ([commit](https://github.com/Cielquan/DoTH-DNS/commit/0971352710634728599221745460ed3260b2419e))
