@@ -13,12 +13,12 @@ services:
     expose:
       - "8053"
     networks:
-      dns_network0:
+      dns_network:
         ipv4_address: 172.16.1.3
     restart: always
     labels:
       - traefik.enable=true
-      - traefik.docker.network=${TRAEFIK_NETWORK:-traefik_proxy}
+      - traefik.docker.network=${TRAEFIK_NETWORK:-dns_network}
   ##### http
     ### services
       # backend port
@@ -57,14 +57,14 @@ services:
     expose:
       - "80"
     networks:
-      dns_network0:
+      dns_network:
         ipv4_address: 172.16.1.4
     dns:
       - 127.0.0.1
     restart: always
     labels:
       - traefik.enable=true
-      - traefik.docker.network=${TRAEFIK_NETWORK:-traefik_proxy}
+      - traefik.docker.network=${TRAEFIK_NETWORK:-dns_network}
   ##### http
     ### services
       # backend port
@@ -113,7 +113,7 @@ services:
     expose:
       - "53"
     networks:
-      dns_network0:
+      dns_network:
         ipv4_address: 172.16.1.5
     restart: always
     labels:
@@ -122,8 +122,8 @@ services:
 
 networks:
   # Bridge network for internal communication
-  dns_network0:
-    name: dns_network0
+  dns_network:
+    name: dns_network
     driver: bridge
     driver_opts:
       encrypted: "true"

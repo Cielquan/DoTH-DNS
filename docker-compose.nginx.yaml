@@ -21,8 +21,8 @@ services:
       - "443:443"
       - "853:853"
     networks:
-      dns_network0:
-        ipv4_address: 172.16.1.2
+      dns_network:
+        ipv4_address: 172.16.1.249
     restart: always
     command: >-
       /bin/bash -c

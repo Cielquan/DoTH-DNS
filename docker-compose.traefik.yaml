@@ -74,12 +74,12 @@ services:
       - "853:853"
       - "8080:8080"
     networks:
-      traefik_proxy:
-        ipv4_address: 172.16.0.250
+      dns_network:
+        ipv4_address: 172.16.1.250
     restart: always
     labels:
       - traefik.enable=true
-      - traefik.docker.network=traefik_proxy
+      - traefik.docker.network=dns_network
   ##### https
     ### middleware
       # dashboard auth
@@ -95,16 +95,3 @@ services:
       - traefik.http.routers.rou_Traefik.tls.options=default
       - traefik.http.routers.rou_Traefik.middlewares=mdw_TraefikChain${TRAEFIK_AUTH:-NoAuth}
       - traefik.http.routers.rou_Traefik.service=api@internal
-
-
-networks:
-  # Bridge network for træfik's communication
-  traefik_proxy:
-    name: traefik_proxy
-    driver: bridge
-    driver_opts:
-      encrypted: "true"
-    ipam:
-      config:
-        - subnet: 172.16.0.0/24
-    attachable: false
