@@ -60,8 +60,7 @@ exit_dc_err() {
 # Func for showing usage string
 usage_string() {
   printf "\nUsage: %s [-f] [-a <arm|x86>] [-c] [-I <INTERFACE>] [-i <IP ADDRESS>] `
-          `[-n <HOSTNAME>] [-t <TIMEZONE>] [-d <DOMAIN>] [-N] [-R] [-U] `
-          `[-p <traefik|nginx>] [-P] [-h]\n" "$0" 1>&2;
+          `[-n <HOSTNAME>] [-t <TIMEZONE>] [-d <DOMAIN>] [-N] [-R] [-U] [-P] [-h]\n" "$0" 1>&2;
 }
 
 # Func for showing usage
@@ -80,7 +79,7 @@ help() {
 
 # ##########################################################################################
 # Catching flags
-while getopts ":fa:cI:i:n:t:d:RUp:PNh" flag; do
+while getopts ":fa:cI:i:n:t:d:RUPNh" flag; do
   case ${flag} in
     f) # Set for overwriting existing configs with new ones.
       _FLAG_FRESH='y'
@@ -116,14 +115,7 @@ while getopts ":fa:cI:i:n:t:d:RUp:PNh" flag; do
     U) # Update all containers with newer images if available and recreate them.
       _FLAG_UPDATE_ALL='y'
       ;;
-    p) # Set reverse proxy to use. 'ngnix' or 'traefik' (case insensitive). Default: traefik
-      if ! [[ "${OPTARG,,}" == 'nginx' ]] && ! [[ "${OPTARG,,}" == 'traefik' ]]; then
-        printf "No valid argument for '-p'.\n"
-        exit_arg_err
-      fi
-      _FLAG_PROXY=${OPTARG,,}
-      ;;
-    P) # Start without a reverse proxy. Overwrites '-p'.
+    P) # Start without reverse proxy (`traefik`).
       _FLAG_NO_PROXY='y'
       ;;
     N) # Deactivate traefik dashboard authorization
@@ -452,24 +444,20 @@ if [[ "${_FLAG_NO_PROXY}" == 'y' ]]; then
     docker-compose up -d || exit_dc_err
   fi
 else
-  # If no proxy is set fall back to 'traefik'
-  if [[ -z "${_FLAG_PROXY}" ]]; then
-    _FLAG_PROXY="traefik"
-  fi
   if [[ "${_FLAG_UPDATE_ALL}" == 'y' ]]; then
-    printf "%bINFO:   %b Updating DoTH-DNS with %b%s%b reverse proxy.\n" \
-            "${CYAN}" "${BLANK}" "${CYAN}" "${_FLAG_PROXY}" "${BLANK}"
-    docker-compose -f docker-compose.yaml -f docker-compose."${_FLAG_PROXY}".yaml down || exit_dc_err
-    docker-compose -f docker-compose.yaml -f docker-compose."${_FLAG_PROXY}".yaml pull || exit_dc_err
-    docker-compose -f docker-compose.yaml -f docker-compose."${_FLAG_PROXY}".yaml up -d --force-recreate || exit_dc_err
+    printf "%bINFO:   %b Updating DoTH-DNS with %btraefik%b reverse proxy.\n" \
+            "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+    docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml down || exit_dc_err
+    docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml pull || exit_dc_err
+    docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml up -d --force-recreate || exit_dc_err
   elif [[ "${_FLAG_RECREATE_ALL}" == 'y' ]]; then
-    printf "%bINFO:   %b Recreating DoTH-DNS with %b%s%b reverse proxy.\n" \
-            "${CYAN}" "${BLANK}" "${CYAN}" "${_FLAG_PROXY}" "${BLANK}"
-    docker-compose -f docker-compose.yaml -f docker-compose."${_FLAG_PROXY}".yaml up -d --force-recreate || exit_dc_err
+    printf "%bINFO:   %b Recreating DoTH-DNS with %btraefik%b reverse proxy.\n" \
+            "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+    docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml up -d --force-recreate || exit_dc_err
   else
-    printf "%bINFO:   %b Creating DoTH-DNS with %b%s%b reverse proxy.\n" \
-            "${CYAN}" "${BLANK}" "${CYAN}" "${_FLAG_PROXY}" "${BLANK}"
-    docker-compose -f docker-compose.yaml -f docker-compose."${_FLAG_PROXY}".yaml up -d || exit_dc_err
+    printf "%bINFO:   %b Creating DoTH-DNS with %btraefik%b reverse proxy.\n" \
+            "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+    docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml up -d || exit_dc_err
   fi
 fi
 
@@ -600,39 +588,8 @@ printf "%bINFO:   %b Container health status of 'doh_server': `
 
 
 # ##########################################################################################
-### Testing nginx-docker
-if [[ "${_FLAG_PROXY}" == 'nginx' ]]; then
-  # Check if container started and is running; timeout after 1 min
-  printf "\n%bINFO:   %b Starting up nginx container " "${CYAN}" "${BLANK}"
-  for i in $(seq 1 20); do
-    if [ "$(docker inspect -f "{{.State.Status}}" nginx)" == "running" ]; then
-      sleep 5
-      if [ "$(docker inspect -f "{{.State.Status}}" nginx)" == "running" ]; then
-        printf " %bOK%b\n" "${GREEN}" "${BLANK}"
-        break
-      fi
-    else
-      sleep 3
-      printf "."
-    fi
-
-    if [ "$i" -eq 20 ]; then
-      printf " %bFAILED%b\n" "${RED}" "${BLANK}"
-      printf "%bERROR:  %b Timed out waiting for nginx to start, check your container logs for more info `
-              `(\`docker logs nginx\`).\n" "${RED}" "${BLANK}"
-      printf "%bINFO:   %b Container health status of 'nginx': `
-            `%b$(docker inspect -f "{{.State.Status}}" nginx)%b\n" "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
-      exit_err
-    fi
-  done;
-  printf "%bINFO:   %b Container health status of 'nginx': `
-        `%b$(docker inspect -f "{{.State.Status}}" nginx)%b\n" "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
-fi
-
-
-# ##########################################################################################
 ### Testing traefik-docker
-if [[ "${_FLAG_PROXY}" == 'traefik' ]]; then
+if ! [[ "${_FLAG_NO_PROXY}" == 'y' ]]; then
   # Check if container started and is running; timeout after 1 min
   printf "\n%bINFO:   %b Starting up traefik container " "${CYAN}" "${BLANK}"
   for i in $(seq 1 20); do
@@ -659,7 +616,6 @@ if [[ "${_FLAG_PROXY}" == 'traefik' ]]; then
   printf "%bINFO:   %b Container health status of 'traefik': `
           `%b$(docker inspect -f "{{.State.Status}}" traefik)%b\n" "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
 fi
-
 
 # ##########################################################################################
 # Finishing line
