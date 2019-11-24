@@ -446,7 +446,6 @@ if [[ "${_FLAG_NO_PROXY}" == 'y' ]]; then
     docker-compose up -d --force-recreate || exit_dc_err
   elif [[ "${_FLAG_RECREATE_ALL}" == 'y' ]]; then
     printf "%bINFO:   %b Recreating DoTH-DNS without reverse proxy.\n" "${CYAN}" "${BLANK}"
-    docker-compose down || exit_dc_err
     docker-compose up -d --force-recreate || exit_dc_err
   else
     printf "%bINFO:   %b Creating DoTH-DNS without reverse proxy.\n" "${CYAN}" "${BLANK}"
@@ -466,7 +465,6 @@ else
   elif [[ "${_FLAG_RECREATE_ALL}" == 'y' ]]; then
     printf "%bINFO:   %b Recreating DoTH-DNS with %b%s%b reverse proxy.\n" \
             "${CYAN}" "${BLANK}" "${CYAN}" "${_FLAG_PROXY}" "${BLANK}"
-    docker-compose -f docker-compose.yaml -f docker-compose."${_FLAG_PROXY}".yaml down || exit_dc_err
     docker-compose -f docker-compose.yaml -f docker-compose."${_FLAG_PROXY}".yaml up -d --force-recreate || exit_dc_err
   else
     printf "%bINFO:   %b Creating DoTH-DNS with %b%s%b reverse proxy.\n" \
