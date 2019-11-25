@@ -21,7 +21,7 @@ DoH if you want to use [ESNI](https://en.wikipedia.org/wiki/Server_Name_Indicati
 of code more so I did it also. 
 
 The docker-compose file creates a bridge network and the following containers: 
-`pi-hole/pi-hole`, `mvance:unbound`, `traefik`, `goofball222/dns-over-https`. 
+`pi-hole/pi-hole`, `mvance/unbound`, `traefik`, `goofball222/dns-over-https`. 
 
 Query forwarding: 
 * Normal DNS query: port 53 -> pihole -> unbound 
