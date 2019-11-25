@@ -1,5 +1,11 @@
 # DoTH DNS Change Log
 
+**Release 5.0.1** - 25.11.2019
+- Added "fix-attrs" file for s6 overlay for `pihole` container to fix config file ownerships ([commit](https://github.com/Cielquan/DoTH-DNS/commit/f4b302f57670a34331f547256a53abff3cbd1744))
+- Added `ro` flag to `cert.crt`, `key.key` and `docker.sock` ([commit](https://github.com/Cielquan/DoTH-DNS/commit/34d55434e821eddf8a202f2990906ed52cca617a))
+- Added `TZ` EnvVar and `/etc/localtime` to all containers missing it ([commit](https://github.com/Cielquan/DoTH-DNS/commit/2629da5b0decfbcdb8e7c6bc6a2fae3d3c06609c))
+- Minor fixes
+
 **Release 5.0.0** - 24.11.2019
 - Removed `nginx` support ([commit](https://github.com/Cielquan/DoTH-DNS/commit/e63567409815e0c511353baee5593a9d888f4d43))
 - Removed second docker network ([commit](https://github.com/Cielquan/DoTH-DNS/commit/4beb000a6d79e01eff459d09816aa3fc3ae2d60b))
