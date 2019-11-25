@@ -151,4 +151,4 @@ Christian Riedel
 
 
 ## Versioning
-[SemVer](http://semver.org/) is used for versioning. For the versions available, see the [tags on this repository](https://github.com/Cielquan/DoTH-DNS/tags).
+[SemVer](https://semver.org/) is used for versioning. For the versions available, see the [tags on this repository](https://github.com/Cielquan/DoTH-DNS/tags).
