@@ -55,6 +55,7 @@ services:
       - ./pihole-docker/configs/pihole/:/etc/pihole/
       - ./pihole-docker/configs/dnsmasq.d/dnsmasq.conf:/etc/dnsmasq.d/02-custom.conf
       - ./pihole-docker/01-conf-dnsmasq.sh:/etc/cont-init.d/01-conf-dnsmasq.sh
+      - ./pihole-docker/02-chown-pihole-configs:/etc/fix-attrs.d/02-chown-pihole-configs
     ports:
       - "53:53/tcp"
       - "53:53/udp"
