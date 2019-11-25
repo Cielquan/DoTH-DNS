@@ -147,7 +147,7 @@ printf "\n%bINFO:   %b Starting setup for DoTH-DNS.\n\n\n" "${CYAN}" "${BLANK}"
 if [[ ${_FLAG_FRESH} == 'y' ]]; then
   printf "%bINFO:   %b Skipped loading of '.env'.\n\n" "${CYAN}" "${BLANK}"
 else
-  if . .env; then
+  if [[ -f .env ]] && . .env; then
     printf "%bINFO:   %b .env loaded.\n\n" "${CYAN}" "${BLANK}"
   else
     printf "%bWARNING:%b Failed to load '.env'. Falling back to self gather information.\n\n" "${ORANGE}" "${BLANK}"
