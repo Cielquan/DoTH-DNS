@@ -1,5 +1,10 @@
 # DoTH DNS Change Log
 
+**Release 5.0.2** - 25.11.2019
+- Fixed update function to not pull `doh_server`'s image when architecture is `arm` ([commit](https://github.com/Cielquan/DoTH-DNS/commit/5969d1e394212c647fd2f43e42889485cc08d584))
+- Made `.env` file import messages more clear ([commit](https://github.com/Cielquan/DoTH-DNS/commit/ae21fc2a2e1deef6d2c2408338285287005178c7))
+- Fixed `.env` file import error when no file is there ([commit](https://github.com/Cielquan/DoTH-DNS/commit/6b84f3026679bc361c8c4f79e4ddd25b7877c9fe))
+
 **Release 5.0.1** - 25.11.2019
 - Added "fix-attrs" file for s6 overlay for `pihole` container to fix config file ownerships ([commit](https://github.com/Cielquan/DoTH-DNS/commit/f4b302f57670a34331f547256a53abff3cbd1744))
 - Added `ro` flag to `cert.crt`, `key.key` and `docker.sock` ([commit](https://github.com/Cielquan/DoTH-DNS/commit/34d55434e821eddf8a202f2990906ed52cca617a))
