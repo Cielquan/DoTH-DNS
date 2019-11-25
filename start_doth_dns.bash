@@ -320,7 +320,8 @@ fi
 
 # Compile doh server image
 if [[ "${_FLAG_COMPILE}" == 'y' ]] ||
-    ! docker images | grep -q 'goofball222/dns-over-https' && printf "%s" "${ARCHITECTURE}" | grep -iq arm; then
+    ! docker images | grep -q 'goofball222/dns-over-https' && printf "%s" "${ARCHITECTURE}" | grep -iq arm ||
+    [[ "${_FLAG_UPDATE_ALL}" == 'y' ]] && printf "%s" "${ARCHITECTURE}" | grep -iq arm; then
   if
     VERSION="$(git ls-remote -t --refs  https://github.com/m13253/dns-over-https.git | tail -n1 |
                 awk '{print $2}' | sed 's,refs/tags/v,,')" &&
@@ -438,7 +439,11 @@ if [[ "${_FLAG_NO_PROXY}" == 'y' ]]; then
   if [[ "${_FLAG_UPDATE_ALL}" == 'y' ]]; then
     printf "%bINFO:   %b Updating DoTH-DNS without reverse proxy.\n" "${CYAN}" "${BLANK}"
     docker-compose down || exit_dc_err
-    docker-compose pull || exit_dc_err
+    if printf "%s" "${ARCHITECTURE}" | grep -iq arm; then
+      docker-compose pull pihole unbound || exit_dc_err
+    else
+      docker-compose pull || exit_dc_err
+    fi
     docker-compose up -d --force-recreate || exit_dc_err
   elif [[ "${_FLAG_RECREATE_ALL}" == 'y' ]]; then
     printf "%bINFO:   %b Recreating DoTH-DNS without reverse proxy.\n" "${CYAN}" "${BLANK}"
@@ -452,7 +457,11 @@ else
     printf "%bINFO:   %b Updating DoTH-DNS with %btraefik%b reverse proxy.\n" \
             "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
     docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml down || exit_dc_err
-    docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml pull || exit_dc_err
+    if printf "%s" "${ARCHITECTURE}" | grep -iq arm; then
+      docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml pull pihole unbound traefik || exit_dc_err
+    else
+      docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml pull || exit_dc_err
+    fi
     docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml up -d --force-recreate || exit_dc_err
   elif [[ "${_FLAG_RECREATE_ALL}" == 'y' ]]; then
     printf "%bINFO:   %b Recreating DoTH-DNS with %btraefik%b reverse proxy.\n" \
