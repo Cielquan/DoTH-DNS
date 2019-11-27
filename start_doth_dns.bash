@@ -60,7 +60,7 @@ exit_dc_err() {
 # Func for showing usage string
 usage_string() {
   printf "\nUsage: %s [-f] [-a <arm|x86>] [-c] [-I <INTERFACE>] [-i <IP ADDRESS>] `
-          `[-n <HOSTNAME>] [-t <TIMEZONE>] [-d <DOMAIN>] [-N] [-R] [-U] [-P] [-h]\n" "$0" 1>&2;
+          `[-n <HOSTNAME>] [-t <TIMEZONE>] [-d <DOMAIN>] [-N] [-R] [-U] [-P] [-D] [-h]\n" "$0" 1>&2;
 }
 
 # Func for showing usage
@@ -79,7 +79,7 @@ help() {
 
 # ##########################################################################################
 # Catching flags
-while getopts ":fa:cI:i:n:t:d:NRUPh" flag; do
+while getopts ":fa:cI:i:n:t:d:NRUPDh" flag; do
   case ${flag} in
     f) # Set for overwriting existing configs with new ones.
       _FLAG_FRESH='y'
@@ -120,6 +120,9 @@ while getopts ":fa:cI:i:n:t:d:NRUPh" flag; do
       ;;
     P) # Start without reverse proxy (`traefik`).
       _FLAG_NO_PROXY='y'
+      ;;
+    D) # Shut all containers and the network down.
+      _FLAG_DOWN_ALL='y'
       ;;
     h) # Shows this help page.
       help
