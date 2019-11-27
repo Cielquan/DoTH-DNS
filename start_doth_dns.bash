@@ -79,7 +79,7 @@ help() {
 
 # ##########################################################################################
 # Catching flags
-while getopts ":fa:cI:i:n:t:d:RUPNh" flag; do
+while getopts ":fa:cI:i:n:t:d:NRUPh" flag; do
   case ${flag} in
     f) # Set for overwriting existing configs with new ones.
       _FLAG_FRESH='y'
@@ -109,6 +109,9 @@ while getopts ":fa:cI:i:n:t:d:RUPNh" flag; do
     d) # Set DOMAIN variable with <DOMAIN>. E.g. example.com
       _FLAG_DOMAIN=${OPTARG}
       ;;
+    N) # Deactivate traefik dashboard authorization
+      _FLAG_TRAEFIK_NOAUTH='y'
+      ;;
     R) # Recreate all conatiners taking in changed configs.
       _FLAG_RECREATE_ALL='y'
       ;;
@@ -117,9 +120,6 @@ while getopts ":fa:cI:i:n:t:d:RUPNh" flag; do
       ;;
     P) # Start without reverse proxy (`traefik`).
       _FLAG_NO_PROXY='y'
-      ;;
-    N) # Deactivate traefik dashboard authorization
-      _FLAG_TRAEFIK_NOAUTH='y'
       ;;
     h) # Shows this help page.
       help
