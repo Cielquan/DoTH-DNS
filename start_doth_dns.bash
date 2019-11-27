@@ -191,7 +191,7 @@ else
     if ARCHITECTURE=$(lscpu | grep Architecture: | awk '{print $2}'); then
       printf "%bINFO:   %b ARCHITECTURE was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${ARCHITECTURE}"
     else
-      printf "%bERROR:  %b ARCHITECTURE was not set und could not be determined. `
+      printf "%bERROR:  %b ARCHITECTURE was not set and could not be determined. `
               `Please set ARCHITECTURE in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
       exit_err
     fi
@@ -213,7 +213,7 @@ else
     if INTERFACE=$(route | grep '^default' | grep -o '[^ ]*$'); then
       printf "%bINFO:   %b INTERFACE was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${INTERFACE}"
     else
-      printf "%bERROR:  %b INTERFACE was not set und could not be determined. `
+      printf "%bERROR:  %b INTERFACE was not set and could not be determined. `
               `Please set INTERFACE in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
       exit_err
     fi
@@ -235,7 +235,7 @@ else
     if HOST_IP=$(ifconfig "${INTERFACE}" | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'); then
       printf "%bINFO:   %b HOST_IP was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${HOST_IP}"
     else
-      printf "%bERROR:  %b HOST_IP was not set und could not be determined. `
+      printf "%bERROR:  %b HOST_IP was not set and could not be determined. `
               `Please set HOST_IP in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
       exit_err
     fi
@@ -258,7 +258,7 @@ else
     if HOST_NAME=$(hostname); then
       printf "%bINFO:   %b HOST_NAME was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${HOST_NAME}"
     else
-      printf "%bERROR:  %b HOST_NAME was not set und could not be determined. `
+      printf "%bERROR:  %b HOST_NAME was not set and could not be determined. `
               `Please set HOST_NAME in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
       exit_err
     fi
@@ -280,7 +280,7 @@ else
     if TIMEZONE=$(timedatectl | grep 'Time zone' | awk '{print $3}'); then
       printf "%bINFO:   %b TIMEZONE was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${TIMEZONE}"
     else
-      printf "%bERROR:  %b TIMEZONE was not set und could not be determined. `
+      printf "%bERROR:  %b TIMEZONE was not set and could not be determined. `
               `Please set TIMEZONE in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
       exit_err
     fi
@@ -302,7 +302,7 @@ else
     if DOMAIN="${HOST_NAME}.dns"; then
       printf "%bINFO:   %b DOMAIN was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${DOMAIN}"
     else
-      printf "%bERROR:  %b DOMAIN was not set und could not be created. `
+      printf "%bERROR:  %b DOMAIN was not set and could not be created. `
               `Please set DOMAIN in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
       exit_err
     fi
