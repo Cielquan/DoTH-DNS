@@ -462,7 +462,7 @@ else
     else
       docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml pull || exit_dc_err
     fi
-    docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml up -d --force-recreate || exit_dc_err
+    docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml up -d || exit_dc_err
   elif [[ "${_FLAG_RECREATE_ALL}" == 'y' ]]; then
     printf "%bINFO:   %b Recreating DoTH-DNS with %btraefik%b reverse proxy.\n" \
             "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
