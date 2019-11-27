@@ -1,5 +1,8 @@
 # DoTH DNS Change Log
 
+**Release 5.1.0** - 27.11.2019
+- Added shut down function to script (`-D` flag) ([commit](https://github.com/Cielquan/DoTH-DNS/commit/2d00c4c7c751f746cc577b869244a125a3153b8f))
+
 **Release 5.0.2** - 25.11.2019
 - Fixed update function to not pull `doh_server`'s image when architecture is `arm` ([commit](https://github.com/Cielquan/DoTH-DNS/commit/5969d1e394212c647fd2f43e42889485cc08d584))
 - Made `.env` file import messages more clear ([commit](https://github.com/Cielquan/DoTH-DNS/commit/ae21fc2a2e1deef6d2c2408338285287005178c7))
