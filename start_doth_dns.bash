@@ -178,18 +178,22 @@ fi
 ### Check and set ENV Vars
 # Set ARCHITECTURE
 if [[ -n "${_FLAG_ARCHITECTURE}" ]]; then
-  if ARCHITECTURE="${_FLAG_ARCHITECTURE}"; then
-    printf "%bINFO:   %b ARCHITECTURE set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${ARCHITECTURE}"
+  if _ARCHITECTURE="${_FLAG_ARCHITECTURE}"; then
+    printf "%bINFO:   %b ARCHITECTURE set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${_ARCHITECTURE}"
   else
     printf "%bERROR:  %b Failed to set ARCHITECTURE by CLI argument.\n" "${RED}" "${BLANK}"
     exit_err
   fi
-else
-  if [[ -n "${ARCHITECTURE}" ]]; then
-    printf "%bINFO:   %b ARCHITECTURE set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${ARCHITECTURE}"
+elif [[ -n "${ARCHITECTURE}" ]]; then
+  if _ARCHITECTURE="${ARCHITECTURE}"; then
+    printf "%bINFO:   %b ARCHITECTURE set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${_ARCHITECTURE}"
   else
-    if ARCHITECTURE=$(lscpu | grep Architecture: | awk '{print $2}'); then
-      printf "%bINFO:   %b ARCHITECTURE was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${ARCHITECTURE}"
+    printf "%bERROR:  %b Failed to set ARCHITECTURE by .env file.\n" "${RED}" "${BLANK}"
+    exit_err
+  fi
+  if [[ -n "${_ARCHITECTURE}" ]]; then
+    if _ARCHITECTURE=$(lscpu | grep Architecture: | awk '{print $2}'); then
+      printf "%bINFO:   %b ARCHITECTURE was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${_ARCHITECTURE}"
     else
       printf "%bERROR:  %b ARCHITECTURE was not set and could not be determined. `
               `Please set ARCHITECTURE in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
@@ -200,18 +204,22 @@ fi
 
 # Set INTERFACE
 if [[ -n "${_FLAG_INTERFACE}" ]]; then
-  if INTERFACE="${_FLAG_INTERFACE}"; then
-    printf "%bINFO:   %b INTERFACE set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${INTERFACE}"
+  if _INTERFACE="${_FLAG_INTERFACE}"; then
+    printf "%bINFO:   %b INTERFACE set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${_INTERFACE}"
   else
     printf "%bERROR:  %b Failed to set INTERFACE by CLI argument.\n" "${RED}" "${BLANK}"
     exit_err
   fi
-else
-  if [[ -n "${INTERFACE}" ]]; then
-    printf "%bINFO:   %b INTERFACE set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${INTERFACE}"
+elif [[ -n "${INTERFACE}" ]]; then
+  if _INTERFACE="${INTERFACE}"; then
+    printf "%bINFO:   %b INTERFACE set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${_INTERFACE}"
   else
-    if INTERFACE=$(route | grep '^default' | grep -o '[^ ]*$'); then
-      printf "%bINFO:   %b INTERFACE was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${INTERFACE}"
+    printf "%bERROR:  %b Failed to set INTERFACE by .env file.\n" "${RED}" "${BLANK}"
+    exit_err
+  fi
+  if [[ -n "${_INTERFACE}" ]]; then
+    if _INTERFACE=$(route | grep '^default' | grep -o '[^ ]*$'); then
+      printf "%bINFO:   %b INTERFACE was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${_INTERFACE}"
     else
       printf "%bERROR:  %b INTERFACE was not set and could not be determined. `
               `Please set INTERFACE in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
@@ -222,18 +230,22 @@ fi
 
 # Set HOST_IP for given INTERFACE
 if [[ -n "${_FLAG_HOST_IP}" ]]; then
-  if HOST_IP="${_FLAG_HOST_IP}"; then
-    printf "%bINFO:   %b HOST_IP set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${HOST_IP}"
+  if _HOST_IP="${_FLAG_HOST_IP}"; then
+    printf "%bINFO:   %b HOST_IP set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_IP}"
   else
     printf "%bERROR:  %b Failed to set HOST_IP by CLI argument.\n" "${RED}" "${BLANK}"
     exit_err
   fi
-else
-  if [[ -n "${HOST_IP}" ]]; then
-    printf "%bINFO:   %b HOST_IP set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${HOST_IP}"
+elif [[ -n "${HOST_IP}" ]]; then
+  if _HOST_IP="${HOST_IP}"; then
+    printf "%bINFO:   %b HOST_IP set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_IP}"
   else
-    if HOST_IP=$(ifconfig "${INTERFACE}" | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'); then
-      printf "%bINFO:   %b HOST_IP was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${HOST_IP}"
+    printf "%bERROR:  %b Failed to set HOST_IP by .env file.\n" "${RED}" "${BLANK}"
+    exit_err
+  fi
+  if [[ -n "${_HOST_IP}" ]]; then
+    if _HOST_IP=$(ifconfig "${_INTERFACE}" | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'); then
+      printf "%bINFO:   %b HOST_IP was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_IP}"
     else
       printf "%bERROR:  %b HOST_IP was not set and could not be determined. `
               `Please set HOST_IP in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
@@ -245,18 +257,22 @@ fi
 
 # Set HOSTNAME
 if [[ -n "${_FLAG_HOST_NAME}" ]]; then
-  if HOST_NAME="${_FLAG_HOST_NAME}"; then
-    printf "%bINFO:   %b HOST_NAME set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${HOST_NAME}"
+  if _HOST_NAME="${_FLAG_HOST_NAME}"; then
+    printf "%bINFO:   %b HOST_NAME set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_NAME}"
   else
     printf "%bERROR:  %b Failed to set HOST_NAME by CLI argument.\n" "${RED}" "${BLANK}"
     exit_err
   fi
-else
-  if [[ -n "${HOST_NAME}" ]]; then
-    printf "%bINFO:   %b HOST_NAME set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${HOST_NAME}"
+elif [[ -n "${HOST_NAME}" ]]; then
+  if _HOST_NAME="${HOST_NAME}"; then
+    printf "%bINFO:   %b HOST_NAME set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_NAME}"
   else
-    if HOST_NAME=$(hostname); then
-      printf "%bINFO:   %b HOST_NAME was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${HOST_NAME}"
+    printf "%bERROR:  %b Failed to set HOST_NAME by .env file.\n" "${RED}" "${BLANK}"
+    exit_err
+  fi
+  if [[ -n "${_HOST_NAME}" ]]; then
+    if _HOST_NAME=$(hostname); then
+      printf "%bINFO:   %b HOST_NAME was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_NAME}"
     else
       printf "%bERROR:  %b HOST_NAME was not set and could not be determined. `
               `Please set HOST_NAME in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
@@ -267,18 +283,22 @@ fi
 
 # Set TIMEZONE
 if [[ -n "${_FLAG_TIMEZONE}" ]]; then
-  if TIMEZONE="${_FLAG_TIMEZONE}"; then
-    printf "%bINFO:   %b TIMEZONE set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${TIMEZONE}"
+  if _TIMEZONE="${_FLAG_TIMEZONE}"; then
+    printf "%bINFO:   %b TIMEZONE set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${_TIMEZONE}"
   else
     printf "%bERROR:  %b Failed to set TIMEZONE by CLI argument.\n" "${RED}" "${BLANK}"
     exit_err
   fi
-else
-  if [[ -n "${TIMEZONE}" ]]; then
-    printf "%bINFO:   %b TIMEZONE set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${TIMEZONE}"
+elif [[ -n "${TIMEZONE}" ]]; then
+  if _TIMEZONE="${TIMEZONE}"; then
+    printf "%bINFO:   %b TIMEZONE set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${_TIMEZONE}"
   else
-    if TIMEZONE=$(timedatectl | grep 'Time zone' | awk '{print $3}'); then
-      printf "%bINFO:   %b TIMEZONE was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${TIMEZONE}"
+    printf "%bERROR:  %b Failed to set TIMEZONE by .env file.\n" "${RED}" "${BLANK}"
+    exit_err
+  fi
+  if [[ -n "${_TIMEZONE}" ]]; then
+    if _TIMEZONE=$(timedatectl | grep 'Time zone' | awk '{print $3}'); then
+      printf "%bINFO:   %b TIMEZONE was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${_TIMEZONE}"
     else
       printf "%bERROR:  %b TIMEZONE was not set and could not be determined. `
               `Please set TIMEZONE in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
@@ -289,18 +309,22 @@ fi
 
 # Set DOMAIN or create with HOSTNAME
 if [[ -n "${_FLAG_DOMAIN}" ]]; then
-  if DOMAIN="${_FLAG_DOMAIN}"; then
-    printf "%bINFO:   %b DOMAIN set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${DOMAIN}"
+  if _DOMAIN="${_FLAG_DOMAIN}"; then
+    printf "%bINFO:   %b DOMAIN set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${_DOMAIN}"
   else
     printf "%bERROR:  %b Failed to set DOMAIN by CLI argument.\n" "${RED}" "${BLANK}"
     exit_err
   fi
-else
-  if [[ -n "${DOMAIN}" ]]; then
-    printf "%bINFO:   %b DOMAIN set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${DOMAIN}"
+elif [[ -n "${DOMAIN}" ]]; then
+  if _DOMAIN="${DOMAIN}"; then
+    printf "%bINFO:   %b DOMAIN set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${_DOMAIN}"
   else
-    if DOMAIN="${HOST_NAME}.dns"; then
-      printf "%bINFO:   %b DOMAIN was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${DOMAIN}"
+    printf "%bERROR:  %b Failed to set DOMAIN by .env file.\n" "${RED}" "${BLANK}"
+    exit_err
+  fi
+  if [[ -n "${_DOMAIN}" ]]; then
+    if _DOMAIN="${_HOST_NAME}.dns"; then
+      printf "%bINFO:   %b DOMAIN was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${_DOMAIN}"
     else
       printf "%bERROR:  %b DOMAIN was not set and could not be created. `
               `Please set DOMAIN in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
@@ -311,11 +335,11 @@ fi
 
 # Set TRAEFIK_AUTH
 if ! [ -f traefik-docker/shared/.htpasswd ] || [[ "${_FLAG_TRAEFIK_NOAUTH}" == 'y' ]]; then
-  TRAEFIK_AUTH="NoAuth"
+  _TRAEFIK_AUTH="NoAuth"
   printf "%bINFO:   %b Treafik dashboard authorization is set to %bINACTIVE%b.\n" \
           "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
 else
-  TRAEFIK_AUTH="Auth"
+  _TRAEFIK_AUTH="Auth"
   printf "%bINFO:   %b Treafik dashboard authorization is set to %bACTIVE%b.\n" \
           "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
 fi
@@ -324,10 +348,10 @@ fi
 # ##########################################################################################
 ### Change architecture specific stuff based on ARCHITECTURE
 # Set varinat of unbound to use
-if printf "%s" "${ARCHITECTURE}" | grep -iq arm; then
-  UNBOUND_VARIANT="unbound-rpi"
-elif printf "%s" "${ARCHITECTURE}" | grep -iq x86; then
-  UNBOUND_VARIANT="unbound"
+if printf "%s" "${_ARCHITECTURE}" | grep -iq arm; then
+  _UNBOUND_VARIANT="unbound-rpi"
+elif printf "%s" "${_ARCHITECTURE}" | grep -iq x86; then
+  _UNBOUND_VARIANT="unbound"
 else
   printf "%bERROR:  %b Invalid architecture. Only 'ARM' and 'x86' are allowed.\n" "${RED}" "${BLANK}"
   exit_err
@@ -335,8 +359,8 @@ fi
 
 # Compile doh server image
 if [[ "${_FLAG_COMPILE}" == 'y' ]] ||
-    ! docker images | grep -q 'goofball222/dns-over-https' && printf "%s" "${ARCHITECTURE}" | grep -iq arm ||
-    [[ "${_FLAG_UPDATE_ALL}" == 'y' ]] && printf "%s" "${ARCHITECTURE}" | grep -iq arm; then
+    ! docker images | grep -q 'goofball222/dns-over-https' && printf "%s" "${_ARCHITECTURE}" | grep -iq arm ||
+    [[ "${_FLAG_UPDATE_ALL}" == 'y' ]] && printf "%s" "${_ARCHITECTURE}" | grep -iq arm; then
   if
     VERSION="$(git ls-remote -t --refs  https://github.com/m13253/dns-over-https.git | tail -n1 |
                 awk '{print $2}' | sed 's,refs/tags/v,,')" &&
@@ -426,8 +450,8 @@ else
   _NEW_ENV='Created new'
 fi
 if printf "HOST_NAME=%s\nDOMAIN=%s\nTIMEZONE=%s\nUNBOUND_VARIANT=%s\nARCHITECTURE=%s\nINTERFACE=%s\nHOST_IP=%s`
-            `\nTRAEFIK_AUTH=%s" "${HOST_NAME}" "${DOMAIN}" "${TIMEZONE}" "${UNBOUND_VARIANT}" "${ARCHITECTURE}" \
-            "${INTERFACE}" "${HOST_IP}" "${TRAEFIK_AUTH}" | tee .env > /dev/null; then
+            `\nTRAEFIK_AUTH=%s" "${_HOST_NAME}" "${_DOMAIN}" "${_TIMEZONE}" "${_UNBOUND_VARIANT}" "${_ARCHITECTURE}" \
+            "${_INTERFACE}" "${_HOST_IP}" "${_TRAEFIK_AUTH}" | tee .env > /dev/null; then
   printf "%bSUCCESS:%b ${_NEW_ENV} '.env' file.\n" "${GREEN}" "${BLANK}"
 else
   if [ -f .env ]; then
@@ -454,7 +478,7 @@ if [[ "${_FLAG_NO_PROXY}" == 'y' ]]; then
   if [[ "${_FLAG_UPDATE_ALL}" == 'y' ]]; then
     printf "%bINFO:   %b Updating DoTH-DNS without reverse proxy.\n" "${CYAN}" "${BLANK}"
     docker-compose down || exit_dc_err
-    if printf "%s" "${ARCHITECTURE}" | grep -iq arm; then
+    if printf "%s" "${_ARCHITECTURE}" | grep -iq arm; then
       docker-compose pull pihole unbound || exit_dc_err
     else
       docker-compose pull || exit_dc_err
@@ -472,7 +496,7 @@ else
     printf "%bINFO:   %b Updating DoTH-DNS with %btraefik%b reverse proxy.\n" \
             "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
     docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml down || exit_dc_err
-    if printf "%s" "${ARCHITECTURE}" | grep -iq arm; then
+    if printf "%s" "${_ARCHITECTURE}" | grep -iq arm; then
       docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml pull pihole unbound traefik || exit_dc_err
     else
       docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml pull || exit_dc_err
