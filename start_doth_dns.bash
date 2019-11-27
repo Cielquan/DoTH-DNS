@@ -140,6 +140,18 @@ done
 
 
 # ##########################################################################################
+# Shutting service down
+if [[ ${_FLAG_DOWN_ALL} == 'y' ]]; then
+  printf "\n####################\n"
+  printf "\n%bINFO:   %b Shutting DoTH-DNS down.\n\n" "${CYAN}" "${BLANK}"
+  docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml down || exit_dc_err
+  printf "\n\n%bSUCCESS:%b DoTH-DNS shut down.\n" "${GREEN}" "${BLANK}"
+  printf "\n####################\n\n"
+  exit 0
+fi
+
+
+# ##########################################################################################
 # Starting line
 printf "\n####################\n"
 printf "\n%bINFO:   %b Starting setup for DoTH-DNS.\n\n\n" "${CYAN}" "${BLANK}"
