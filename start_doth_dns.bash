@@ -175,6 +175,27 @@ fi
 
 
 # ##########################################################################################
+# Grabbing EnvVars
+if [[ ${_FLAG_FRESH} == 'y' ]]; then
+  printf "%bINFO:   %b Skipped loading of Environment Variables.\n\n" "${CYAN}" "${BLANK}"
+else
+  if \
+  _ENV_ARCHITECTURE=${DOTH_ARCHITECTURE} &&
+  _ENV_INTERFACE=${DOTH_INTERFACE} &&
+  _ENV_HOST_IP=${DOTH_HOST_IP} &&
+  _ENV_HOST_NAME=${DOTH_HOST_NAME} &&
+  _ENV_TIMEZONE=${DOTH_TIMEZONE} &&
+  _ENV_DOMAIN=${DOTH_DOMAIN}
+  then
+    printf "%bINFO:   %b Environment Variables loaded.\n\n" "${CYAN}" "${BLANK}"
+  else
+    printf "%bWARNING:%b No Environment Variables could be loaded. Falling back to self gather information.\n\n" \
+            "${ORANGE}" "${BLANK}"
+  fi
+fi
+
+
+# ##########################################################################################
 ### Check and set ENV Vars
 # Set ARCHITECTURE
 if [[ -n "${_FLAG_ARCHITECTURE}" ]]; then
@@ -189,6 +210,13 @@ elif [[ -n "${ARCHITECTURE}" ]]; then
     printf "%bINFO:   %b ARCHITECTURE set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${_ARCHITECTURE}"
   else
     printf "%bERROR:  %b Failed to set ARCHITECTURE by .env file.\n" "${RED}" "${BLANK}"
+    exit_err
+  fi
+elif [[ -n "${_ENV_ARCHITECTURE}" ]]; then
+  if _ARCHITECTURE="${_ENV_ARCHITECTURE}"; then
+    printf "%bINFO:   %b ARCHITECTURE set by Environment Variable to '%s'.\n" "${CYAN}" "${BLANK}" "${_ARCHITECTURE}"
+  else
+    printf "%bERROR:  %b Failed to set ARCHITECTURE by Environment Variable.\n" "${RED}" "${BLANK}"
     exit_err
   fi
   if [[ -n "${_ARCHITECTURE}" ]]; then
@@ -217,6 +245,13 @@ elif [[ -n "${INTERFACE}" ]]; then
     printf "%bERROR:  %b Failed to set INTERFACE by .env file.\n" "${RED}" "${BLANK}"
     exit_err
   fi
+elif [[ -n "${_ENV_INTERFACE}" ]]; then
+  if _INTERFACE="${_ENV_INTERFACE}"; then
+    printf "%bINFO:   %b INTERFACE set by Environment Variable to '%s'.\n" "${CYAN}" "${BLANK}" "${_INTERFACE}"
+  else
+    printf "%bERROR:  %b Failed to set INTERFACE by Environment Variable.\n" "${RED}" "${BLANK}"
+    exit_err
+  fi
   if [[ -n "${_INTERFACE}" ]]; then
     if _INTERFACE=$(route | grep '^default' | grep -o '[^ ]*$'); then
       printf "%bINFO:   %b INTERFACE was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${_INTERFACE}"
@@ -241,6 +276,13 @@ elif [[ -n "${HOST_IP}" ]]; then
     printf "%bINFO:   %b HOST_IP set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_IP}"
   else
     printf "%bERROR:  %b Failed to set HOST_IP by .env file.\n" "${RED}" "${BLANK}"
+    exit_err
+  fi
+elif [[ -n "${_ENV_HOST_IP}" ]]; then
+  if _HOST_IP="${_ENV_HOST_IP}"; then
+    printf "%bINFO:   %b HOST_IP set by Environment Variable to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_IP}"
+  else
+    printf "%bERROR:  %b Failed to set HOST_IP by Environment Variable.\n" "${RED}" "${BLANK}"
     exit_err
   fi
   if [[ -n "${_HOST_IP}" ]]; then
@@ -270,6 +312,13 @@ elif [[ -n "${HOST_NAME}" ]]; then
     printf "%bERROR:  %b Failed to set HOST_NAME by .env file.\n" "${RED}" "${BLANK}"
     exit_err
   fi
+elif [[ -n "${_ENV_HOST_NAME}" ]]; then
+  if _HOST_NAME="${_ENV_HOST_NAME}"; then
+    printf "%bINFO:   %b HOST_NAME set by Environment Variable to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_NAME}"
+  else
+    printf "%bERROR:  %b Failed to set HOST_NAME by Environment Variable.\n" "${RED}" "${BLANK}"
+    exit_err
+  fi
   if [[ -n "${_HOST_NAME}" ]]; then
     if _HOST_NAME=$(hostname); then
       printf "%bINFO:   %b HOST_NAME was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_NAME}"
@@ -296,6 +345,13 @@ elif [[ -n "${TIMEZONE}" ]]; then
     printf "%bERROR:  %b Failed to set TIMEZONE by .env file.\n" "${RED}" "${BLANK}"
     exit_err
   fi
+elif [[ -n "${_ENV_TIMEZONE}" ]]; then
+  if _TIMEZONE="${_ENV_TIMEZONE}"; then
+    printf "%bINFO:   %b TIMEZONE set by Environment Variable to '%s'.\n" "${CYAN}" "${BLANK}" "${_TIMEZONE}"
+  else
+    printf "%bERROR:  %b Failed to set TIMEZONE by Environment Variable.\n" "${RED}" "${BLANK}"
+    exit_err
+  fi
   if [[ -n "${_TIMEZONE}" ]]; then
     if _TIMEZONE=$(timedatectl | grep 'Time zone' | awk '{print $3}'); then
       printf "%bINFO:   %b TIMEZONE was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${_TIMEZONE}"
@@ -320,6 +376,13 @@ elif [[ -n "${DOMAIN}" ]]; then
     printf "%bINFO:   %b DOMAIN set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${_DOMAIN}"
   else
     printf "%bERROR:  %b Failed to set DOMAIN by .env file.\n" "${RED}" "${BLANK}"
+    exit_err
+  fi
+elif [[ -n "${_ENV_DOMAIN}" ]]; then
+  if _DOMAIN="${_ENV_DOMAIN}"; then
+    printf "%bINFO:   %b DOMAIN set by Environment Variable to '%s'.\n" "${CYAN}" "${BLANK}" "${_DOMAIN}"
+  else
+    printf "%bERROR:  %b Failed to set DOMAIN by Environment Variable.\n" "${RED}" "${BLANK}"
     exit_err
   fi
   if [[ -n "${_DOMAIN}" ]]; then
