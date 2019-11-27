@@ -79,6 +79,18 @@ Now you can setup your other devices to use the server.
 You may also install your CA certificate on your other devices.
 
 
+### Configuration
+Configuration is guessed by the script automatically. Alternatively you can set flags when running the script, set them in a '.env' file or set them in the shell environment.
+When setting them in the shell environment add `DOTH_` before the actual variable. Else the .env file will overwrite them or if not set in .env file take the .env file as source.
+You can set the following Variables:
+* `ARCHITECTURE`
+* `INTERFACE`
+* `HOST_IP`
+* `HOST_NAME`
+* `TIMEZONE`
+* `DOMAIN`
+
+
 ### Config flag notes
 Here is an overview of the available flags for setup when calling the script. Run `-h` flag for help on commandline.
 
@@ -112,6 +124,7 @@ Here is an overview of the available flags for running when calling the script. 
 * `-P`): Set to start without reverse proxy (`traefik`).
 
 * `-D`): Set to shut DoTH-DNS down. It will remove all DoTH-DNS containers and networks.
+
 
 ### Reverse proxy
 You have two options for the reverse proxy: `None` or `traefik`. 
