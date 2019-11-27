@@ -121,7 +121,7 @@ while getopts ":fa:cI:i:n:t:d:NRUPDh" flag; do
     P) # Start without reverse proxy (`traefik`).
       _FLAG_NO_PROXY='y'
       ;;
-    D) # Shut all containers and the network down.
+    D) # Shut all containers and networks down.
       _FLAG_DOWN_ALL='y'
       ;;
     h) # Shows this help page.
