@@ -111,6 +111,8 @@ Here is an overview of the available flags for running when calling the script. 
 
 * `-P`): Set to start without reverse proxy (`traefik`).
 
+* `-D`): Set to shut DoTH-DNS down. It will remove all DoTH-DNS containers and networks.
+
 ### Reverse proxy
 You have two options for the reverse proxy: `None` or `traefik`. 
 If you want to use `None` you have to set the flag `-P` when running the script else `traefik` will be used.
