@@ -78,6 +78,17 @@ _The script also reminds you if a random password was generated from pihole._
 Now you can setup your other devices to use the server.
 You may also install your CA certificate on your other devices.
 
+#### Menu script
+Instead of calling the setup script directly you can use the menu script as a wrapper. 
+
+    $ ./menu_start_doth_dns.bash
+
+But the menu only provides very basic options (and always with traefik):
+* Starting DoTH-DNS
+* Restarting DoTH-DNS
+* Updating DoTH-DNS
+* Shutting down DoTH-DNS
+
 
 ### Configuration
 Configuration is guessed by the script automatically. Alternatively you can set flags when running the script, set them in a '.env' file or set them in the shell environment.
