@@ -1,5 +1,8 @@
 # DoTH DNS Change Log
 
+**Release 5.2.0** - 29.11.2019
+- Added very basic menu script based on whiptail([commit](https://github.com/Cielquan/DoTH-DNS/commit/f2805004ca10a73f1dedef11023b1cdab371c3a5))
+
 **Release 5.1.0** - 27.11.2019
 - Added shut down function to script (`-D` flag) ([commit](https://github.com/Cielquan/DoTH-DNS/commit/2d00c4c7c751f746cc577b869244a125a3153b8f))
 
