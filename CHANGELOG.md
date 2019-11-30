@@ -1,5 +1,8 @@
 # DoTH DNS Change Log
 
+**Release 5.2.1** - 30.11.2019
+- Added missing hint for `whiptail` in README ([commit](https://github.com/Cielquan/DoTH-DNS/commit/f389e3ab123a64066b67acaf2a33c6a80bf1c139))
+
 **Release 5.2.0** - 29.11.2019
 - Added very basic menu script based on `whiptail` ([commit](https://github.com/Cielquan/DoTH-DNS/commit/f2805004ca10a73f1dedef11023b1cdab371c3a5))
 - Added support for setting config environment variables in shell context ([commit](https://github.com/Cielquan/DoTH-DNS/commit/8cff59eb92ef03a4874b51b0d6a70ff527e4767e))
