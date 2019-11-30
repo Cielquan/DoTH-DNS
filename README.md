@@ -79,7 +79,7 @@ Now you can setup your other devices to use the server.
 You may also install your CA certificate on your other devices.
 
 #### Menu script
-Instead of calling the setup script directly you can use the menu script as a wrapper. 
+Instead of calling the setup script directly you can use the menu script as a wrapper. This requires `whiptail` to be installed.
 
     $ ./menu_start_doth_dns.bash
 
