@@ -399,6 +399,8 @@ elif [[ -n "${_ENV_DOMAIN}" ]]; then
   fi
 fi
 
+
+# ##########################################################################################
 # Set TRAEFIK_AUTH
 if ! [ -f traefik-docker/shared/.htpasswd ] || [[ "${_FLAG_TRAEFIK_NOAUTH}" == 'y' ]]; then
   _TRAEFIK_AUTH="NoAuth"
