@@ -98,24 +98,30 @@ while getopts ":fFa:cI:i:n:t:d:NRUPDh" flag; do
         printf "No valid argument for '-a'.\n"
         exit_arg_err
       fi
+      # shellcheck disable=SC2034  # Variable(s) is/are referenced indirectly
       _FLAG_ARCHITECTURE=${OPTARG,,}
       ;;
     c) # Set for force compiling the 'goofball222/dns-over-https' docker image.
       _FLAG_COMPILE='y'
       ;;
     I) # Set INTERFACE variable with <INTERFACE>. E.g. eth0
+      # shellcheck disable=SC2034  # Variable(s) is/are referenced indirectly
       _FLAG_INTERFACE=${OPTARG}
       ;;
     i) # Set HOST_IP variable with <IP ADDRESS>. E.g. 192.168.0.2
+      # shellcheck disable=SC2034  # Variable(s) is/are referenced indirectly
       _FLAG_HOST_IP=${OPTARG}
       ;;
     n) # Set HOST_NAME variable with <HOSTNAME>. E.g. raspberry
+      # shellcheck disable=SC2034  # Variable(s) is/are referenced indirectly
       _FLAG_HOST_NAME=${OPTARG}
       ;;
     t) # Set TIMEZONE variable with <TIMEZONE>. Format e.g. Europe/London
+      # shellcheck disable=SC2034  # Variable(s) is/are referenced indirectly
       _FLAG_TIMEZONE=${OPTARG}
       ;;
     d) # Set DOMAIN variable with <DOMAIN>. E.g. example.com
+      # shellcheck disable=SC2034  # Variable(s) is/are referenced indirectly
       _FLAG_DOMAIN=${OPTARG}
       ;;
     N) # Deactivate traefik dashboard authorization
@@ -188,6 +194,7 @@ fi
 if [[ ${_FLAG_FRESH} == 'y' ]]; then
   printf "%b Skipped loading of Environment Variables.\n\n" "${INFO}"
 else
+  # shellcheck disable=SC2034  # Variable(s) is/are referenced indirectly
   if \
   _ENV_ARCHITECTURE=${DOTH_ARCHITECTURE} &&
   _ENV_INTERFACE=${DOTH_INTERFACE} &&
