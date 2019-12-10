@@ -410,11 +410,11 @@ fi
 # Set TRAEFIK_AUTH
 if ! [ -f traefik-docker/shared/.htpasswd ] || [[ "${_FLAG_TRAEFIK_NOAUTH}" == 'y' ]]; then
   _TRAEFIK_AUTH="NoAuth"
-  printf "%b Treafik dashboard authorization is set to %bINACTIVE%b.\n" \
+  printf "\n%b Treafik dashboard authorization is set to %bINACTIVE%b.\n" \
           "${INFO}" "${CYAN}" "${BLANK}"
 else
   _TRAEFIK_AUTH="Auth"
-  printf "%b Treafik dashboard authorization is set to %bACTIVE%b.\n" \
+  printf "\n%b Treafik dashboard authorization is set to %bACTIVE%b.\n" \
           "${INFO}" "${CYAN}" "${BLANK}"
 fi
 
