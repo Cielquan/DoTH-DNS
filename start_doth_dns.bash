@@ -27,6 +27,12 @@ ORANGE='\e[0;33m' # For WARNING messages
 CYAN='\e[0;36m' # For INFO messages
 BLANK='\e[0m' # For resetting colors
 
+# Message category variables
+ERROR="${RED}ERROR:  ${BLANK}"
+SUCCESS="${GREEN}SUCCESS:${BLANK}"
+WARNING="${ORANGE}WARNING:${BLANK}"
+INFO="${CYAN}INFO:   ${BLANK}"
+
 
 # ##########################################################################################
 ### Functions for error exits and help
@@ -146,9 +152,9 @@ done
 # Shutting service down
 if [[ ${_FLAG_DOWN_ALL} == 'y' ]]; then
   printf "\n####################\n"
-  printf "\n%bINFO:   %b Shutting DoTH-DNS down.\n\n" "${CYAN}" "${BLANK}"
+  printf "\n%b Shutting DoTH-DNS down.\n\n" "${INFO}"
   docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml down || exit_dc_err
-  printf "\n\n%bSUCCESS:%b DoTH-DNS shut down.\n" "${GREEN}" "${BLANK}"
+  printf "\n\n%b DoTH-DNS shut down.\n" "${SUCCESS}"
   printf "\n####################\n\n"
   exit 0
 fi
@@ -157,22 +163,22 @@ fi
 # ##########################################################################################
 # Starting line
 printf "\n####################\n"
-printf "\n%bINFO:   %b Starting setup for DoTH-DNS.\n\n\n" "${CYAN}" "${BLANK}"
+printf "\n%b Starting setup for DoTH-DNS.\n\n\n" "${INFO}"
 
 
 # ##########################################################################################
 # Load .env file
 if [[ ${_FLAG_FRESH} == 'y' ]]; then
-  printf "%bINFO:   %b Skipped loading of '.env'.\n\n" "${CYAN}" "${BLANK}"
+  printf "%b Skipped loading of '.env'.\n\n" "${INFO}"
 else
   if [[ -f .env ]]; then
     if . .env; then
-      printf "%bINFO:   %b .env loaded.\n\n" "${CYAN}" "${BLANK}"
+      printf "%b .env loaded.\n\n" "${INFO}"
     else
-      printf "%bWARNING:%b Failed to load '.env'. Falling back to self gather information.\n\n" "${ORANGE}" "${BLANK}"
+      printf "%b Failed to load '.env'. Falling back to self gather information.\n\n" "${WARNING}"
     fi
   else
-    printf "%bWARNING:%b No '.env' file found. Falling back to self gather information.\n\n" "${ORANGE}" "${BLANK}"
+    printf "%b No '.env' file found. Falling back to self gather information.\n\n" "${WARNING}"
   fi
 fi
 
@@ -180,7 +186,7 @@ fi
 # ##########################################################################################
 # Grabbing EnvVars
 if [[ ${_FLAG_FRESH} == 'y' ]]; then
-  printf "%bINFO:   %b Skipped loading of Environment Variables.\n\n" "${CYAN}" "${BLANK}"
+  printf "%b Skipped loading of Environment Variables.\n\n" "${INFO}"
 else
   if \
   _ENV_ARCHITECTURE=${DOTH_ARCHITECTURE} &&
@@ -190,10 +196,10 @@ else
   _ENV_TIMEZONE=${DOTH_TIMEZONE} &&
   _ENV_DOMAIN=${DOTH_DOMAIN}
   then
-    printf "%bINFO:   %b Environment Variables loaded.\n\n" "${CYAN}" "${BLANK}"
+    printf "%b Environment Variables loaded.\n\n" "${INFO}"
   else
-    printf "%bWARNING:%b No Environment Variables could be loaded. Falling back to self gather information.\n\n" \
-            "${ORANGE}" "${BLANK}"
+    printf "%b No Environment Variables could be loaded. Falling back to self gather information.\n\n" \
+            "${WARNING}"
   fi
 fi
 
@@ -404,12 +410,12 @@ fi
 # Set TRAEFIK_AUTH
 if ! [ -f traefik-docker/shared/.htpasswd ] || [[ "${_FLAG_TRAEFIK_NOAUTH}" == 'y' ]]; then
   _TRAEFIK_AUTH="NoAuth"
-  printf "%bINFO:   %b Treafik dashboard authorization is set to %bINACTIVE%b.\n" \
-          "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+  printf "%b Treafik dashboard authorization is set to %bINACTIVE%b.\n" \
+          "${INFO}" "${CYAN}" "${BLANK}"
 else
   _TRAEFIK_AUTH="Auth"
-  printf "%bINFO:   %b Treafik dashboard authorization is set to %bACTIVE%b.\n" \
-          "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+  printf "%b Treafik dashboard authorization is set to %bACTIVE%b.\n" \
+          "${INFO}" "${CYAN}" "${BLANK}"
 fi
 
 
@@ -421,7 +427,7 @@ if printf "%s" "${_ARCHITECTURE}" | grep -iq arm; then
 elif printf "%s" "${_ARCHITECTURE}" | grep -iq x86; then
   _UNBOUND_VARIANT="unbound"
 else
-  printf "%bERROR:  %b Invalid architecture. Only 'ARM' and 'x86' are allowed.\n" "${RED}" "${BLANK}"
+  printf "%b Invalid architecture. Only 'ARM' and 'x86' are allowed.\n" "${ERROR}"
   exit_err
 fi
 
@@ -433,18 +439,18 @@ if [[ "${_FLAG_COMPILE}" == 'y' ]] ||
     VERSION="$(git ls-remote -t --refs  https://github.com/m13253/dns-over-https.git | tail -n1 |
                 awk '{print $2}' | sed 's,refs/tags/v,,')" &&
     CUR_DIR="$(pwd)" &&
-    printf "%bINFO:   %b Compiling image for 'goofball222/dns-over-https' for version %s.\n" \
-            "${CYAN}" "${BLANK}" "${VERSION}." &&
+    printf "%b Compiling image for 'goofball222/dns-over-https' for version %s.\n" \
+            "${INFO}" "${VERSION}." &&
     mkdir -p ~/dns-over-https_tmp && cd ~/dns-over-https_tmp &&
     git clone https://github.com/goofball222/dns-over-https.git && cd dns-over-https &&
     printf "%s" "${VERSION}" | tee 'stable/VERSION' > /dev/null && sudo make &&
     cd "${CUR_DIR}" && rm -rf ~/dns-over-https_tmp
   then
-    printf "%bSUCCESS:%b Image compiled.\n" "${GREEN}" "${BLANK}"
+    printf "%b Image compiled.\n" "${SUCCESS}"
   else
-    printf "%bERROR:  %b Compiling failed. Deleting '~/dns-over-https_tmp' directory.\n" "${RED}" "${BLANK}"
+    printf "%b Compiling failed. Deleting '~/dns-over-https_tmp' directory.\n" "${ERROR}"
     rm -rf ~/dns-over-https_tmp ||
-      printf "%bERROR:  %b Failed to delete '~/dns-over-https_tmp' directory.\n" "${RED}" "${BLANK}"
+      printf "%b Failed to delete '~/dns-over-https_tmp' directory.\n" "${ERROR}"
     exit_err
   fi
 fi
@@ -452,58 +458,58 @@ fi
 
 # ##########################################################################################
 # Download root.hints file
-printf "\n%bINFO:   %b Checking for 'root.hints' file.\n" "${CYAN}" "${BLANK}"
+printf "\n%b Checking for 'root.hints' file.\n" "${INFO}"
 if ! [ -f unbound-docker/var/root.hints ]; then
   if wget -nv https://www.internic.net/domain/named.root -O unbound-docker/var/root.hints; then
-    printf "%bSUCCESS:%b 'root.hints' file downloaded.\n" "${GREEN}" "${BLANK}"
+    printf "%b 'root.hints' file downloaded.\n" "${SUCCESS}"
   else
-    printf "%bERROR:  %b 'root.hints' file download failed.\n" "${RED}" "${BLANK}"
+    printf "%b 'root.hints' file download failed.\n" "${ERROR}"
     exit_err
   fi
 else
   (( DIFF = ($(date +%s) - $(stat -c %Z unbound-docker/var/root.hints))/3600 ))
   if ((DIFF > 1)) || [[ "${_FLAG_FRESH}" == 'y' ]]; then
     if wget -nv https://www.internic.net/domain/named.root -O unbound-docker/var/root.hints; then
-      printf "%bSUCCESS:%b 'root.hints' file updated.\n" "${GREEN}" "${BLANK}"
+      printf "%b 'root.hints' file updated.\n" "${SUCCESS}"
     else
-      printf "%bWARNING:%b 'root.hints' file update failed.\n" "${ORANGE}" "${BLANK}"
+      printf "%b 'root.hints' file update failed.\n" "${WARNING}"
     fi
   else
-    printf "%bSUCCESS:%b 'root.hints' file found.\n" "${GREEN}" "${BLANK}"
+    printf "%b 'root.hints' file found.\n" "${SUCCESS}"
   fi
 fi
 
 
 # ##########################################################################################
 ### Check encryption file stuff
-printf "\n%bINFO:   %b Checking for TLS files.\n" "${CYAN}" "${BLANK}"
+printf "\n%b Checking for TLS files.\n" "${INFO}"
 # Check for 'cert.crt' file
-printf "%bINFO:   %b Checking for cert.crt file.\n" "${CYAN}" "${BLANK}"
+printf "%b Checking for cert.crt file.\n" "${INFO}"
 if [ -f certificates/cert.crt ]; then
-  printf "%bSUCCESS:%b Found cert.crt file.\n" "${GREEN}" "${BLANK}"
+  printf "%b Found cert.crt file.\n" "${SUCCESS}"
 else
-  printf "%bERROR:  %b No 'cert.crt' file found. Please add a 'cert.crt' file to certificates/.`
-          ` Then restart this script.\n" "${RED}" "${BLANK}"
+  printf "%b No 'cert.crt' file found. Please add a 'cert.crt' file to certificates/.`
+          ` Then restart this script.\n" "${ERROR}"
   exit_err
 fi
 
 # Check for 'key.key' file
-printf "%bINFO:   %b Checking for key.key file.\n" "${CYAN}" "${BLANK}"
+printf "%b Checking for key.key file.\n" "${INFO}"
 if [ -f certificates/key.key ]; then
-  printf "%bSUCCESS:%b Found key.key file.\n" "${GREEN}" "${BLANK}"
+  printf "%b Found key.key file.\n" "${SUCCESS}"
 else
-  printf "%bERROR:  %b No 'key.key' file found. Please add a 'key.key' file to certificates/.`
-          ` Then restart this script.\n" "${RED}" "${BLANK}"
+  printf "%b No 'key.key' file found. Please add a 'key.key' file to certificates/.`
+          ` Then restart this script.\n" "${ERROR}"
   exit_err
 fi
 
 # Check for 'dhparam.pem' file
-printf "%bINFO:   %b Checking for dhparam.pem file.\n" "${CYAN}" "${BLANK}"
+printf "%b Checking for dhparam.pem file.\n" "${INFO}"
 if [ -f certificates/dhparam.pem ]; then
-  printf "%bSUCCESS:%b Found dhparam.pem file.\n" "${GREEN}" "${BLANK}"
+  printf "%b Found dhparam.pem file.\n" "${SUCCESS}"
 else
-  printf "%bERROR:  %b No 'dhparam.pem' file found. Please add a 'dhparam.pem' file to certificates/.`
-          ` Then restart this script.\n" "${RED}" "${BLANK}"
+  printf "%b No 'dhparam.pem' file found. Please add a 'dhparam.pem' file to certificates/.`
+          ` Then restart this script.\n" "${ERROR}"
   exit_err
 fi
 
@@ -511,23 +517,23 @@ fi
 # ##########################################################################################
 # Creating/Overwriting '.env' file
 if [ -f .env ]; then
-  printf "\n%bINFO:   %b Overwriting '.env' file.\n" "${CYAN}" "${BLANK}"
+  printf "\n%b Overwriting '.env' file.\n" "${INFO}"
   _NEW_ENV='Overwrote'
 else
-  printf "\n%bINFO:   %b Creating '.env' file.\n" "${CYAN}" "${BLANK}"
+  printf "\n%b Creating '.env' file.\n" "${INFO}"
   _NEW_ENV='Created new'
 fi
 if printf "HOST_NAME=%s\nDOMAIN=%s\nTIMEZONE=%s\nUNBOUND_VARIANT=%s\nARCHITECTURE=%s\nINTERFACE=%s\nHOST_IP=%s`
             `\nTRAEFIK_AUTH=%s" "${_HOST_NAME}" "${_DOMAIN}" "${_TIMEZONE}" "${_UNBOUND_VARIANT}" "${_ARCHITECTURE}" \
             "${_INTERFACE}" "${_HOST_IP}" "${_TRAEFIK_AUTH}" | tee .env > /dev/null; then
-  printf "%bSUCCESS:%b ${_NEW_ENV} '.env' file.\n" "${GREEN}" "${BLANK}"
+  printf "%b ${_NEW_ENV} '.env' file.\n" "${SUCCESS}"
 else
   if [ -f .env ]; then
-    printf "%bERROR:  %b Error while creating '.env' file. Data could not be gathered and empty file was created. `
-            `Please add necessary settings (ServerIP, DOMAIN and TZ) manually.\n" "${RED}" "${BLANK}"
+    printf "%b Error while creating '.env' file. Data could not be gathered and empty file was created. `
+            `Please add necessary settings (ServerIP, DOMAIN and TZ) manually.\n" "${ERROR}"
     exit_err
   else
-    printf "%bERROR:  %b Error while creating '.env' file. The file was not created.\n" "${RED}" "${BLANK}"
+    printf "%b Error while creating '.env' file. The file was not created.\n" "${ERROR}"
     exit_err
   fi
 fi
@@ -535,16 +541,16 @@ fi
 
 # ##########################################################################################
 # Setup finish & run start line
-printf "\n\n%bSUCCESS:%b Setup for DoTH-DNS finished.\n" "${GREEN}" "${BLANK}"
+printf "\n\n%b Setup for DoTH-DNS finished.\n" "${SUCCESS}"
 printf "\n####################\n"
-printf "\n%bINFO:   %b Starting DoTH-DNS.\n\n\n" "${CYAN}" "${BLANK}"
+printf "\n%b Starting DoTH-DNS.\n\n\n" "${INFO}"
 
 
 # ##########################################################################################
 # Different start compositions
 if [[ "${_FLAG_NO_PROXY}" == 'y' ]]; then
   if [[ "${_FLAG_UPDATE_ALL}" == 'y' ]]; then
-    printf "%bINFO:   %b Updating DoTH-DNS without reverse proxy.\n" "${CYAN}" "${BLANK}"
+    printf "%b Updating DoTH-DNS without reverse proxy.\n" "${INFO}"
     docker-compose down || exit_dc_err
     if printf "%s" "${_ARCHITECTURE}" | grep -iq arm; then
       docker-compose pull pihole unbound || exit_dc_err
@@ -553,16 +559,16 @@ if [[ "${_FLAG_NO_PROXY}" == 'y' ]]; then
     fi
     docker-compose up -d --force-recreate || exit_dc_err
   elif [[ "${_FLAG_RECREATE_ALL}" == 'y' ]]; then
-    printf "%bINFO:   %b Recreating DoTH-DNS without reverse proxy.\n" "${CYAN}" "${BLANK}"
+    printf "%b Recreating DoTH-DNS without reverse proxy.\n" "${INFO}"
     docker-compose up -d --force-recreate || exit_dc_err
   else
-    printf "%bINFO:   %b Creating DoTH-DNS without reverse proxy.\n" "${CYAN}" "${BLANK}"
+    printf "%b Creating DoTH-DNS without reverse proxy.\n" "${INFO}"
     docker-compose up -d || exit_dc_err
   fi
 else
   if [[ "${_FLAG_UPDATE_ALL}" == 'y' ]]; then
-    printf "%bINFO:   %b Updating DoTH-DNS with %btraefik%b reverse proxy.\n" \
-            "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+    printf "%b Updating DoTH-DNS with %btraefik%b reverse proxy.\n" \
+            "${INFO}" "${CYAN}" "${BLANK}"
     docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml down || exit_dc_err
     if printf "%s" "${_ARCHITECTURE}" | grep -iq arm; then
       docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml pull pihole unbound traefik || exit_dc_err
@@ -571,12 +577,12 @@ else
     fi
     docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml up -d || exit_dc_err
   elif [[ "${_FLAG_RECREATE_ALL}" == 'y' ]]; then
-    printf "%bINFO:   %b Recreating DoTH-DNS with %btraefik%b reverse proxy.\n" \
-            "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+    printf "%b Recreating DoTH-DNS with %btraefik%b reverse proxy.\n" \
+            "${INFO}" "${CYAN}" "${BLANK}"
     docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml up -d --force-recreate || exit_dc_err
   else
-    printf "%bINFO:   %b Creating DoTH-DNS with %btraefik%b reverse proxy.\n" \
-            "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+    printf "%b Creating DoTH-DNS with %btraefik%b reverse proxy.\n" \
+            "${INFO}" "${CYAN}" "${BLANK}"
     docker-compose -f docker-compose.yaml -f docker-compose.traefik.yaml up -d || exit_dc_err
   fi
 fi
@@ -585,7 +591,7 @@ fi
 # ##########################################################################################
 ### Testing unbound-docker
 # Check if container started and works; timeout after 1 min
-printf "\n%bINFO:   %b Starting up unbound container " "${CYAN}" "${BLANK}"
+printf "\n%b Starting up unbound container " "${INFO}"
 for i in $(seq 1 20); do
   if [ "$(docker inspect -f "{{.State.Health.Status}}" unbound)" == "healthy" ]; then
     printf " %bOK%b\n" "${GREEN}" "${BLANK}"
@@ -597,15 +603,15 @@ for i in $(seq 1 20); do
 
   if [ "$i" -eq 20 ]; then
     printf " %bFAILED%b\n" "${RED}" "${BLANK}"
-    printf "%bERROR:  %b Timed out waiting for unbound to start, check your container logs for more info `
-            `(\`docker logs unbound\`).\n" "${RED}" "${BLANK}"
-    printf "%bINFO:   %b Container health status of 'unbound': `
-            `%b$(docker inspect -f "{{.State.Health.Status}}" unbound)%b\n" "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+    printf "%b Timed out waiting for unbound to start, check your container logs for more info `
+            `(\`docker logs unbound\`).\n" "${ERROR}"
+    printf "%b Container health status of 'unbound': `
+            `%b$(docker inspect -f "{{.State.Health.Status}}" unbound)%b\n" "${INFO}" "${CYAN}" "${BLANK}"
     exit_err
   fi
 done;
-printf "%bINFO:   %b Container health status of 'unbound': `
-        `%b$(docker inspect -f "{{.State.Health.Status}}" unbound)%b\n" "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+printf "%b Container health status of 'unbound': `
+        `%b$(docker inspect -f "{{.State.Health.Status}}" unbound)%b\n" "${INFO}" "${CYAN}" "${BLANK}"
 
 # Test DNSSEC - The first command should give a status report of SERVFAIL and no IP address.
 # The second should give NOERROR plus an IP address.
@@ -615,28 +621,28 @@ if [ "$(echo "$TEST" | sed '/SERVER:/d' | grep -cE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9
   TEST=$(docker exec unbound drill sigok.verteiltesysteme.net @127.0.0.1 -p 53)
   if [ "$(echo "$TEST" | sed '/SERVER:/d' | grep -cE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')" = 1 ] &&
         [ "$(echo "$TEST" | grep -c 'rcode: NOERROR')" = 1 ]; then
-    printf "%bSUCCESS:%b DNSSEC works.\n" "${GREEN}" "${BLANK}"
+    printf "%b DNSSEC works.\n" "${SUCCESS}"
   else
-    printf "%bWARNING:%b DNSSEC fail with second check (positiv check).\n" "${ORANGE}" "${BLANK}"
+    printf "%b DNSSEC fail with second check (positiv check).\n" "${WARNING}"
   fi
 else
-  printf "%bWARNING:%b DNSSEC fail with first check (negativ check).\n" "${ORANGE}" "${BLANK}"
+  printf "%b DNSSEC fail with first check (negativ check).\n" "${WARNING}"
 fi
 
 
 # ##########################################################################################
 ### Testing pihole-docker
 # Check if container started and works; timeout after 1 min
-printf "\n%bINFO:   %b Starting up pihole container " "${CYAN}" "${BLANK}"
+printf "\n%b Starting up pihole container " "${INFO}"
 for i in $(seq 1 20); do
   if [ "$(docker inspect -f "{{.State.Health.Status}}" pihole)" == "healthy" ]; then
     printf " %bOK%b\n" "${GREEN}" "${BLANK}"
     if [ "$(docker logs pihole 2> /dev/null | grep -c 'Setting password:')" -gt 0 ]; then
-      printf "%bINFO:   %b $(docker logs pihole 2> /dev/null |
-            grep 'Setting password:') for your pi-hole: https://pi.hole/admin/.\n" "${CYAN}" "${BLANK}"
+      printf "%b $(docker logs pihole 2> /dev/null |
+            grep 'Setting password:') for your pi-hole: https://pi.hole/admin/.\n" "${INFO}"
       RAN_PW='y'
     else
-      printf "%bINFO:   %b Set given WEBPASSWORD for your pi-hole: https://pi.hole/admin/.\n" "${CYAN}" "${BLANK}"
+      printf "%b Set given WEBPASSWORD for your pi-hole: https://pi.hole/admin/.\n" "${INFO}"
       RAN_PW='n'
     fi
     break
@@ -647,22 +653,22 @@ for i in $(seq 1 20); do
 
   if [ "$i" -eq 20 ]; then
     printf " %bFAILED%b\n" "${RED}" "${BLANK}"
-    printf "%bERROR:  %b Timed out waiting for Pi-hole to start, check your container logs for more info `
-            `(\`docker logs pihole\`).\n" "${RED}" "${BLANK}"
-    printf "%bINFO:   %b Container health status of 'pihole': `
-            `%b$(docker inspect -f "{{.State.Health.Status}}" pihole)%b\n" "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+    printf "%b Timed out waiting for Pi-hole to start, check your container logs for more info `
+            `(\`docker logs pihole\`).\n" "${ERROR}"
+    printf "%b Container health status of 'pihole': `
+            `%b$(docker inspect -f "{{.State.Health.Status}}" pihole)%b\n" "${INFO}" "${CYAN}" "${BLANK}"
     exit_err
   fi
 done;
-printf "%bINFO:   %b Container health status of 'pihole': `
-        `%b$(docker inspect -f "{{.State.Health.Status}}" pihole)%b\n" "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+printf "%b Container health status of 'pihole': `
+        `%b$(docker inspect -f "{{.State.Health.Status}}" pihole)%b\n" "${INFO}" "${CYAN}" "${BLANK}"
 
 # Check if blocklist setup is finished and when then restore custom conf; timeout after 10 min
-printf "%bINFO:   %b Waiting for blocklist setup to finish " "${CYAN}" "${BLANK}"
+printf "%b Waiting for blocklist setup to finish " "${INFO}"
 for i in $(seq 1 60); do
   if [ "$(docker logs pihole 2> /dev/null | grep -c "\[services.d\] done.")" -gt 0 ]; then
     printf " %bOK%b\n" "${GREEN}" "${BLANK}"
-    printf "%bSUCCESS:%b Blocklist setup finished.\n" "${GREEN}" "${BLANK}"
+    printf "%b Blocklist setup finished.\n" "${SUCCESS}"
     break
   else
     sleep 10
@@ -671,8 +677,8 @@ for i in $(seq 1 60); do
 
   if [ "$i" -eq 60 ]; then
     printf " %bFAILED%b\n" "${RED}" "${BLANK}"
-    printf "%bERROR:  %b Timed out waiting for blocklists to set up, check your container logs for more info `
-            `(\`docker logs pihole\`).\n" "${RED}" "${BLANK}"
+    printf "%b Timed out waiting for blocklists to set up, check your container logs for more info `
+            `(\`docker logs pihole\`).\n" "${ERROR}"
     exit_err
   fi
 done;
@@ -681,7 +687,7 @@ done;
 # ##########################################################################################
 ### Testing doh_server-docker
 # Check if container started and is running; timeout after 1 min
-printf "\n%bINFO:   %b Starting up doh_server container " "${CYAN}" "${BLANK}"
+printf "\n%b Starting up doh_server container " "${INFO}"
 for i in $(seq 1 20); do
   if [ "$(docker inspect -f "{{.State.Status}}" doh_server)" == "running" ]; then
     if [ "$(docker inspect -f "{{.State.Status}}" doh_server)" == "running" ]; then
@@ -696,22 +702,22 @@ for i in $(seq 1 20); do
 
   if [ "$i" -eq 20 ]; then
     printf " %bFAILED%b\n" "${RED}" "${BLANK}"
-    printf "%bERROR:  %b Timed out waiting for doh_server to start, check your container logs for more info `
-            `(\`docker logs doh_server\`).\n" "${RED}" "${BLANK}"
-    printf "%bINFO:   %b Container health status of 'doh_server': `
-            `%b$(docker inspect -f "{{.State.Status}}" doh_server)%b\n" "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+    printf "%b Timed out waiting for doh_server to start, check your container logs for more info `
+            `(\`docker logs doh_server\`).\n" "${ERROR}"
+    printf "%b Container health status of 'doh_server': `
+            `%b$(docker inspect -f "{{.State.Status}}" doh_server)%b\n" "${INFO}" "${CYAN}" "${BLANK}"
     exit_err
   fi
 done;
-printf "%bINFO:   %b Container health status of 'doh_server': `
-        `%b$(docker inspect -f "{{.State.Status}}" doh_server)%b\n" "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+printf "%b Container health status of 'doh_server': `
+        `%b$(docker inspect -f "{{.State.Status}}" doh_server)%b\n" "${INFO}" "${CYAN}" "${BLANK}"
 
 
 # ##########################################################################################
 ### Testing traefik-docker
 if ! [[ "${_FLAG_NO_PROXY}" == 'y' ]]; then
   # Check if container started and is running; timeout after 1 min
-  printf "\n%bINFO:   %b Starting up traefik container " "${CYAN}" "${BLANK}"
+  printf "\n%b Starting up traefik container " "${INFO}"
   for i in $(seq 1 20); do
     if [ "$(docker inspect -f "{{.State.Status}}" traefik)" == "running" ]; then
       if [ "$(docker inspect -f "{{.State.Status}}" traefik)" == "running" ]; then
@@ -726,20 +732,20 @@ if ! [[ "${_FLAG_NO_PROXY}" == 'y' ]]; then
 
     if [ "$i" -eq 20 ]; then
       printf " %bFAILED%b\n" "${RED}" "${BLANK}"
-      printf "%bERROR:  %b Timed out waiting for traefik to start, check your container logs for more info `
-              `(\`docker logs traefik\`).\n" "${RED}" "${BLANK}"
-      printf "%bINFO:   %b Container health status of 'traefik': `
-            `%b$(docker inspect -f "{{.State.Status}}" traefik)%b\n" "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+      printf "%b Timed out waiting for traefik to start, check your container logs for more info `
+              `(\`docker logs traefik\`).\n" "${ERROR}"
+      printf "%b Container health status of 'traefik': `
+            `%b$(docker inspect -f "{{.State.Status}}" traefik)%b\n" "${INFO}" "${CYAN}" "${BLANK}"
       exit_err
     fi
   done;
-  printf "%bINFO:   %b Container health status of 'traefik': `
-          `%b$(docker inspect -f "{{.State.Status}}" traefik)%b\n" "${CYAN}" "${BLANK}" "${CYAN}" "${BLANK}"
+  printf "%b Container health status of 'traefik': `
+          `%b$(docker inspect -f "{{.State.Status}}" traefik)%b\n" "${INFO}" "${CYAN}" "${BLANK}"
 fi
 
 # ##########################################################################################
 # Finishing line
-printf "\n\n%bSUCCESS:%b DoTH-DNS is up and running.\n" "${GREEN}" "${BLANK}"
+printf "\n\n%b DoTH-DNS is up and running.\n" "${SUCCESS}"
 printf "\n####################\n\n"
 
 
