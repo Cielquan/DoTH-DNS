@@ -206,204 +206,96 @@ fi
 
 # ##########################################################################################
 ### Check and set ENV Vars
-# Set ARCHITECTURE
-if [[ -n "${_FLAG_ARCHITECTURE}" ]]; then
-  if _ARCHITECTURE="${_FLAG_ARCHITECTURE}"; then
-    printf "%bINFO:   %b ARCHITECTURE set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${_ARCHITECTURE}"
-  else
-    printf "%bERROR:  %b Failed to set ARCHITECTURE by CLI argument.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-elif [[ -n "${ARCHITECTURE}" ]]; then
-  if _ARCHITECTURE="${ARCHITECTURE}"; then
-    printf "%bINFO:   %b ARCHITECTURE set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${_ARCHITECTURE}"
-  else
-    printf "%bERROR:  %b Failed to set ARCHITECTURE by .env file.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-elif [[ -n "${_ENV_ARCHITECTURE}" ]]; then
-  if _ARCHITECTURE="${_ENV_ARCHITECTURE}"; then
-    printf "%bINFO:   %b ARCHITECTURE set by Environment Variable to '%s'.\n" "${CYAN}" "${BLANK}" "${_ARCHITECTURE}"
-  else
-    printf "%bERROR:  %b Failed to set ARCHITECTURE by Environment Variable.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-  if [[ -n "${_ARCHITECTURE}" ]]; then
-    if _ARCHITECTURE=$(lscpu | grep Architecture: | awk '{print $2}'); then
-      printf "%bINFO:   %b ARCHITECTURE was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${_ARCHITECTURE}"
+# Put config vars and sources into arrays
+_CONF_VARS=(ARCHITECTURE INTERFACE HOST_IP HOST_NAME TIMEZONE DOMAIN)
+_CONF_SOURCES=(FLAG ENV DOT_ENV)
+
+# Loop trough config vars
+for _CONF_VAR in "${_CONF_VARS[@]}"; do
+
+  # Set loop variable
+  _CONF_VAR_UC="_$_CONF_VAR"
+  _FALLBACK_START=""
+
+  # Loop trough sources
+  for _CONF_SOURCE in "${_CONF_SOURCES[@]}"; do
+
+    # Set variables according to source
+    case ${_CONF_SOURCE} in
+      FLAG)
+        _CONF_SOURCE_VAR="_FLAG_$_CONF_VAR"
+        _CONF_SOURCE_MESSAGE="'CLI argument'"
+        ;;
+      ENV)
+        _CONF_SOURCE_VAR="_ENV_$_CONF_VAR"
+        _CONF_SOURCE_MESSAGE="'Environment Variable'"
+        ;;
+      DOT_ENV)
+        _CONF_SOURCE_VAR="$_CONF_VAR"
+        _CONF_SOURCE_MESSAGE="'.env file'"
+        ;;
+    esac
+
+    # Gather config from source
+    if [[ -z "${!_CONF_VAR_UC}" ]]; then
+      if [[ -n "${!_CONF_SOURCE_VAR}" ]]; then
+        if eval "${_CONF_VAR_UC}"='${!_CONF_SOURCE_VAR}'; then
+          printf "%b %s set to '%s' by %s.\n" "${INFO}" "${_CONF_VAR}" "${!_CONF_VAR_UC}" \
+                  "${_CONF_SOURCE_MESSAGE}"
+        else
+          if [[ "${_FLAG_FALLBACK}" == 'y' ]]; then
+            _FALLBACK_START="y"
+            printf "%b Failed to set %s by %s. Falling back to next source.\n" "${WARNING}" \
+                    "${_CONF_VAR}" "${_CONF_SOURCE_MESSAGE}"
+          else
+            printf "%b Failed to set %s by %s. Fallback to other sources is deactivated.\n" "${ERROR}" \
+                    "${_CONF_VAR}" "${_CONF_SOURCE_MESSAGE}"
+            exit_err
+          fi
+        fi
+      elif [[ "${_FALLBACK_START}" == 'y' ]]; then
+        printf "%b Failed to set %s by %s because not set. Falling back to next source.\n" \
+                "${WARNING}" "${_CONF_VAR}" "${_CONF_SOURCE_MESSAGE}"
+      fi
+    fi
+
+  done
+
+  # Self gather config via command
+  if [[ -z "${!_CONF_VAR_UC}" ]]; then
+    case "${_CONF_VAR}" in
+      ARCHITECTURE)
+        _ARCHITECTURE=$(lscpu | grep Architecture: | awk '{print $2}')
+        ;;
+      INTERFACE)
+        _INTERFACE=$(route | grep '^default' | grep -o '[^ ]*$')
+        ;;
+      HOST_IP)
+        _HOST_IP=$(ifconfig "${_INTERFACE}" | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+        ;;
+      HOST_NAME)
+        _HOST_NAME=$(hostname)
+        ;;
+      TIMEZONE)
+        _TIMEZONE=$(timedatectl | grep 'Time zone' | awk '{print $3}')
+        ;;
+      DOMAIN)
+        _DOMAIN="${_HOST_NAME}".dns
+        ;;
+    esac
+
+    if [[ -n "${!_CONF_VAR_UC}" ]]; then
+      printf "%b %s set to '%s' by determining from system.\n" "${INFO}" "${_CONF_VAR}" \
+              "${!_CONF_VAR_UC}"
     else
-      printf "%bERROR:  %b ARCHITECTURE was not set and could not be determined. `
-              `Please set ARCHITECTURE in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
+      printf "%b %s was not set and could not be determined. `
+              `Please set %s via '-a' flag, in the shell environment or in '.env' file.\n" "${ERROR}" \
+              "${_CONF_VAR}" "${_CONF_VAR}"
       exit_err
     fi
   fi
-fi
 
-# Set INTERFACE
-if [[ -n "${_FLAG_INTERFACE}" ]]; then
-  if _INTERFACE="${_FLAG_INTERFACE}"; then
-    printf "%bINFO:   %b INTERFACE set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${_INTERFACE}"
-  else
-    printf "%bERROR:  %b Failed to set INTERFACE by CLI argument.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-elif [[ -n "${INTERFACE}" ]]; then
-  if _INTERFACE="${INTERFACE}"; then
-    printf "%bINFO:   %b INTERFACE set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${_INTERFACE}"
-  else
-    printf "%bERROR:  %b Failed to set INTERFACE by .env file.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-elif [[ -n "${_ENV_INTERFACE}" ]]; then
-  if _INTERFACE="${_ENV_INTERFACE}"; then
-    printf "%bINFO:   %b INTERFACE set by Environment Variable to '%s'.\n" "${CYAN}" "${BLANK}" "${_INTERFACE}"
-  else
-    printf "%bERROR:  %b Failed to set INTERFACE by Environment Variable.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-  if [[ -n "${_INTERFACE}" ]]; then
-    if _INTERFACE=$(route | grep '^default' | grep -o '[^ ]*$'); then
-      printf "%bINFO:   %b INTERFACE was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${_INTERFACE}"
-    else
-      printf "%bERROR:  %b INTERFACE was not set and could not be determined. `
-              `Please set INTERFACE in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
-      exit_err
-    fi
-  fi
-fi
-
-# Set HOST_IP for given INTERFACE
-if [[ -n "${_FLAG_HOST_IP}" ]]; then
-  if _HOST_IP="${_FLAG_HOST_IP}"; then
-    printf "%bINFO:   %b HOST_IP set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_IP}"
-  else
-    printf "%bERROR:  %b Failed to set HOST_IP by CLI argument.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-elif [[ -n "${HOST_IP}" ]]; then
-  if _HOST_IP="${HOST_IP}"; then
-    printf "%bINFO:   %b HOST_IP set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_IP}"
-  else
-    printf "%bERROR:  %b Failed to set HOST_IP by .env file.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-elif [[ -n "${_ENV_HOST_IP}" ]]; then
-  if _HOST_IP="${_ENV_HOST_IP}"; then
-    printf "%bINFO:   %b HOST_IP set by Environment Variable to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_IP}"
-  else
-    printf "%bERROR:  %b Failed to set HOST_IP by Environment Variable.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-  if [[ -n "${_HOST_IP}" ]]; then
-    if _HOST_IP=$(ifconfig "${_INTERFACE}" | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'); then
-      printf "%bINFO:   %b HOST_IP was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_IP}"
-    else
-      printf "%bERROR:  %b HOST_IP was not set and could not be determined. `
-              `Please set HOST_IP in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
-      exit_err
-    fi
-  fi
-fi
-
-
-# Set HOSTNAME
-if [[ -n "${_FLAG_HOST_NAME}" ]]; then
-  if _HOST_NAME="${_FLAG_HOST_NAME}"; then
-    printf "%bINFO:   %b HOST_NAME set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_NAME}"
-  else
-    printf "%bERROR:  %b Failed to set HOST_NAME by CLI argument.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-elif [[ -n "${HOST_NAME}" ]]; then
-  if _HOST_NAME="${HOST_NAME}"; then
-    printf "%bINFO:   %b HOST_NAME set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_NAME}"
-  else
-    printf "%bERROR:  %b Failed to set HOST_NAME by .env file.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-elif [[ -n "${_ENV_HOST_NAME}" ]]; then
-  if _HOST_NAME="${_ENV_HOST_NAME}"; then
-    printf "%bINFO:   %b HOST_NAME set by Environment Variable to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_NAME}"
-  else
-    printf "%bERROR:  %b Failed to set HOST_NAME by Environment Variable.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-  if [[ -n "${_HOST_NAME}" ]]; then
-    if _HOST_NAME=$(hostname); then
-      printf "%bINFO:   %b HOST_NAME was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${_HOST_NAME}"
-    else
-      printf "%bERROR:  %b HOST_NAME was not set and could not be determined. `
-              `Please set HOST_NAME in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
-      exit_err
-    fi
-  fi
-fi
-
-# Set TIMEZONE
-if [[ -n "${_FLAG_TIMEZONE}" ]]; then
-  if _TIMEZONE="${_FLAG_TIMEZONE}"; then
-    printf "%bINFO:   %b TIMEZONE set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${_TIMEZONE}"
-  else
-    printf "%bERROR:  %b Failed to set TIMEZONE by CLI argument.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-elif [[ -n "${TIMEZONE}" ]]; then
-  if _TIMEZONE="${TIMEZONE}"; then
-    printf "%bINFO:   %b TIMEZONE set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${_TIMEZONE}"
-  else
-    printf "%bERROR:  %b Failed to set TIMEZONE by .env file.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-elif [[ -n "${_ENV_TIMEZONE}" ]]; then
-  if _TIMEZONE="${_ENV_TIMEZONE}"; then
-    printf "%bINFO:   %b TIMEZONE set by Environment Variable to '%s'.\n" "${CYAN}" "${BLANK}" "${_TIMEZONE}"
-  else
-    printf "%bERROR:  %b Failed to set TIMEZONE by Environment Variable.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-  if [[ -n "${_TIMEZONE}" ]]; then
-    if _TIMEZONE=$(timedatectl | grep 'Time zone' | awk '{print $3}'); then
-      printf "%bINFO:   %b TIMEZONE was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${_TIMEZONE}"
-    else
-      printf "%bERROR:  %b TIMEZONE was not set and could not be determined. `
-              `Please set TIMEZONE in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
-      exit_err
-    fi
-  fi
-fi
-
-# Set DOMAIN or create with HOSTNAME
-if [[ -n "${_FLAG_DOMAIN}" ]]; then
-  if _DOMAIN="${_FLAG_DOMAIN}"; then
-    printf "%bINFO:   %b DOMAIN set by CLI argument to '%s'.\n" "${CYAN}" "${BLANK}" "${_DOMAIN}"
-  else
-    printf "%bERROR:  %b Failed to set DOMAIN by CLI argument.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-elif [[ -n "${DOMAIN}" ]]; then
-  if _DOMAIN="${DOMAIN}"; then
-    printf "%bINFO:   %b DOMAIN set by .env file to '%s'.\n" "${CYAN}" "${BLANK}" "${_DOMAIN}"
-  else
-    printf "%bERROR:  %b Failed to set DOMAIN by .env file.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-elif [[ -n "${_ENV_DOMAIN}" ]]; then
-  if _DOMAIN="${_ENV_DOMAIN}"; then
-    printf "%bINFO:   %b DOMAIN set by Environment Variable to '%s'.\n" "${CYAN}" "${BLANK}" "${_DOMAIN}"
-  else
-    printf "%bERROR:  %b Failed to set DOMAIN by Environment Variable.\n" "${RED}" "${BLANK}"
-    exit_err
-  fi
-  if [[ -n "${_DOMAIN}" ]]; then
-    if _DOMAIN="${_HOST_NAME}.dns"; then
-      printf "%bINFO:   %b DOMAIN was determined and set to '%s'.\n" "${CYAN}" "${BLANK}" "${_DOMAIN}"
-    else
-      printf "%bERROR:  %b DOMAIN was not set and could not be created. `
-              `Please set DOMAIN in '.env' file or via '-a' flag.\n" "${RED}" "${BLANK}"
-      exit_err
-    fi
-  fi
-fi
+done
 
 
 # ##########################################################################################
