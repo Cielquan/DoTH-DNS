@@ -1,5 +1,11 @@
 # DoTH DNS Change Log
 
+**Release 5.3.0** - 11.12.2019
+- Reworked config gathering in script and added fallback mechanism ([commit](https://github.com/Cielquan/DoTH-DNS/commit/30a33776a36d2fc44465710c8335958248b1ad37))
+- Added `-F` flag for fallback option ([commit](https://github.com/Cielquan/DoTH-DNS/commit/ef9677ef8d089ca5b5ad6e221b8601cc1c5e0c4d))
+- Minor code improvements in script
+- Updated README ([commit](https://github.com/Cielquan/DoTH-DNS/commit/359eed77a263d1d0efd82444f1d33aaaf5ad05cd))
+
 **Release 5.2.1** - 30.11.2019
 - Added missing hint for `whiptail` in README ([commit](https://github.com/Cielquan/DoTH-DNS/commit/f389e3ab123a64066b67acaf2a33c6a80bf1c139))
 
