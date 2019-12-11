@@ -90,7 +90,7 @@ while getopts ":fFa:cI:i:n:t:d:NRUPDh" flag; do
     f) # Set for overwriting existing configs with new ones.
       _FLAG_FRESH='y'
       ;;
-    F) # Set to let the script fallback to next source for configuration variables. Order: `flag -> .env file -> environment -> self gather`
+    F) # Set to let the script fallback to next source for configuration variables. Order: `flag -> environment -> .env file -> self gather`
       _FLAG_FALLBACK='y'
       ;;
     a) # Set ARCHITECTURE variable with 'ARM' or 'x86' (case insensitive).
