@@ -107,6 +107,8 @@ Here is an overview of the available flags for setup when calling the script. Ru
 
 * `-f`): If set then old configuration settings saved in `.env` file will not be loaded and a new `root.hints` file will be downloaded.
 
+* `-F`): Set to let the script fallback to next source for configuration variables. Order: `flag -> environment -> .env file -> self gather`
+
 * `-a`): Set Architecture of the processor ('arm' or 'x86') used by the server. Needed for determining the right docker images. If not set script will determine it. 
 
 * `-c`): Set to force `goofball222/dns-over-https` docker image to be compiled. If not set then the `ARCHITECTURE` determines if the image will be compiled 
