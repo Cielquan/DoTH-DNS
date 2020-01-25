@@ -1,5 +1,3 @@
-.. _changelog:
-
 DoTH-DNS Change Log
 ===================
 .. note::
