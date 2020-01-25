@@ -1,7 +1,13 @@
 .. _changelog:
 
-DoTH DNS Change Log
+DoTH-DNS Change Log
 ===================
+.. note::
+  These changes are listed in decreasing version number order and not necessarily chronological.
+  Version numbers follow the `SemVer <https://semver.org/>`__ principle.
+  See the `tags on this repository <https://github.com/Cielquan/DoTH-DNS/tags>`__ for all available versions.
+
+  Not all commits are linked. Commits are only linked when they match the specific note.
 
 
 .. _changelog_530:
