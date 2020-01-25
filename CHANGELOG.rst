@@ -18,7 +18,7 @@ Release 5.4.0
 
 - Added sphinx documentation (`commit <https://github.com/Cielquan/DoTH-DNS/commit/574469f04829b3565c413d6edb45d48df90643f4>`__)
 - Changed README, LICENSE, CHANGELOG from MD to reST (`commit <https://github.com/Cielquan/DoTH-DNS/commit/5890a05586032c2a6074d032d35f49660d899ec6>`__)
-- Added .gitignore (`commit <https://github.com/Cielquan/DoTH-DNS/commit/0dd209fc9575f3ee8b373d5c6f237160e6058b81>`__)
+- Added .gitattributes (`commit <https://github.com/Cielquan/DoTH-DNS/commit/0dd209fc9575f3ee8b373d5c6f237160e6058b81>`__)
 - Minor additions and fixes to documentation.
 
 
