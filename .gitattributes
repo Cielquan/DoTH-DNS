@@ -1,0 +1,250 @@
+# ====================================================================
+# GITATTRIBUTES FOR PYTHON(-WEB) PROJECTS
+#
+# These settings are general purpose for python(-web) projects.
+#
+# Details per file setting:
+#   `text`      get normalized (i.e. convert CRLF to LF).
+#   `binary`    leave untouched
+#
+# Note that `binary` is a macro for `-text -diff`.
+# ====================================================================
+
+# Exclude files from exporting
+.gitattributes      export-ignore
+.gitignore          export-ignore
+
+# Auto detect
+#    Handle line endings automatically for files detected as
+#    text and leave all files detected as binary untouched.
+#    This will handle all files NOT defined below.
+*                   text=auto
+
+
+# ==============================
+# Python
+# ==============================
+
+*.py                text diff=python
+*.pyc               binary
+*.pyd               binary
+*.pyw               text diff=python
+*.pyx               text diff=python
+*.pyz               text diff=python
+# Extensions
+*.mako              text
+
+
+# ==============================
+# Web
+# ==============================
+
+*.htm               text diff=html
+*.html              text diff=html
+*.xhtml             text diff=html
+# Stylesheets / Scripts
+*.css               text
+*.less              text
+*.sass              text
+*.scss              text diff=css
+*.js                text
+*.map               text -diff
+
+
+# ==============================
+# Scripts
+# ==============================
+
+*.bash              text eol=lf
+*.fish              text eol=lf
+*.sh                text eol=lf
+# These are explicitly windows files and should use crlf
+*.bat               text eol=crlf
+*.cmd               text eol=crlf
+*.ps1               text eol=crlf
+
+
+# ==============================
+# Config file extionsions
+# ==============================
+
+*.cfg               text
+*.cnf               text
+*.conf              text
+*.config            text
+*.ini               text
+*.json              text
+*.toml              text
+*.yaml              text
+*.yml               text
+*.xml               text
+
+
+# ==============================
+# Config files
+# ==============================
+
+Dockerfile          text
+.dockerignore       text
+.editorconfig       text
+.env                text
+.gitattributes      text
+.gitconfig          text
+.gitignore          text
+Makefile            text
+makefile            text
+.meta               text
+# Heroku
+Procfile            text
+.slugignore         text
+# Vagrant
+Vagrantfile         text
+
+
+# ==============================
+# Data / -base
+# ==============================
+
+*.csv               text
+*.xlsx              binary
+
+*.db                binary
+*.sql               text
+
+
+# ==============================
+# Documentation
+# ==============================
+
+AUTHORS             text
+CHANGELOG           text
+CHANGES             text
+CODE_OF_CONDUCT     text
+CONTRIBUTING        text
+COPYING             text
+copyright           text
+COPYRIGHT           text
+EXAMPLES            text
+INSTALL             text
+license             text
+LICENSE             text
+NEWS                text
+readme              text
+README              text
+TODO                text
+
+
+# ==============================
+# Text
+# ==============================
+
+*.md                text
+*.rst               text
+*.txt               text
+# Binary
+*.docx              -text diff=word
+*.dot               -text diff=astextplain
+*.pdf               -text diff=astextplain
+*.rtf               -text diff=astextplain
+
+
+# ==============================
+# Graphics / Images
+# ==============================
+
+*.ai                binary
+*.bmp               binary
+*.eps               binary
+*.exr               binary
+*.gif               binary
+*.gifv              binary
+*.hdr               binary
+*.ico               binary
+*.iff               binary
+*.jng               binary
+*.jp2               binary
+*.jpg               binary
+*.jpeg              binary
+*.jpx               binary
+*.jxr               binary
+*.pdf               binary
+*.pict              binary
+*.png               binary
+*.psb               binary
+*.psd               binary
+*.svg               text
+*.svgz              binary
+*.tga               binary
+*.tif               binary
+*.tiff              binary
+*.wbmp              binary
+*.webp              binary
+
+
+# ==============================
+# Audio
+# ==============================
+
+*.aif               binary
+*.aiff              binary
+*.it                binary
+*.kar               binary
+*.m4a               binary
+*.mid               binary
+*.midi              binary
+*.mod               binary
+*.mp3               binary
+*.ogg               binary
+*.ra                binary
+*.s3m               binary
+*.wav               binary
+*.xm                binary
+
+
+# ==============================
+# Video
+# ==============================
+
+*.3gpp              binary
+*.3gp               binary
+*.as                binary
+*.asf               binary
+*.asx               binary
+*.avi               binary
+*.fla               binary
+*.flv               binary
+*.m4v               binary
+*.mng               binary
+*.mov               binary
+*.mp4               binary
+*.mpeg              binary
+*.mpg               binary
+*.ogv               binary
+*.swc               binary
+*.swf               binary
+*.webm              binary
+*.wmv               binary
+
+
+# ==============================
+# Fonts
+# ==============================
+
+*.ttf               binary
+*.eot               binary
+*.otf               binary
+*.woff              binary
+*.woff2             binary
+
+
+# ==============================
+# Archives
+# ==============================
+
+*.7z                binary
+*.bz2               binary
+*.gz                binary
+*.jar               binary
+*.rar               binary
+*.tar               binary
+*.zip               binary
