@@ -17,25 +17,6 @@ DoH (`DNS over HTTPS <https://en.wikipedia.org/wiki/DNS_over_HTTPS>`_) and
 DoT (`DNS over TLS <https://en.wikipedia.org/wiki/DNS_over_TLS>`_).
 
 
-Installation
-------------
-You can install DoTH-DNS directly from a git repository clone.
-Either clone the repo and install the local clone or install it directly via git::
-
-    $ git clone https://github.com/Cielquan/DoTH-DNS.git
-    $ cd DoTH-DNS
-    $ pip install .
-
-::
-
-    $ pip install git+https://github.com/Cielquan/DoTH-DNS.git
-
-You can also download the git repo in either
-`tar.gz <https://github.com/Cielquan/DoTH-DNS/archive/master.tar.gz>`_ or
-`zip <https://github.com/Cielquan/DoTH-DNS/archive/master.zip>`_ format.
-After downloading and extracting, these can be installed with pip like above.
-
-
 Documentation
 -------------
 Documentation is available at `doth-dns.readthedocs.io <https://doth-dns.readthedocs.io/>`_.
