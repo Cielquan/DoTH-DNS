@@ -8,7 +8,17 @@ DoTH-DNS Change Log
   Not all commits are linked. Commits are only linked when they match the specific note.
 
 
-.. _changelog_:
+.. _changelog_602:
+
+Release 6.0.2
+-------------
+*Released: 01.02.2020*
+
+- Changed LICENSE to rst because of parsing errors in docs (`commit <https://github.com/Cielquan/DoTH-DNS/commit/94ad3308c582a34d5b44be2aa42567c7ebe07b17>`__)
+- Updated README (`commit <https://github.com/Cielquan/DoTH-DNS/commit/2de12da82f3c30309bf7603059323a26461b184f>`__)
+
+
+.. _changelog_601:
 
 Release 6.0.1
 -------------
