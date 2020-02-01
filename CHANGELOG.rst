@@ -5,7 +5,10 @@ DoTH-DNS Change Log
   Version numbers follow the `SemVer <https://semver.org/>`__ principle.
   See the `tags on this repository <https://github.com/Cielquan/DoTH-DNS/tags>`__ for all available versions.
 
+.. note::
   Not all commits are linked. Commits are only linked when they match the specific note.
+
+.. _changelog:
 
 
 .. _changelog_602:
