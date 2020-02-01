@@ -11,6 +11,17 @@ DoTH-DNS Change Log
 .. _changelog:
 
 
+.. _changelog_603:
+
+Release 6.0.3
+-------------
+*Released: 01.02.2020*
+
+- Fixed LICENSE.rst to be detectable by Github again (`commit <https://github.com/Cielquan/DoTH-DNS/commit/6540fce766e705d59c9ad7487a988e5d4dabfed8>`__)
+- Updated Changelog reST syntax stuff (`commit <https://github.com/Cielquan/DoTH-DNS/commit/73a433093fc75e98e73c35744e66765d74fc09b2>`__)
+- Added basic Github Issue template (`commit <https://github.com/Cielquan/DoTH-DNS/commit/33604d61dc3443e17733c0466f9d1d4079d5cc16>`__)
+
+
 .. _changelog_602:
 
 Release 6.0.2
