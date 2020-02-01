@@ -2,7 +2,7 @@
 
 # ==============================================================================
 # Copyright (c) 2019 Christian Riedel
-# 
+#
 # This file 'custom-init.bash' created 2019-11-17 is part of the project/program 'DoTH-DNS'.
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
-# 
+#
 # Github: https://github.com/Cielquan/
 # ==============================================================================
 
