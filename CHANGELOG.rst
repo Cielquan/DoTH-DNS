@@ -8,6 +8,15 @@ DoTH-DNS Change Log
   Not all commits are linked. Commits are only linked when they match the specific note.
 
 
+.. _changelog_600:
+
+Release 6.0.0
+-------------
+*Released: 30.01.2020*
+
+- Changed License from MIT to GPLv3 (`commit <https://github.com/Cielquan/DoTH-DNS/commit/3088cbac82cc3cf5e62479412199cb294509c0ea>`__)
+
+
 .. _changelog_540:
 
 Release 5.4.0
