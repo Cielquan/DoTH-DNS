@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # ======================================================================================
 # Copyright (c) 2019-2020 Christian Riedel
 #
@@ -28,72 +26,89 @@
     :copyright: 2019-2020 (c) Christian Riedel
     :license: GPLv3, see LICENSE.rst for more details
 """
+#: pylint: disable=C0103
 import os
 import sys
 
+from datetime import datetime
 from pathlib import Path
 
+import sphinx_rtd_theme
 
-# Paths
+from dothdns import __version__
+
+
+#: Add Repo to path
 sys.path.insert(0, os.path.abspath("../.."))
-conf_dir = Path(__file__)
+
+#: Vars
+CONF_DIR = Path(__file__)
+TODAY = datetime.today()
+YEAR = f"{TODAY.year}"
 
 
-# -- PROJECT INFORMATION ---------------------------------------------------------------
+#: -- PROJECT INFORMATION --------------------------------------------------------------
 
 project = "DoTH-DNS"
 author = "Christian Riedel"
-copyright = "2019-2020, Christian Riedel"  #: CHANGEME
-# The full version, including alpha/beta/rc tags
-release = "5.4.0"  #: CHANGEME
-# Major version like (X.Y)
-version = "5.4"  #: CHANGEME
-# Release date
-release_date = "2020"  #: CHANGEME
+release_year = "2019"
+copyright = (  #: pylint: disable=W0622
+    f"{release_year}{('-' + YEAR) if YEAR != release_year else ''}, " + author
+)
+#: The full version, including alpha/beta/rc tags
+release = __version__
+#: Major version like (X.Y)
+version = ".".join(__version__.split(".")[0:2])
+#: Release date
+release_date = f"{TODAY}"  #: CHANGEME
 
 
-# -- SPHINX CONFIG ---------------------------------------------------------------------
+#: -- SPHINX CONFIG --------------------------------------------------------------------
 
-# Add any Sphinx extension module names here, as strings.
-extensions = []
+#: Add any Sphinx extension module names here, as strings.
+extensions = [
+    "sphinx_rtd_theme",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.autodoc",
+]
 
-# intersphinx_mapping = {}
+intersphinx_mapping = {"python": ("https://docs.python.org/3/", None)}
 
 
-# -- FILES -----------------------------------------------------------------------------
+#: -- FILES ----------------------------------------------------------------------------
 
-# Index source file
+# source_suffix = ['.rst', '.md']
+source_suffix = ".rst"
+
+#: Index source file
 master_doc = "index"
 
-# Files to exclude for source of doc
+#: Files to exclude for source of doc
 exclude_patterns = []
 
-# Folder for static files, if folder exists
+#: Folder for static files, if folder exists
 html_static_path = []
-if Path(conf_dir, "_static").exists():
+if Path(CONF_DIR, "_static").exists():
     html_static_path = ["_static"]
 
-# Folder for template files, if folder exists
+#: Folder for template files, if folder exists
 templates_path = []
-if Path(conf_dir, "_templates").exists():
+if Path(CONF_DIR, "_templates").exists():
     templates_path = ["_templates"]
 
 
-# -- HTML OUTPUT -----------------------------------------------------------------------
+#: -- HTML OUTPUT ----------------------------------------------------------------------
 
-# Add links to *.rst source files on HTML pages
+#: Theme
+html_theme = "sphinx_rtd_theme"
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+html_last_updated_fmt = TODAY.isoformat()
+
+#: Add links to *.rst source files on HTML pages
 html_show_sourcelink = True
 
-# Pygments syntax highlighting style
+#: Pygments syntax highlighting style
 pygments_style = "sphinx"
 
-# Use RTD Theme if installed
-try:
-    import sphinx_rtd_theme
-except ImportError:
-    html_theme = "alabaster"
-else:
-    extensions.append("sphinx_rtd_theme")
-    html_theme = "sphinx_rtd_theme"
-
-# rst_epilog = """""".format()
+# rst_epilog = """
+# """.format()
