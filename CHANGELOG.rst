@@ -8,6 +8,15 @@ DoTH-DNS Change Log
   Not all commits are linked. Commits are only linked when they match the specific note.
 
 
+.. _changelog_:
+
+Release 6.0.1
+-------------
+*Released: 01.02.2020*
+
+- Added missing release note for 6.0.0 (`commit <https://github.com/Cielquan/DoTH-DNS/commit/f51ecb09929499d05853b695148aca18a18b4753>`__)
+
+
 .. _changelog_600:
 
 Release 6.0.0
