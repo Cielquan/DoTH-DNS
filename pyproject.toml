@@ -1,7 +1,17 @@
 [build-system]
 requires = [
-    "setuptools >= 40.0.4",
-    "setuptools_scm >= 2.0.0, <4",
-    "wheel >= 0.29.0",
+    "setuptools >= 42",
+    "setuptools_scm[toml] >= 3.4, < 4",
+    "wheel >= 0.34",
 ]
 build-backend = 'setuptools.build_meta'
+
+[tool.setuptools_scm]
+write_to = "src/dothdns/version.py"
+write_to_template = "__version__ = {version!r}"
+
+# -- BLACK CONFIG ----------------------------------------------------------------------
+
+[tool.black]
+line-length = 88
+exclude = "venv/"
