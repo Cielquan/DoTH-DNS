@@ -1,0 +1,28 @@
+# .readthedocs.yml
+# Read the Docs configuration file
+# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
+
+version: 2
+
+
+formats: all
+
+
+python:
+  version: 3.7
+  system_packages: true
+  install:
+    - method: pip
+      path: .
+      extra_requirements:
+        - docs
+
+
+build:
+  image: latest
+
+
+sphinx:
+  configuration: docs/source/conf.py
+  fail_on_warning: true
+  builder: htmldir
