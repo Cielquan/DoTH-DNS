@@ -37,6 +37,6 @@ from . import __version__
     version=__version__, prog_name="DoTH-DNS",
 )
 @click.help_option("-h", "--help")
-def dothdns():
+def dothdns() -> None:
     """Handle your DoTH-DNS system"""
     pass  #: pylint: disable=W0107
