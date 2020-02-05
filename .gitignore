@@ -133,3 +133,7 @@ version.py
 
 # Personal stuff
 dothdns.ini
+
+# Unignores
+!/src/dothdns/container_configs/unbound-docker/unbound.log
+!/src/dothdns/container_configs/unbound-docker/var/
