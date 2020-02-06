@@ -78,7 +78,7 @@ repos:
     hooks:
       #: pylint
       - id: pylint
-        args: [--ignore=version.py]
+        args: [--rcfile=tox.ini, --ignore=version.py]
         name: pylint
         entry: .tox/pre-commit/bin/pylint
         language: system
@@ -100,6 +100,8 @@ repos:
   #: Meta hooks
   - repo: meta
     hooks:
+      - id: identity
+        stages: [manual]
       - id: check-hooks-apply
         stages: [manual]
       - id: check-useless-excludes
