@@ -1,7 +1,7 @@
 # ======================================================================================
 # Copyright (c) 2019-2020 Christian Riedel
 #
-# This file 'cli.py' created 2020-01-25
+# This file 'config.py' created 2020-01-26
 # is part of the project/program 'DoTH-DNS'.
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,28 +19,26 @@
 # Github: https://github.com/Cielquan/
 # ======================================================================================
 """
-    dothdns.cli
-    ~~~~~~~~~~~
+    dothdns.config
+    ~~~~~~~~~~~~~~
 
-    Base command `dothdns` for CLI.
+    Configuration variables for DoTH-DNS.
 
     :copyright: (c) 2019-2020 Christian Riedel
     :license: GPLv3, see LICENSE for more details
 """
-import click
-
-from . import __version__
-from .subcommands import init
+from pathlib import Path
 
 
-@click.group()
-@click.version_option(
-    version=__version__, prog_name="DoTH-DNS",
-)
-@click.help_option("-h", "--help")
-def dothdns() -> None:
-    """Handle your DoTH-DNS system"""
-    pass  #: pylint: disable=W0107
+#: === HOME DIR PATHS ===
+#: Home dir
+ABS_PATH_HOME = Path.home()
+#: DoTH-DNS dir
+ABS_PATH_HOME_REPO_DIR = Path(ABS_PATH_HOME, "DoTH-DNS")
 
 
-dothdns.add_command(init)
+#: === PACKAGE PATHS ===
+#: Package dir
+REL_PATH_PACKAGE_DIR = Path(__file__).parent
+#: 'container_configs' dir
+REL_PATH_PACKAGE_CONTAINER_CONFIGS_DIR = Path(REL_PATH_PACKAGE_DIR, "container_configs")

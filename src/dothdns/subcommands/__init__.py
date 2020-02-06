@@ -1,7 +1,7 @@
 # ======================================================================================
 # Copyright (c) 2019-2020 Christian Riedel
 #
-# This file 'cli.py' created 2020-01-25
+# This file '__init__.py' created 2020-01-26
 # is part of the project/program 'DoTH-DNS'.
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,28 +19,15 @@
 # Github: https://github.com/Cielquan/
 # ======================================================================================
 """
-    dothdns.cli
-    ~~~~~~~~~~~
+    dothdns.subcommands
+    ~~~~~~~~~~~~~~~~~~~
 
-    Base command `dothdns` for CLI.
+    Subcommands for `dothdns` command.
 
     :copyright: (c) 2019-2020 Christian Riedel
     :license: GPLv3, see LICENSE for more details
 """
-import click
-
-from . import __version__
-from .subcommands import init
+from .init import init
 
 
-@click.group()
-@click.version_option(
-    version=__version__, prog_name="DoTH-DNS",
-)
-@click.help_option("-h", "--help")
-def dothdns() -> None:
-    """Handle your DoTH-DNS system"""
-    pass  #: pylint: disable=W0107
-
-
-dothdns.add_command(init)
+__all__ = ("init",)
