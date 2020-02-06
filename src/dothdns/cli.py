@@ -30,7 +30,7 @@
 import click
 
 from . import __version__
-from .subcommands import init
+from .subcommands import config, init
 
 
 @click.group()
@@ -43,4 +43,5 @@ def dothdns() -> None:
     pass  #: pylint: disable=W0107
 
 
+dothdns.add_command(config)
 dothdns.add_command(init)

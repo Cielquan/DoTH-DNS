@@ -27,7 +27,11 @@
     :copyright: (c) 2019-2020 Christian Riedel
     :license: GPLv3, see LICENSE for more details
 """
+from .config import config
 from .init import init
 
 
-__all__ = ("init",)
+__all__ = (
+    "config",
+    "init",
+)
