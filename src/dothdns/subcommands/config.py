@@ -36,9 +36,8 @@ from typing import Dict
 import click
 import tzlocal  # type: ignore
 
-from dothdns.config import CHOICES_ARCHITECTURE, HTPASSWD_FILES, HTPASSWD_PATHS
-from dothdns.helpers import CommandWithConfigFile, add_to_dotenv, file_finder
-
+from ..config import CHOICES_ARCHITECTURE, HTPASSWD_FILES, HTPASSWD_PATHS
+from ..helpers import CommandWithConfigFile, add_to_dotenv, file_finder
 from .init import create_config_dir
 
 

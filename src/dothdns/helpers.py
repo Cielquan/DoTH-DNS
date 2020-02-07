@@ -33,7 +33,7 @@ from typing import Dict, Iterable, Optional, Union
 
 import click
 
-from dothdns.config import (
+from .config import (
     CHOICES_ARCHITECTURE,
     DOTENV_FILES,
     DOTENV_PATHS,

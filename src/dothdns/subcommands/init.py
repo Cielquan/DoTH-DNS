@@ -31,7 +31,7 @@ import shutil
 
 import click
 
-from dothdns.config import (
+from ..config import (
     ABS_PATH_HOME_REPO_DIR,
     REL_PATH_PACKAGE_CONTAINER_CONFIGS_DIR,
 )
