@@ -39,10 +39,12 @@ CHOICES_COMPILE_MODE = ("y", "n", "auto")
 ABS_PATH_HOME = Path.home()
 #: DoTH-DNS dir
 ABS_PATH_HOME_REPO_DIR = Path(ABS_PATH_HOME, "DoTH-DNS")
-#: htpasswd file dir
-ABS_PATH_HOME_REPO_DIR_HTPASSWD = Path(
-    ABS_PATH_HOME_REPO_DIR, "traefik-docker", "shared"
+#: '.htpasswd' file
+ABS_PATH_HOME_REPO_DIR_HTPASSWD_FILE = Path(
+    ABS_PATH_HOME_REPO_DIR, "traefik-docker", "shared", ".htpasswd"
 )
+#: '.env' file for docker-compose
+ABS_PATH_HOME_REPO_DIR_DOTENV_FILE = Path(ABS_PATH_HOME_REPO_DIR, ".env")
 
 
 #: === PACKAGE PATHS ===
@@ -52,15 +54,8 @@ REL_PATH_PACKAGE_DIR = Path(__file__).parent
 REL_PATH_PACKAGE_CONTAINER_CONFIGS_DIR = Path(REL_PATH_PACKAGE_DIR, "container_configs")
 
 
-DOTENV_PATHS = [ABS_PATH_HOME_REPO_DIR]
-DOTENV_FILES = [".env"]
-
-
 INI_PATHS = (
     ABS_PATH_HOME_REPO_DIR,
     ABS_PATH_HOME,
 )
 INI_FILES = ("dothdns.ini", ".dothdns.ini")
-
-HTPASSWD_PATHS = [ABS_PATH_HOME_REPO_DIR_HTPASSWD]
-HTPASSWD_FILES = [".htpasswd"]

@@ -34,9 +34,8 @@ from typing import Dict, Iterable, Optional, Union
 import click
 
 from .config import (
+    ABS_PATH_HOME_REPO_DIR_DOTENV_FILE,
     CHOICES_ARCHITECTURE,
-    DOTENV_FILES,
-    DOTENV_PATHS,
     INI_FILES,
     INI_PATHS,
 )
@@ -154,12 +153,7 @@ def get_env_file_data(env_file: Union[str, Path]) -> Dict[str, str]:
 
 
 def add_to_dotenv(
-    var_dict: Dict[str, str],
-    *,
-    overwrite: bool = False,
-    create: bool = True,
-    dotenv_paths: Iterable[Path] = DOTENV_PATHS,
-    dotenv_files: Iterable[str] = DOTENV_FILES,
+    var_dict: Dict[str, str], *, overwrite: bool = False, create: bool = True,
 ) -> Optional[str]:
     """Write Env Vars to '.env' file
 
@@ -170,16 +164,16 @@ def add_to_dotenv(
     :param dotenv_files: Possible file names
     :return: Path of env file
     """
-    env_file = file_finder(dotenv_paths, dotenv_files)
+    env_file = ABS_PATH_HOME_REPO_DIR_DOTENV_FILE
 
-    if env_file is None and create is not True:
-        return None
-
-    if env_file:
+    if env_file.is_file():
         #: Get env vars from file
         file_dict = get_env_file_data(env_file)
+    elif create is not True:
+        #: Abort if no file and creation is not permitted
+        return None
     else:
-        #: Set first option for .env file if no file was found
+        #: No file found -> no vars to load
         file_dict = {}
 
     #: Merge env vars from dict and file; set write mode to 'append' or 'write'
@@ -189,10 +183,6 @@ def add_to_dotenv(
         dict_to_add = {**var_dict, **file_dict}
 
     #: Write env vars to .env file
-    if not env_file:
-        path_idx = 0
-        env_file = Path(DOTENV_PATHS[path_idx], DOTENV_FILES[0])
-
     with open(str(env_file), "w") as file:
         file.writelines(f"{key.upper()}={dict_to_add[key]}\n" for key in dict_to_add)
 
