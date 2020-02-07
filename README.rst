@@ -27,6 +27,12 @@ Disclaimer
 Use at own risk see the License.rst file for more details.
 
 
+Acknowledgments
+---------------
+
+Dockerfile for doh_server is based on https://github.com/goofball222/dns-over-https
+
+
 .. .############################### LINKS ###############################
 
 .. BADGES START
