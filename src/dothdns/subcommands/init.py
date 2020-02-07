@@ -1,5 +1,5 @@
 # ======================================================================================
-# Copyright (c) 2020 Christian Riedel
+# Copyright (c) 2019-2020 Christian Riedel
 #
 # This file 'init.py' created 2020-02-06
 # is part of the project/program 'DoTH-DNS'.
