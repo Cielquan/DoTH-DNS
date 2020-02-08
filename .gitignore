@@ -135,5 +135,5 @@ version.py
 dothdns.ini
 
 # Unignores
-!/src/dothdns/container_configs/unbound-docker/unbound.log
+!/src/dothdns/container_configs/unbound-docker/logs/unbound.log
 !/src/dothdns/container_configs/unbound-docker/var/
