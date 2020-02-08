@@ -32,8 +32,8 @@ from typing import Iterable, Optional
 
 import click
 
-from dothdns.config import CHOICES_ARCHITECTURE, INI_FILES, INI_PATHS
-from dothdns.helpers import file_finder, get_bool
+from ..config import CHOICES_ARCHITECTURE, INI_FILES, INI_PATHS
+from ..helpers import file_finder, get_bool
 
 
 class CommandWithConfigFile(click.Command):
@@ -62,6 +62,7 @@ class CommandWithConfigFile(click.Command):
                 conf = config["dothdns"]
                 ini_config = {
                     "fallback": get_bool(conf.get("fallback")),
+                    "proxy": get_bool(conf.get("proxy")),
                     "traefik_no_auth": get_bool(conf.get("traefik_no_auth")),
                     "traefik_network": conf.get("traefik_network"),
                     "architecture": self._check_choice(
