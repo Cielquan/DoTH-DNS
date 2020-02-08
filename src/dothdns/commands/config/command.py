@@ -1,7 +1,7 @@
 # ======================================================================================
 # Copyright (c) 2019-2020 Christian Riedel
 #
-# This file 'cmd_config.py' created 2020-01-25
+# This file 'command.py' created 2020-01-25
 # is part of the project/program 'DoTH-DNS'.
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,10 +19,10 @@
 # Github: https://github.com/Cielquan/
 # ======================================================================================
 """
-    dothdns.subcommands.config
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    dothdns.commands.config.command
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    `config` subcommand for `dothdns` command.
+    `config` subcommand.
 
     :copyright: (c) 2019-2020 Christian Riedel
     :license: GPLv3, see LICENSE for more details
@@ -36,12 +36,12 @@ from typing import Dict
 import click
 import tzlocal  # type: ignore
 
-from ..config import (
+from ...config import (
     ABS_PATH_HOME_REPO_DIR_TRAEFIK_HTPASSWD_FILE,
     CHOICES_ARCHITECTURE,
 )
-from ..helpers import CommandWithConfigFile, add_to_dotenv
-from .init import create_config_dir
+from ...helpers import CommandWithConfigFile, add_to_dotenv
+from ..init.command import create_config_dir
 
 
 @click.command(cls=CommandWithConfigFile)

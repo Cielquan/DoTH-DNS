@@ -19,10 +19,10 @@
 # Github: https://github.com/Cielquan/
 # ======================================================================================
 """
-    dothdns.subcommands
-    ~~~~~~~~~~~~~~~~~~~
+    dothdns.commands
+    ~~~~~~~~~~~~~~~~
 
-    Subcommands for `dothdns` command.
+    Commands for DoTH-DNS.
 
     :copyright: (c) 2019-2020 Christian Riedel
     :license: GPLv3, see LICENSE for more details

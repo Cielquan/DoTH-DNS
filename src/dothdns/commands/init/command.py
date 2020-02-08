@@ -1,7 +1,7 @@
 # ======================================================================================
 # Copyright (c) 2019-2020 Christian Riedel
 #
-# This file 'init.py' created 2020-02-06
+# This file 'command.py' created 2020-02-06
 # is part of the project/program 'DoTH-DNS'.
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,10 +19,10 @@
 # Github: https://github.com/Cielquan/
 # ======================================================================================
 """
-    dothdns.subcommands.init
-    ~~~~~~~~~~~~~~~~~~~~~~~~
+    dothdns.commands.init.command
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    `init` subcommand for `dothdns` command.
+    `init` subcommand.
 
     :copyright: (c) 2019-2020 Christian Riedel
     :license: GPLv3, see LICENSE for more details
@@ -32,7 +32,7 @@ import shutil
 import click
 import requests
 
-from ..config import (
+from ...config import (
     ABS_PATH_HOME_REPO_DIR,
     ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE,
     REL_PATH_PACKAGE_CONTAINER_CONFIGS_DIR,
