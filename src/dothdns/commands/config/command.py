@@ -171,7 +171,8 @@ def config(  #: pylint: disable=C0330,R0912,R0913
         env_dict.update(DOMAIN=domain)
 
     #: Create config dir if non exists
-    if create_config_dir(overwrite=False):
+    # TODO 08.02.2020: switch to call init # pylint: disable=W0511
+    if create_config_dir(creation_level=0):
         click.secho("New 'DoTH-DNS' config dir created.")
 
     #: Add env vars to '.env'

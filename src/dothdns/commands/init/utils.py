@@ -30,18 +30,61 @@
 import shutil
 
 from pathlib import Path
+from typing import Dict, Tuple
 
 from dothdns.config import ABS_PATH_HOME_REPO_DIR
 
 
-def create_config_dir(*, overwrite: bool = False) -> bool:
+def create_config_dir(*, creation_level: int = 0) -> Tuple[bool, Dict[str, str]]:
     """Creates/Overwrites DoTH-DNS config dir in home dir"""
-    if ABS_PATH_HOME_REPO_DIR.is_dir() and overwrite is False:
-        return False
-    shutil.copytree(
-        Path(__file__).parents[2].joinpath("container_configs"),
-        ABS_PATH_HOME_REPO_DIR,
-        ignore=shutil.ignore_patterns("__pycache__"),
-        dirs_exist_ok=True,
+    #: Abort if dir exists and shall not be overwritten
+    if ABS_PATH_HOME_REPO_DIR.is_dir() and creation_level == 0:
+        return (
+            False,
+            {
+                "message": "'DoTH-DNS' directory already exists. "
+                "Call `dothdns init -f/F` to overwrite existing directory.",
+                "fg": "cyan",
+            },
+        )
+
+    #: Remove old config dir
+    if creation_level == 2:
+        try:
+            shutil.rmtree(ABS_PATH_HOME_REPO_DIR)
+        except Exception as exc:  #: pylint: disable=W0703
+            return (
+                True,
+                {
+                    "message": "ERROR: Failed to remove old 'DoTH-DNS' config "
+                    "directory. Remove old directory manually and call `dothdns init` "
+                    f"again. \nError description: {exc}",
+                    "fg": "red",
+                },
+            )
+
+    #: Copy new config dir
+    try:
+        shutil.copytree(
+            Path(__file__).parents[2].joinpath("container_configs"),
+            ABS_PATH_HOME_REPO_DIR,
+            ignore=shutil.ignore_patterns("__pycache__"),
+            dirs_exist_ok=True,
+        )
+    except Exception as exc:  #: pylint: disable=W0703
+        return (
+            True,
+            {
+                "message": "ERROR: Failed to create new 'DoTH-DNS' config directory. "
+                "Make sure write rights are given and call `dothdns init` "
+                f"again. \nError description: {exc}",
+                "fg": "red",
+            },
+        )
+    return (
+        False,
+        {
+            "message": "Successfully created new 'DoTH-DNS' config directory. ",
+            "fg": "green",
+        },
     )
-    return True

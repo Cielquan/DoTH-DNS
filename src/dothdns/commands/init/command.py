@@ -35,18 +35,37 @@ from .utils import create_config_dir
 
 
 @click.command()
-@click.option("-f", "--new", is_flag=True, help="Overwrite existing config dir.")
+@click.option(
+    "-c",
+    "--only-create",
+    "creation_level",
+    default=True,
+    flag_value=0,
+    help="Only create config dir if not already existing.",
+)
+@click.option(
+    "-f",
+    "--overwrite",
+    "creation_level",
+    flag_value=1,
+    help="Overwrite existing config dir, but files added by the user stay.",
+)
+@click.option(
+    "-F",
+    "--fresh",
+    "creation_level",
+    flag_value=2,
+    help="Overwrite existing config dir totally. No files will be kept.",
+)
 @click.help_option("-h", "--help")
-def init(new):
+@click.pass_context
+def init(ctx, creation_level):
     """Create DoTH-DNS config directory in home directory"""
-    created = create_config_dir(overwrite=new)
-    if created is False:
-        click.secho(
-            "'DoTH-DNS' directory already exists. "
-            "Call `dothdns init -f` to overwrite existing directory."
-        )
-    elif created is True:
-        click.secho("New 'DoTH-DNS' config dir created.")
+    #: Create config dir
+    err, msg = create_config_dir(creation_level=creation_level)
+    click.secho(msg["message"], err=err, fg=msg.get("fg", None))
+    if err:
+        ctx.abort()
 
     #: Download 'root.hints' file
     root_hints = requests.get("https://www.internic.net/domain/named.root")
