@@ -27,18 +27,10 @@
     :copyright: (c) 2019-2020 Christian Riedel
     :license: GPLv3, see LICENSE for more details
 """
-from configparser import ConfigParser
 from pathlib import Path
 from typing import Dict, Iterable, Optional, Union
 
-import click
-
-from .config import (
-    ABS_PATH_HOME_REPO_DIR_DOTENV_FILE,
-    CHOICES_ARCHITECTURE,
-    INI_FILES,
-    INI_PATHS,
-)
+from .config import ABS_PATH_HOME_REPO_DIR_DOTENV_FILE
 
 
 def file_finder(paths: Iterable[Path], file_names: Iterable[str]) -> Optional[Path]:
@@ -84,51 +76,6 @@ def get_bool(value: Union[str, int, bool]) -> Optional[bool]:
         "false": False,
     }
     return booleans.get(str(value).lower(), None)
-
-
-class CommandWithConfigFile(click.Command):
-    """Command subclass with config file import"""
-
-    @staticmethod
-    def _check_choice(value: str, choices: Iterable[str]) -> Optional[str]:
-        """Check if value is a valid choice
-
-        :param value: Value to be checked
-        :param choices: Valid choices
-        :return: Valid value
-        """
-        if value in choices:
-            return value
-        return None
-
-    def invoke(self, ctx: click.core.Context) -> Optional[click.core.Context]:
-        """Overwritten method loading config file"""
-        config_file = file_finder(INI_PATHS, INI_FILES)
-        if config_file is not None:
-            config = ConfigParser()
-            config.read(config_file)
-
-            if "dothdns" in config.sections():
-                conf = config["dothdns"]
-                ini_config = {
-                    "fallback": get_bool(conf.get("fallback")),
-                    "traefik_no_auth": get_bool(conf.get("traefik_no_auth")),
-                    "traefik_network": conf.get("traefik_network"),
-                    "architecture": self._check_choice(
-                        conf.get("architecture"), CHOICES_ARCHITECTURE
-                    ),
-                    "interface": conf.get("interface"),
-                    "host_ip": conf.get("host_ip"),
-                    "hostname": conf.get("hostname"),
-                    "timezone": conf.get("timezone"),
-                    "domain": conf.get("domain"),
-                }
-
-                for param, value in ctx.params.items():
-                    if value is None and param in ini_config:
-                        ctx.params[param] = ini_config[param]
-
-        return super().invoke(ctx)
 
 
 def get_env_file_data(env_file: Union[str, Path]) -> Dict[str, str]:
