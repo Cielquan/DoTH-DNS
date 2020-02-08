@@ -1,7 +1,7 @@
 # ======================================================================================
 # Copyright (c) 2019-2020 Christian Riedel
 #
-# This file 'command.py' created 2020-02-06
+# This file 'utils.py' created 2020-02-08
 # is part of the project/program 'DoTH-DNS'.
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,36 +19,29 @@
 # Github: https://github.com/Cielquan/
 # ======================================================================================
 """
-    dothdns.commands.init.command
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    dothdns.commands.init.utils
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    `init` subcommand.
+    Utlilties for `init` subcommand.
 
     :copyright: (c) 2019-2020 Christian Riedel
     :license: GPLv3, see LICENSE for more details
 """
-import click
-import requests
+import shutil
 
-from ...config import ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE
-from .utils import create_config_dir
+from pathlib import Path
+
+from dothdns.config import ABS_PATH_HOME_REPO_DIR
 
 
-@click.command()
-@click.option("-f", "--new", is_flag=True, help="Overwrite existing config dir.")
-@click.help_option("-h", "--help")
-def init(new):
-    """Create DoTH-DNS config directory in home directory"""
-    created = create_config_dir(overwrite=new)
-    if created is False:
-        click.secho(
-            "'DoTH-DNS' directory already exists. "
-            "Call `dothdns init -f` to overwrite existing directory."
-        )
-    elif created is True:
-        click.secho("New 'DoTH-DNS' config dir created.")
-
-    #: Download 'root.hints' file
-    root_hints = requests.get("https://www.internic.net/domain/named.root")
-    with open(ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE, "w") as file:
-        file.write(root_hints.text)
+def create_config_dir(*, overwrite: bool = False) -> bool:
+    """Creates/Overwrites DoTH-DNS config dir in home dir"""
+    if ABS_PATH_HOME_REPO_DIR.is_dir() and overwrite is False:
+        return False
+    shutil.copytree(
+        Path(__file__).parents[2].joinpath("container_configs"),
+        ABS_PATH_HOME_REPO_DIR,
+        ignore=shutil.ignore_patterns("__pycache__"),
+        dirs_exist_ok=True,
+    )
+    return True
