@@ -36,7 +36,13 @@ from dothdns.config import ABS_PATH_HOME_REPO_DIR
 
 
 def create_config_dir(*, creation_level: int = 0) -> Tuple[bool, Dict[str, str]]:
-    """Creates/Overwrites DoTH-DNS config dir in home dir"""
+    """Creates/Overwrites DoTH-DNS config dir in home dir
+
+    :param creation_level: Level 0: create, not overwrite
+                           Level 1: overwrite, user added stuff stays
+                           Level 2: remove old and create
+    :returns: If error and output for click.secho
+    """
     #: Abort if dir exists and shall not be overwritten
     if ABS_PATH_HOME_REPO_DIR.is_dir() and creation_level == 0:
         return (
