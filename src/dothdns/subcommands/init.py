@@ -30,9 +30,11 @@
 import shutil
 
 import click
+import requests
 
 from ..config import (
     ABS_PATH_HOME_REPO_DIR,
+    ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE,
     REL_PATH_PACKAGE_CONTAINER_CONFIGS_DIR,
 )
 
@@ -62,3 +64,8 @@ def init(new):
         )
     elif created is True:
         click.secho("New 'DoTH-DNS' config dir created.")
+
+    #: Download 'root.hints' file
+    root_hints = requests.get("https://www.internic.net/domain/named.root")
+    with open(ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE, "w") as file:
+        file.write(root_hints.text)

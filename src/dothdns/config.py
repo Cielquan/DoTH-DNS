@@ -39,6 +39,10 @@ CHOICES_COMPILE_MODE = ("y", "n", "auto")
 ABS_PATH_HOME = Path.home()
 #: DoTH-DNS dir
 ABS_PATH_HOME_REPO_DIR = Path(ABS_PATH_HOME, "DoTH-DNS")
+#: unbound-docker root.hints file
+ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE = Path(
+    ABS_PATH_HOME_REPO_DIR, "unbound-docker/var_dir/root.hints"
+)
 #: '.htpasswd' file
 ABS_PATH_HOME_REPO_DIR_HTPASSWD_FILE = Path(
     ABS_PATH_HOME_REPO_DIR, "traefik-docker", "shared", ".htpasswd"
