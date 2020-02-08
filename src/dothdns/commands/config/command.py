@@ -41,7 +41,7 @@ from ...config import (
     CHOICES_ARCHITECTURE,
 )
 from ..cmd_class import CommandWithConfigFile
-from ..init.command import create_config_dir
+from ..init import init
 from .utils import add_to_dotenv
 
 
@@ -171,10 +171,10 @@ def config(  #: pylint: disable=C0330,R0912,R0913
         env_dict.update(DOMAIN=domain)
 
     #: Create config dir if non exists
-    # TODO 08.02.2020: switch to call init # pylint: disable=W0511
-    if create_config_dir(creation_level=0):
-        click.secho("New 'DoTH-DNS' config dir created.")
+    ctx.invoke(init, creation_level=0)
 
     #: Add env vars to '.env'
     if add_to_dotenv(env_dict, overwrite=fresh) is not None:
-        click.secho("SUCCESS: environment variables set in '.env' file.", fg="green")
+        click.secho(
+            "Successfully set environment variables in '.env' file.", fg="green"
+        )
