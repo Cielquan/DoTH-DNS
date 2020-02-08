@@ -141,7 +141,7 @@ def get_env_file_data(env_file: Union[str, Path]) -> Dict[str, str]:
     with open(env_file) as file:
         for line in file:
             line = line.strip()
-            #: Skip none var=val and comment lines
+            #: Skip none key=val and comment lines
             if "=" not in line or line.startswith("#"):
                 continue
             key, val = line.split("=", 1)
