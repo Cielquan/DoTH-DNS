@@ -51,13 +51,6 @@ ABS_PATH_HOME_REPO_DIR_TRAEFIK_HTPASSWD_FILE = Path(
 ABS_PATH_HOME_REPO_DIR_DOTENV_FILE = Path(ABS_PATH_HOME_REPO_DIR, ".env")
 
 
-#: === PACKAGE PATHS ===
-#: Package dir
-REL_PATH_PACKAGE_DIR = Path(__file__).parent
-#: 'container_configs' dir
-REL_PATH_PACKAGE_CONTAINER_CONFIGS_DIR = Path(REL_PATH_PACKAGE_DIR, "container_configs")
-
-
 INI_PATHS = (
     ABS_PATH_HOME_REPO_DIR,
     ABS_PATH_HOME,

@@ -29,13 +29,14 @@
 """
 import shutil
 
+from pathlib import Path
+
 import click
 import requests
 
 from ...config import (
     ABS_PATH_HOME_REPO_DIR,
     ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE,
-    REL_PATH_PACKAGE_CONTAINER_CONFIGS_DIR,
 )
 
 
@@ -44,8 +45,9 @@ def create_config_dir(*, overwrite: bool = False) -> bool:
     if ABS_PATH_HOME_REPO_DIR.is_dir() and overwrite is False:
         return False
     shutil.copytree(
-        REL_PATH_PACKAGE_CONTAINER_CONFIGS_DIR,
+        Path(__file__).parents[2].joinpath("container_configs"),
         ABS_PATH_HOME_REPO_DIR,
+        ignore=shutil.ignore_patterns("__pycache__"),
         dirs_exist_ok=True,
     )
     return True
