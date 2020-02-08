@@ -35,7 +35,7 @@ from typing import Dict, Tuple
 from dothdns.config import ABS_PATH_HOME_REPO_DIR
 
 
-def create_config_dir(*, creation_level: int = 0) -> Tuple[bool, Dict[str, str]]:
+def create_config_dir(*, creation_level: int = 0) -> Tuple[bool, bool, Dict[str, str]]:
     """Creates/Overwrites DoTH-DNS config dir in home dir
 
     :param creation_level: Level 0: create, not overwrite
@@ -47,11 +47,11 @@ def create_config_dir(*, creation_level: int = 0) -> Tuple[bool, Dict[str, str]]
     if ABS_PATH_HOME_REPO_DIR.is_dir() and creation_level == 0:
         return (
             False,
+            False,
             {
                 "message": "'DoTH-DNS' directory already exists. "
                 "Call `dothdns init -f/F` to overwrite existing directory.",
                 "fg": "cyan",
-                "print": "only_directly_invoked",
             },
         )
 
@@ -61,6 +61,7 @@ def create_config_dir(*, creation_level: int = 0) -> Tuple[bool, Dict[str, str]]
             shutil.rmtree(ABS_PATH_HOME_REPO_DIR)
         except Exception as exc:  #: pylint: disable=W0703
             return (
+                True,
                 True,
                 {
                     "message": "ERROR: Failed to remove old 'DoTH-DNS' config "
@@ -81,6 +82,7 @@ def create_config_dir(*, creation_level: int = 0) -> Tuple[bool, Dict[str, str]]
     except Exception as exc:  #: pylint: disable=W0703
         return (
             True,
+            True,
             {
                 "message": "ERROR: Failed to create new 'DoTH-DNS' config directory. "
                 "Make sure write rights are given and call `dothdns init` "
@@ -91,6 +93,7 @@ def create_config_dir(*, creation_level: int = 0) -> Tuple[bool, Dict[str, str]]
     creation_msg = {0: "created new", 1: "overwrote", 2: "created fresh"}
     return (
         False,
+        True,
         {
             "message": f"Successfully {creation_msg[creation_level]} 'DoTH-DNS' "
             "config directory. ",

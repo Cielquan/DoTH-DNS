@@ -171,7 +171,7 @@ def config(  #: pylint: disable=C0330,R0912,R0913
         env_dict.update(DOMAIN=domain)
 
     #: Create config dir if non exists
-    ctx.obj["invoked_internally"] = True
+    ctx.obj["invoked_internally_by"] = "config"
     ctx.invoke(init, creation_level=0, new_downoad=False)
 
     #: Add env vars to '.env'
