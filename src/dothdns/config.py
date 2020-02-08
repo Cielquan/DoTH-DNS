@@ -34,7 +34,6 @@ CONTAINER_NAMES = ("doh_server", "unbound", "pihole", "traefik")
 
 
 CHOICES_ARCHITECTURE = ("x86", "arm")
-CHOICES_COMPILE_MODE = ("y", "n", "auto")
 
 
 #: Home dir
