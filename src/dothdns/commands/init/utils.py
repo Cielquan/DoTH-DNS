@@ -81,10 +81,12 @@ def create_config_dir(*, creation_level: int = 0) -> Tuple[bool, Dict[str, str]]
                 "fg": "red",
             },
         )
+    creation_msg = {0: "created new", 1: "overwrote", 2: "created fresh"}
     return (
         False,
         {
-            "message": "Successfully created new 'DoTH-DNS' config directory. ",
+            "message": f"Successfully {creation_msg[creation_level]} 'DoTH-DNS' "
+            "config directory. ",
             "fg": "green",
         },
     )
