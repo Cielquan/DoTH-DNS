@@ -30,11 +30,13 @@
 from pathlib import Path
 
 
+CONTAINER_NAMES = ("doh_server", "unbound", "pihole", "traefik")
+
+
 CHOICES_ARCHITECTURE = ("x86", "arm")
 CHOICES_COMPILE_MODE = ("y", "n", "auto")
 
 
-#: === HOME DIR PATHS ===
 #: Home dir
 ABS_PATH_HOME = Path.home()
 #: DoTH-DNS dir
@@ -46,6 +48,14 @@ ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE = Path(
 #: '.htpasswd' file
 ABS_PATH_HOME_REPO_DIR_TRAEFIK_HTPASSWD_FILE = Path(
     ABS_PATH_HOME_REPO_DIR, "traefik-docker", "shared", ".htpasswd"
+)
+#: Dockerfile for doh_server
+ABS_PATH_HOME_REPO_DIR_DOH_DOCKERFILE = Path(
+    ABS_PATH_HOME_REPO_DIR, "doh-docker", "Dockerfile"
+)
+#: Docker container config file
+ABS_PATH_HOME_REPO_DIR_CONTAINER_CONFIG_FILE = Path(
+    ABS_PATH_HOME_REPO_DIR, "container_config.py"
 )
 #: '.env' file for docker-compose
 ABS_PATH_HOME_REPO_DIR_DOTENV_FILE = Path(ABS_PATH_HOME_REPO_DIR, ".env")
