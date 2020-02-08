@@ -44,7 +44,7 @@ ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE = Path(
     ABS_PATH_HOME_REPO_DIR, "unbound-docker/var_dir/root.hints"
 )
 #: '.htpasswd' file
-ABS_PATH_HOME_REPO_DIR_HTPASSWD_FILE = Path(
+ABS_PATH_HOME_REPO_DIR_TRAEFIK_HTPASSWD_FILE = Path(
     ABS_PATH_HOME_REPO_DIR, "traefik-docker", "shared", ".htpasswd"
 )
 #: '.env' file for docker-compose

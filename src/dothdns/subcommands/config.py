@@ -36,7 +36,10 @@ from typing import Dict
 import click
 import tzlocal  # type: ignore
 
-from ..config import ABS_PATH_HOME_REPO_DIR_HTPASSWD_FILE, CHOICES_ARCHITECTURE
+from ..config import (
+    ABS_PATH_HOME_REPO_DIR_TRAEFIK_HTPASSWD_FILE,
+    CHOICES_ARCHITECTURE,
+)
 from ..helpers import CommandWithConfigFile, add_to_dotenv
 from .init import create_config_dir
 
@@ -151,7 +154,7 @@ def config(  #: pylint: disable=C0330,R0912,R0913
         env_dict.update(TIMEZONE=timezone)
 
     #: TRAEFIK_AUTH_MODE
-    if ABS_PATH_HOME_REPO_DIR_HTPASSWD_FILE.is_file() and (
+    if ABS_PATH_HOME_REPO_DIR_TRAEFIK_HTPASSWD_FILE.is_file() and (
         traefik_auth is True or traefik_auth is None
     ):
         env_dict.update(TRAEFIK_AUTH_MODE="Auth")
