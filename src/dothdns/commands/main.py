@@ -36,9 +36,10 @@ from ..version import __version__
 @click.group()
 @click.version_option(version=__version__, prog_name="DoTH-DNS")
 @click.help_option("-h", "--help")
-def main() -> None:
+@click.pass_context
+def main(ctx) -> None:
     """Handle your DoTH-DNS system"""
-    pass  #: pylint: disable=W0107
+    ctx.ensure_object(dict)
 
 
 main.add_command(config)

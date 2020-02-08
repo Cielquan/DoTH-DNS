@@ -51,6 +51,7 @@ def create_config_dir(*, creation_level: int = 0) -> Tuple[bool, Dict[str, str]]
                 "message": "'DoTH-DNS' directory already exists. "
                 "Call `dothdns init -f/F` to overwrite existing directory.",
                 "fg": "cyan",
+                "print": "only_directly_invoked",
             },
         )
 

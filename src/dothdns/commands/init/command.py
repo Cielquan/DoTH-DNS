@@ -59,11 +59,12 @@ from .utils import create_config_dir
 )
 @click.help_option("-h", "--help")
 @click.pass_context
-def init(ctx, creation_level):
+def init(ctx, creation_level) -> None:
     """Create DoTH-DNS config directory in home directory"""
     #: Create config dir
     err, msg = create_config_dir(creation_level=creation_level)
-    click.secho(msg["message"], err=err, fg=msg.get("fg", None))
+    if ctx.obj.get("invoked_internally") is None or msg.get("print") is None:
+        click.secho(msg["message"], err=err, fg=msg.get("fg", None))
     if err:
         ctx.abort()
 

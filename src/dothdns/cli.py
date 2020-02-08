@@ -29,8 +29,8 @@
 """
 import sys
 
-from .commands.main import main
+from dothdns.commands.main import main
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(obj={}))  #: pylint: disable=E1120,E1123
