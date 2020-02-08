@@ -95,7 +95,7 @@ def config(  #: pylint: disable=C0330,R0912,R0913
     timezone,
     domain,
 ) -> None:
-    """Edit or create DoTH-DNS configuration file"""
+    """Edit or create DoTH-DNS configuration"""
     env_dict: Dict[str, str] = dict()
 
     #: HOST_IP

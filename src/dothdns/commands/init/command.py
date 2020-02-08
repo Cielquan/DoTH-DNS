@@ -69,7 +69,7 @@ from .utils import create_config_dir
 @click.help_option("-h", "--help")
 @click.pass_context
 def init(ctx, creation_level, new_download) -> None:
-    """Create DoTH-DNS config directory in home directory"""
+    """Create DoTH-DNS configuration directory"""
     #: Create config dir
     err, msg = create_config_dir(creation_level=creation_level)
     if ctx.obj.get("invoked_internally") is None or msg.get("print") is None:
