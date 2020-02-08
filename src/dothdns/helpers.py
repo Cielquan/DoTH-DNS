@@ -30,8 +30,6 @@
 from pathlib import Path
 from typing import Dict, Iterable, Optional, Union
 
-from .config import ABS_PATH_HOME_REPO_DIR_DOTENV_FILE
-
 
 def file_finder(paths: Iterable[Path], file_names: Iterable[str]) -> Optional[Path]:
     """Search first existing file
@@ -97,40 +95,3 @@ def get_env_file_data(env_file: Union[str, Path]) -> Dict[str, str]:
             env_file_dict[key] = val
 
     return env_file_dict
-
-
-def add_to_dotenv(
-    var_dict: Dict[str, str], *, overwrite: bool = False, create: bool = True,
-) -> Optional[str]:
-    """Write Env Vars to '.env' file
-
-    :param var_dict: Environment variables to add
-    :param overwrite: Overwrite same existing entries, other entries will be kept
-    :param create: Create '.env' file if non is found
-    :param dotenv_paths: Possible paths
-    :param dotenv_files: Possible file names
-    :return: Path of env file
-    """
-    env_file = ABS_PATH_HOME_REPO_DIR_DOTENV_FILE
-
-    if env_file.is_file():
-        #: Get env vars from file
-        file_dict = get_env_file_data(env_file)
-    elif create is not True:
-        #: Abort if no file and creation is not permitted
-        return None
-    else:
-        #: No file found -> no vars to load
-        file_dict = {}
-
-    #: Merge env vars from dict and file; set write mode to 'append' or 'write'
-    if overwrite is True:
-        dict_to_add = {**file_dict, **var_dict}
-    else:
-        dict_to_add = {**var_dict, **file_dict}
-
-    #: Write env vars to .env file
-    with open(str(env_file), "w") as file:
-        file.writelines(f"{key.upper()}={dict_to_add[key]}\n" for key in dict_to_add)
-
-    return str(env_file)

@@ -40,9 +40,9 @@ from ...config import (
     ABS_PATH_HOME_REPO_DIR_TRAEFIK_HTPASSWD_FILE,
     CHOICES_ARCHITECTURE,
 )
-from ...helpers import add_to_dotenv
 from ..cmd_class import CommandWithConfigFile
 from ..init.command import create_config_dir
+from .utils import add_to_dotenv
 
 
 @click.command(cls=CommandWithConfigFile)
