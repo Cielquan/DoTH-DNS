@@ -91,7 +91,12 @@ def init(ctx, creation_level, new_download) -> None:
         try:
             root_hints = requests.get("https://www.internic.net/domain/named.root")
         except requests.exceptions.ConnectionError:
-            click.secho("ERROR: `root.hints` file download failed.", err=True, fg="red")
+            click.secho(
+                "ERROR: `root.hints` file download failed. "
+                "Please check your connection.",
+                err=True,
+                fg="red",
+            )
             ctx.abort()
 
         with open(ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE, "w") as file:
