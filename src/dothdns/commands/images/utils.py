@@ -81,7 +81,7 @@ def doh_compile(
                     False,
                     False,
                     {
-                        "message": f"Latest 'doh_server' image found: {image.id}",
+                        "message": f"Latest 'doh_server' image found: {image.short_id}",
                         "fg": "cyan",
                     },
                 )
