@@ -22,7 +22,7 @@
     dothdns.commands.init.utils
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Utlilties for `init` subcommand.
+    Utilities for `init` subcommand.
 
     :copyright: (c) 2019-2020 Christian Riedel
     :license: GPLv3, see LICENSE for more details
