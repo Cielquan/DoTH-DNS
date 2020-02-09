@@ -50,7 +50,7 @@ from .utils import create_config_dir
     "--overwrite",
     "creation_level",
     flag_value=1,
-    help="Overwrite existing config dir, but files added by the user stay.",
+    help="Overwrite existing config dir, additional files are not touched.",
 )
 @click.option(
     "-F",
@@ -78,7 +78,7 @@ def init(ctx, creation_level, new_download) -> None:
     if err:
         ctx.abort()
 
-    #: Check age of 'root.hints' file
+    #: Check age of `root.hints` file
     if ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE.is_file() and not new_download:
         file_time_stamp = datetime.fromtimestamp(
             ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE.stat().st_ctime
@@ -86,12 +86,12 @@ def init(ctx, creation_level, new_download) -> None:
         if (datetime.now() - file_time_stamp).days > 30:
             new_download = True
 
-    #: Download 'root.hints' file
+    #: Download `root.hints` file
     if new_download:
         try:
             root_hints = requests.get("https://www.internic.net/domain/named.root")
         except requests.exceptions.ConnectionError:
-            click.secho("ERROR: 'root.hints' file download failed.", err=True, fg="red")
+            click.secho("ERROR: `root.hints` file download failed.", err=True, fg="red")
             ctx.abort()
 
         with open(ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE, "w") as file:

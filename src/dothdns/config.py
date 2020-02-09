@@ -30,9 +30,11 @@
 from pathlib import Path
 
 
+#: DO NOT CHANGE NAMES .. order is start up order and my be changed
 CONTAINER_NAMES = ("doh_server", "unbound", "pihole", "traefik")
 
 
+#: Choices for `dothdns config -a`
 CHOICES_ARCHITECTURE = ("x86", "arm")
 
 
@@ -40,28 +42,30 @@ CHOICES_ARCHITECTURE = ("x86", "arm")
 ABS_PATH_HOME = Path.home()
 #: DoTH-DNS dir
 ABS_PATH_HOME_REPO_DIR = Path(ABS_PATH_HOME, "DoTH-DNS")
-#: unbound-docker root.hints file
+#: unbound-docker `root.hints` file
 ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE = Path(
     ABS_PATH_HOME_REPO_DIR, "unbound-docker/var_dir/root.hints"
 )
-#: '.htpasswd' file
+#: traefik-docker `.htpasswd` file
 ABS_PATH_HOME_REPO_DIR_TRAEFIK_HTPASSWD_FILE = Path(
     ABS_PATH_HOME_REPO_DIR, "traefik-docker", "shared", ".htpasswd"
 )
-#: Dockerfile for doh_server
+#: doh_server `Dockerfile` file
 ABS_PATH_HOME_REPO_DIR_DOH_DOCKERFILE = Path(
     ABS_PATH_HOME_REPO_DIR, "doh-docker", "Dockerfile"
 )
-#: Docker container config file
+#: `container_configs.py` file
 ABS_PATH_HOME_REPO_DIR_CONTAINER_CONFIG_FILE = Path(
     ABS_PATH_HOME_REPO_DIR, "container_configs.py"
 )
-#: '.env' file for docker-compose
+#: `.env` file for `container_configs.py`
 ABS_PATH_HOME_REPO_DIR_DOTENV_FILE = Path(ABS_PATH_HOME_REPO_DIR, ".env")
 
 
+#: Paths an ini file can be placed
 INI_PATHS = (
     ABS_PATH_HOME_REPO_DIR,
     ABS_PATH_HOME,
 )
+#: Names the ini file can have
 INI_FILES = ("dothdns.ini", ".dothdns.ini")

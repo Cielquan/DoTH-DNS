@@ -27,6 +27,7 @@
     :copyright: (c) 2019-2020 Christian Riedel
     :license: GPLv3, see LICENSE for more details
 """
+#: pylint: disable=R0903,W0212
 import sys
 
 from pathlib import Path
@@ -35,13 +36,12 @@ from typing import Dict, List, Optional, Union
 import docker.types  # type: ignore
 
 
-#: Load environment variables from '.env' file
+#: Load environment variables from `.env` file
 EVARS = {}
 try:
     with open(Path(Path(__file__).parent, ".env")) as file:
         for line in file:
             line = line.strip()
-            #: Skip none key=val and comment lines
             if "=" not in line or line.startswith("#"):
                 continue
             key, val = line.split("=", 1)
@@ -55,7 +55,7 @@ except FileNotFoundError:
 USER_CONFIG_DIR = Path(Path.home(), "DoTH-DNS")
 
 
-class NetworkConfig:  #: pylint: disable=R0903
+class NetworkConfig:
     """Config for the internal network"""
 
     #: Container IPv4 addresses
@@ -72,7 +72,7 @@ class NetworkConfig:  #: pylint: disable=R0903
     attachable = False
 
 
-class ContainerBaseConfig:  #: pylint: disable=R0903
+class ContainerBaseConfig:
     """Basic config for all container"""
 
     detach = True
@@ -87,10 +87,10 @@ class ContainerBaseConfig:  #: pylint: disable=R0903
     _domain = EVARS.get("DOMAIN", EVARS.get("HOST_NAME", "doth") + ".dns")
 
 
-class DohServerConfig(ContainerBaseConfig):  #: pylint: disable=R0903
+class DohServerConfig(ContainerBaseConfig):
     """Config for doh_server container"""
 
-    name = "doh_server"
+    name = "doh_server"  #: DO NOT CHANGE
     image = "cielquan/doh_server:latest"
     ports: Dict[str, Union[str, List[Optional[str]]]] = {"8053": []}
     volumes = {
@@ -115,10 +115,10 @@ class DohServerConfig(ContainerBaseConfig):  #: pylint: disable=R0903
     }
 
 
-class UnboundConfig(ContainerBaseConfig):  #: pylint: disable=R0903
+class UnboundConfig(ContainerBaseConfig):
     """Config for unbound container"""
 
-    name = "unbound"
+    name = "unbound"  #: DO NOT CHANGE
     image = f"mvance/{EVARS.get('UNBOUND_VARIANT', 'unbound')}:latest"
     ports: Dict[str, Union[str, List[Optional[str]]]] = {"53": []}
     volumes = {
@@ -140,16 +140,16 @@ class UnboundConfig(ContainerBaseConfig):  #: pylint: disable=R0903
     labels = {"traefik.enable": "false"}
 
 
-class PiholeConfig(ContainerBaseConfig):  #: pylint: disable=R0903
+class PiholeConfig(ContainerBaseConfig):
     """Config for pihole container"""
 
-    name = "pihole"
+    name = "pihole"  #: DO NOT CHANGE
     hostname = f"{EVARS.get('HOST_NAME', 'DoTH-DNS')}"
     image = "pihole/pihole:latest"
     environment = {
         **ContainerBaseConfig.environment,
         "ServerID": EVARS["HOST_IP"],
-        "DNS1": f"{NetworkConfig._ipv4_address_pihole}#53",  #: pylint: disable=W0212
+        "DNS1": f"{NetworkConfig._ipv4_address_pihole}#53",
         "DNS2": "no",
         "DOMAIN": f"{EVARS.get('DOMAIN', 'doth.dns')}",
         "HOST_IP": EVARS["HOST_IP"],
@@ -208,10 +208,10 @@ class PiholeConfig(ContainerBaseConfig):  #: pylint: disable=R0903
     }
 
 
-class TraefikConfig(ContainerBaseConfig):  #: pylint: disable=R0903
+class TraefikConfig(ContainerBaseConfig):
     """Config for traefik container"""
 
-    name = "traefik"
+    name = "traefik"  #: DO NOT CHANGE
     image = "traefik:v2.0"
     ports: Dict[str, Union[str, List[Optional[str]]]] = {
         "80": "80",

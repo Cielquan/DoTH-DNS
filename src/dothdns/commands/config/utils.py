@@ -57,13 +57,13 @@ def add_to_dotenv(
         #: No file found -> no vars to load
         file_dict = {}
 
-    #: Merge env vars from dict and file; set write mode to 'append' or 'write'
+    #: Merge env vars from dict and file accordingly
     if overwrite is True:
         dict_to_add = {**file_dict, **var_dict}
     else:
         dict_to_add = {**var_dict, **file_dict}
 
-    #: Write env vars to .env file
+    #: Write env vars to `.env` file
     with open(str(env_file), "w") as file:
         file.writelines(f"{key.upper()}={dict_to_add[key]}\n" for key in dict_to_add)
 

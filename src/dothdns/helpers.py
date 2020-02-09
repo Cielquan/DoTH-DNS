@@ -22,7 +22,7 @@
     dothdns.helpers
     ~~~~~~~~~~~~~~~
 
-    Helper stuff for other modules.
+    Helper functions for other modules.
 
     :copyright: (c) 2019-2020 Christian Riedel
     :license: GPLv3, see LICENSE for more details
@@ -35,7 +35,7 @@ def file_finder(paths: Iterable[Path], file_names: Iterable[str]) -> Optional[Pa
     """Search first existing file
 
     :param paths: Paths to check
-    :param file_names: File name to check
+    :param file_names: File names to check
     :return: First found file
     """
     file = None
@@ -61,7 +61,7 @@ def get_bool(value: Union[str, int, bool]) -> Optional[bool]:
     """Convert given value to boolean
 
     :param value: Value to be a boolean
-    :return: Python bool
+    :return: Python bool if valid
     """
     booleans = {
         "1": True,
@@ -77,7 +77,7 @@ def get_bool(value: Union[str, int, bool]) -> Optional[bool]:
 
 
 def get_env_file_data(env_file: Union[str, Path]) -> Dict[str, str]:
-    """Extract environment variables from given file
+    """Extract environment variables from given file (`.env`)
 
     :param env_file: File to extract from
     :return: Extracted variable:value pairs

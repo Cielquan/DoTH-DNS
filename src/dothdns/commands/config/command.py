@@ -46,7 +46,9 @@ from .utils import add_to_dotenv
 
 
 @click.command(cls=CommandWithConfigFile)
-@click.option("--fresh", is_flag=True, help="Discard '.env' and write new")
+@click.option(
+    "--fresh", is_flag=True, help="Discard current `.env` file and write new file."
+)
 @click.option(
     "-n/-N",
     "--traefik-auth/--traefik-no-auth",
@@ -59,28 +61,34 @@ from .utils import add_to_dotenv
     "--traefik-network",
     envvar="TRAEFIK_NETWORK",
     help="Docker network to use for internal communication. Defaults to predefined "
-    "network.",
+    "network. Only change if you know what you do.",
 )
 @click.option(
     "-a",
     "--architecture",
     envvar="ARCHITECTURE",
     type=click.Choice(CHOICES_ARCHITECTURE, case_sensitive=False),
-    help="ARCHITECTURE of the system's processor",
+    help="ARCHITECTURE of the system's processor.",
 )
 @click.option(
     "-i",
     "--host-ip",
     envvar="HOST_IP",
-    help="HOST_IP address corresponding to INTERFACE",
+    help="HOST_IP address used by the system by default.",
 )
-@click.option("-H", "--hostname", envvar="HOST_NAME", help="HOST_NAME of the system")
-@click.option("-t", "--timezone", envvar=["TIMEZONE"], help="TIMEZONE of the system")
+@click.option("-H", "--hostname", envvar="HOST_NAME", help="The system's HOST_NAME.")
+@click.option(
+    "-t",
+    "--timezone",
+    envvar=["TIMEZONE"],
+    help="TIMEZONE of the system in 'olson' format. See docs for more info.",
+)
 @click.option(
     "-d",
     "--domain",
     envvar="DOMAIN",
-    help="DOMAIN for dashboards and DoH. [default: HOSTNAME.dns]",
+    help="DOMAIN for dashboards, DoH and DoT (SNI). Defaults to [HOSTNAME.dns] and "
+    "falls back to [doth.dns] if not HOST_NAME is found or given.",
 )
 @click.help_option("-h", "--help")
 @click.pass_context
@@ -116,12 +124,12 @@ def config(  #: pylint: disable=C0330,R0912,R0913
     else:
         click.secho(
             "ERROR: HOST_IP was not set and could not be guessed. "
-            "Please set HOST_IP via '-i' option or in dothdns.ini to avoid"
+            "Please set HOST_IP via `-i` option or in `dothdns.ini` to avoid"
             "future problems and recall this command.",
             err=True,
             fg="red",
         )
-        ctx.exit()
+        ctx.abort()
 
     #: HOST_NAME
     if hostname is None:
@@ -139,7 +147,7 @@ def config(  #: pylint: disable=C0330,R0912,R0913
             "WARNING: ARCHITECTURE was not set and could not be guessed. "
             "Falling back to 'x86' architecture. To avoid this warning or if "
             "you use 'arm' architecture please set ARCHITECTURE in "
-            "dothdns.ini.",
+            "`dothdns.ini`.",
             fg="yellow",
         )
     elif "arm" in architecture:
@@ -174,8 +182,8 @@ def config(  #: pylint: disable=C0330,R0912,R0913
     ctx.obj["invoked_internally_by"] = "config"
     ctx.invoke(init, creation_level=0, new_download=False)
 
-    #: Add env vars to '.env'
+    #: Add env vars to `.env`
     if add_to_dotenv(env_dict, overwrite=fresh) is not None:
         click.secho(
-            "Successfully set environment variables in '.env' file.", fg="green"
+            "Successfully set environment variables in `.env` file.", fg="green"
         )
