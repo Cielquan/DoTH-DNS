@@ -37,7 +37,7 @@ import requests
 
 from docker import errors as docker_exc
 
-from ...config import ABS_PATH_HOME_REPO_DIR_DOH_DOCKERFILE
+from ...config import ABS_PATH_HOME_REPO_DIR_DOH_DIR
 from ...helpers import process_func_output
 
 
@@ -113,10 +113,10 @@ def doh_compile(
     build_date = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S%Z")
 
     try:
-        image_id, _ = client.images.build(
-            path=ABS_PATH_HOME_REPO_DIR_DOH_DOCKERFILE,
+        image, _ = client.images.build(
+            path=str(ABS_PATH_HOME_REPO_DIR_DOH_DIR),
             buildargs={"VERSION": version, "BUILD_DATE": build_date},
-            tag="latest",
+            tag="cielquan/doh_server",
             rm=True,
             quiet=False,
         )
@@ -134,5 +134,5 @@ def doh_compile(
     return (
         False,
         True,
-        {"message": f"New 'doh_server' image was build: {image_id}", "fg": "green"},
+        {"message": f"New 'doh_server' image was build: {str(image)}", "fg": "green"},
     )

@@ -51,9 +51,7 @@ ABS_PATH_HOME_REPO_DIR_TRAEFIK_HTPASSWD_FILE = Path(
     ABS_PATH_HOME_REPO_DIR, "traefik-docker", "shared", ".htpasswd"
 )
 #: doh_server `Dockerfile` file
-ABS_PATH_HOME_REPO_DIR_DOH_DOCKERFILE = Path(
-    ABS_PATH_HOME_REPO_DIR, "doh-docker", "Dockerfile"
-)
+ABS_PATH_HOME_REPO_DIR_DOH_DIR = Path(ABS_PATH_HOME_REPO_DIR, "doh-docker")
 #: `container_configs.py` file
 ABS_PATH_HOME_REPO_DIR_CONTAINER_CONFIG_FILE = Path(
     ABS_PATH_HOME_REPO_DIR, "container_configs.py"

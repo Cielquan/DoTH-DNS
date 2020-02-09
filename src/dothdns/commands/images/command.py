@@ -58,13 +58,22 @@ from .utils import doh_compile
 def images(ctx, recompile, update, update_all) -> None:
     """Handle DoTH-DNS docker images"""
     #: pylint: disable=R0914
-    #: Compile doh_image
-    ctx.obj["do_not_print_when_invoked_by"] = ["run"]
-    doh_compile(force=recompile, update=("doh_server" in update or update_all))
-
     #: Create config dir if non exists
     ctx.obj["invoked_internally_by"] = "images"
     ctx.invoke(init, creation_level=0, new_download=False)
+
+    #: Compile doh_image
+    ctx.obj["do_not_print_when_invoked_by"] = ["run"]
+    if ctx.obj.get("invoked_internally_by") not in ctx.obj.get(
+        "do_not_print_when_invoked_by", []
+    ):
+        click.secho(
+            "Checking for 'doh_server' image and compiling if necessary. "
+            "This may last a bit.",
+            fg="cyan",
+        )
+    doh_compile(force=recompile, update=("doh_server" in update or update_all))
+
     #: Load container configs for image info
     container_config = load_container_configs_file()
 
@@ -103,6 +112,7 @@ def images(ctx, recompile, update, update_all) -> None:
 
         #: Pull images
         if img is None or key in update or update_all:
+            click.secho(f"Pulling image for '{image}'. This may last a bit.", fg="cyan")
             try:
                 client.images.pull(image, tag=tag)
             except docker_exc.APIError as exc:
@@ -113,3 +123,4 @@ def images(ctx, recompile, update, update_all) -> None:
                     fg="red",
                 )
                 ctx.abort()
+            click.secho(f"Successfully pulled image for '{image}'.", fg="green")
