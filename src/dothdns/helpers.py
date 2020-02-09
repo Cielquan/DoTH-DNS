@@ -30,6 +30,10 @@
 from pathlib import Path
 from typing import Dict, Iterable, Optional, Union
 
+import click
+
+from click.core import Context
+
 
 def file_finder(paths: Iterable[Path], file_names: Iterable[str]) -> Optional[Path]:
     """Search first existing file
@@ -95,3 +99,45 @@ def get_env_file_data(env_file: Union[str, Path]) -> Dict[str, str]:
             env_file_dict[key] = val
 
     return env_file_dict
+
+
+# TODO 09.02.2020: type annotations #: pylint: disable=W0511
+def process_func_output(function):
+    """Handle feedback from sub functions called in cmd functions"""
+
+    @click.pass_context
+    def wrapper(ctx: Context, *args, **kwargs):
+        """Work withs given function"""
+
+        class DecoratorArgumentError(Exception):
+            """Exception to call for wrong arguments on decorator"""
+
+        res = function(*args, **kwargs)
+
+        err: bool
+        always_print: bool
+        msg: Dict[str, str]
+
+        if len(res) == 2:
+            err = res[0]
+            msg = res[1]
+            click.secho(msg["message"], err=err, fg=msg.get("fg"))
+
+        elif len(res) == 3:
+            err = res[0]
+            always_print = res[1]
+            msg = res[2]
+
+            if ctx is None:
+                raise DecoratorArgumentError(
+                    "Function with 3 return values was decorated and "
+                    "no 'ctx' was given to the decorator."
+                )
+            if always_print or ctx.obj.get("invoked_internally_by") not in ctx.obj.get(
+                "do_not_print_when_invoked_by", []
+            ):
+                click.secho(msg["message"], err=err, fg=msg.get("fg"))
+            if err:
+                ctx.abort()
+
+    return wrapper
