@@ -59,14 +59,8 @@ def images(ctx, recompile, update, update_all) -> None:
     """Handle DoTH-DNS docker images"""
     #: pylint: disable=R0914
     #: Compile doh_image
-    err, always_print, msg = doh_compile(
-        force=recompile, update=("doh_server" in update or update_all)
-    )
-    print_stop_cmd = ["run"]
-    if ctx.obj.get("invoked_internally_by") not in print_stop_cmd or always_print:
-        click.secho(msg["message"], err=err, fg=msg.get("fg", None))
-    if err:
-        ctx.abort()
+    ctx.obj["do_not_print_when_invoked_by"] = ["run"]
+    doh_compile(force=recompile, update=("doh_server" in update or update_all))
 
     #: Create config dir if non exists
     ctx.obj["invoked_internally_by"] = "images"

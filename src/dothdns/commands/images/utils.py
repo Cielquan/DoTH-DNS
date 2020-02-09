@@ -38,8 +38,10 @@ import requests
 from docker import errors as docker_exc
 
 from ...config import ABS_PATH_HOME_REPO_DIR_DOH_DOCKERFILE
+from ...helpers import process_func_output
 
 
+@process_func_output
 def doh_compile(
     force: bool = False, update: bool = False
 ) -> Tuple[bool, bool, Dict[str, str]]:
@@ -47,7 +49,7 @@ def doh_compile(
 
     :param force: Force recreation if already exists
     :param update: Update if newer version is available
-    :returns: If error was raised and an dict to print with click.secho
+    :returns: If error, if print always and output for click.secho
     """
     #: Get latest version from github for doh server
     tag = requests.get(

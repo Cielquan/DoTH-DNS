@@ -32,9 +32,11 @@ import shutil
 from pathlib import Path
 from typing import Dict, Tuple
 
-from dothdns.config import ABS_PATH_HOME_REPO_DIR
+from ...config import ABS_PATH_HOME_REPO_DIR
+from ...helpers import process_func_output
 
 
+@process_func_output
 def create_config_dir(*, creation_level: int = 0) -> Tuple[bool, bool, Dict[str, str]]:
     """Creates/Overwrites DoTH-DNS config dir in home dir
 
