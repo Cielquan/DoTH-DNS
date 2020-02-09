@@ -54,7 +54,7 @@ ABS_PATH_HOME_REPO_DIR_DOH_DOCKERFILE = Path(
 )
 #: Docker container config file
 ABS_PATH_HOME_REPO_DIR_CONTAINER_CONFIG_FILE = Path(
-    ABS_PATH_HOME_REPO_DIR, "container_config.py"
+    ABS_PATH_HOME_REPO_DIR, "container_configs.py"
 )
 #: '.env' file for docker-compose
 ABS_PATH_HOME_REPO_DIR_DOTENV_FILE = Path(ABS_PATH_HOME_REPO_DIR, ".env")
