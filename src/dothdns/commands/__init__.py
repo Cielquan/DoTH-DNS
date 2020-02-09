@@ -28,10 +28,12 @@
     :license: GPLv3, see LICENSE for more details
 """
 from .config import config
+from .images import images
 from .init import init
 
 
 __all__ = (
     "config",
+    "images",
     "init",
 )

@@ -1,7 +1,7 @@
 # ======================================================================================
 # Copyright (c) 2019-2020 Christian Riedel
 #
-# This file 'main.py' created 2020-02-08
+# This file '__init__.py' created 2020-02-08
 # is part of the project/program 'DoTH-DNS'.
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,29 +19,15 @@
 # Github: https://github.com/Cielquan/
 # ======================================================================================
 """
-    dothdns.commands.main
-    ~~~~~~~~~~~~~~~~~~~~~
+    dothdns.commands.images
+    ~~~~~~~~~~~~~~~~~~~~~~~
 
-    Base command for CLI.
+    `images` subcommand for `dothdns` command.
 
     :copyright: (c) 2019-2020 Christian Riedel
     :license: GPLv3, see LICENSE for more details
 """
-import click
-
-from ..commands import config, images, init
-from ..version import __version__
+from .command import images
 
 
-@click.group()
-@click.version_option(version=__version__, prog_name="DoTH-DNS")
-@click.help_option("-h", "--help")
-@click.pass_context
-def main(ctx) -> None:
-    """Handle your DoTH-DNS system"""
-    ctx.ensure_object(dict)
-
-
-main.add_command(config)
-main.add_command(images)
-main.add_command(init)
+__all__ = ("images",)

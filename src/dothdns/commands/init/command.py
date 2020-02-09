@@ -72,7 +72,7 @@ def init(ctx, creation_level, new_download) -> None:
     """Create DoTH-DNS configuration directory"""
     #: Create config dir
     err, always_print, msg = create_config_dir(creation_level=creation_level)
-    print_stop_cmd = ["config"]
+    print_stop_cmd = ["config", "images"]
     if ctx.obj.get("invoked_internally_by") not in print_stop_cmd or always_print:
         click.secho(msg["message"], err=err, fg=msg.get("fg", None))
     if err:
