@@ -64,6 +64,7 @@ from .utils import check_doh_image, doh_compile
 def images(ctx, recompile, update, update_all) -> None:
     """Handle DoTH-DNS docker images"""
     #: pylint: disable=R0914
+    called_by = ctx.obj["invoked_internally_by"]
     #: Compile doh image message
     ctx.obj["do_not_print_when_invoked_by"] = ["run", "up"]
     if ctx.obj.get("invoked_internally_by") not in ctx.obj.get(
@@ -77,6 +78,7 @@ def images(ctx, recompile, update, update_all) -> None:
     #: Create config dir if non exists
     ctx.obj["invoked_internally_by"] = "images"
     ctx.invoke(init, creation_level=0, new_download=False)
+    ctx.obj["invoked_internally_by"] = called_by
     ctx.obj["do_not_print_when_invoked_by"] = ["run", "up"]
 
     #: Check doh image
