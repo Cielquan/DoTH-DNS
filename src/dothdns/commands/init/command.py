@@ -82,6 +82,8 @@ def init(ctx, creation_level, new_download) -> None:
         )
         if (datetime.now() - file_time_stamp).days > 30:
             new_download = True
+    else:
+        new_download = True
 
     #: Download `root.hints` file
     if new_download:
@@ -98,3 +100,5 @@ def init(ctx, creation_level, new_download) -> None:
 
         with open(ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE, "w") as file:
             file.write(root_hints.text)
+
+        click.secho("Successfully downloaded `root.hints` file.", fg="green")
