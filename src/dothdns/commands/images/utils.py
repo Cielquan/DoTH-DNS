@@ -32,6 +32,7 @@ import re
 from datetime import datetime, timezone
 from typing import Dict, Tuple
 
+import click
 import docker  # type: ignore
 import requests
 
@@ -42,10 +43,13 @@ from ...helpers import process_func_output
 
 
 @process_func_output
-def doh_compile(
-    force: bool = False, update: bool = False
+@click.pass_context
+def check_doh_image(
+    ctx, force: bool = False, update: bool = False
 ) -> Tuple[bool, bool, Dict[str, str]]:
-    """Compile doh_server docker image
+    """Check for doh image
+
+    Set click context var 'doh_version' with version if it should be compiled.
 
     :param force: Force recreation if already exists
     :param update: Update if newer version is available
@@ -70,9 +74,7 @@ def doh_compile(
         )
 
     client = docker.from_env()
-
     if not force:
-        #: Check for image
         try:
             image = client.images.get("cielquan/doh_server")
             #: Exit if no newer version is available
@@ -97,7 +99,12 @@ def doh_compile(
                     },
                 )
         except docker_exc.ImageNotFound:
-            pass
+            ctx.obj["doh_version"] = version
+            return (
+                False,
+                True,
+                {"message": "Image for 'doh_server' not found.", "fg": "cyan"},
+            )
         except docker_exc.APIError as exc:
             return (
                 True,
@@ -108,6 +115,18 @@ def doh_compile(
                     "fg": "red",
                 },
             )
+    ctx.obj["doh_version"] = version
+    return False, False, {"message": "", "fg": "cyan"}
+
+
+@process_func_output
+def doh_compile(version: str) -> Tuple[bool, bool, Dict[str, str]]:
+    """Compile doh_server docker image
+
+    :param version: Version to compile
+    :returns: If error, if print always and output for click.secho
+    """
+    client = docker.from_env()
 
     #: Build the image
     build_date = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S%Z")

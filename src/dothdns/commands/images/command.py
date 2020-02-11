@@ -34,7 +34,7 @@ from docker import errors as docker_exc
 
 from ...utils import load_container_configs_file
 from ..init import init
-from .utils import doh_compile
+from .utils import check_doh_image, doh_compile
 
 
 @click.command()
@@ -52,18 +52,20 @@ from .utils import doh_compile
     help="Update given image. Can be set multiple times. "
     "Accepted values: ['doh_server', 'unbound', 'pihole', 'traefik']",
 )
-@click.option("-U", "--update-all", help="Update all images if updates are available.")
+@click.option(
+    "-U",
+    "--update-all",
+    is_flag=True,
+    default=False,
+    help="Update all images if updates are available.",
+)
 @click.help_option("-h", "--help")
 @click.pass_context
 def images(ctx, recompile, update, update_all) -> None:
     """Handle DoTH-DNS docker images"""
     #: pylint: disable=R0914
-    #: Create config dir if non exists
-    ctx.obj["invoked_internally_by"] = "images"
-    ctx.invoke(init, creation_level=0, new_download=False)
-
-    #: Compile doh_image
-    ctx.obj["do_not_print_when_invoked_by"] = ["run"]
+    #: Compile doh image message
+    ctx.obj["do_not_print_when_invoked_by"] = ["run", "up"]
     if ctx.obj.get("invoked_internally_by") not in ctx.obj.get(
         "do_not_print_when_invoked_by", []
     ):
@@ -72,7 +74,23 @@ def images(ctx, recompile, update, update_all) -> None:
             "This may last a bit.",
             fg="cyan",
         )
-    doh_compile(force=recompile, update=("doh_server" in update or update_all))
+    #: Create config dir if non exists
+    ctx.obj["invoked_internally_by"] = "images"
+    ctx.invoke(init, creation_level=0, new_download=False)
+    ctx.obj["do_not_print_when_invoked_by"] = ["run", "up"]
+
+    #: Check doh image
+    check_doh_image(  #: pylint: disable=E1120,E1123
+        force=recompile, update=("doh_server" in update or update_all)
+    )
+
+    #: Compile doh image
+    version = ctx.obj.get("doh_version")
+    if version is not None:
+        click.secho(
+            f"Compiling image for 'doh_server' for version {version}.", fg="cyan"
+        )
+        doh_compile(version)
 
     #: Load container configs for image info
     container_config = load_container_configs_file()
