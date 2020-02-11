@@ -71,9 +71,7 @@ def images(ctx, recompile, update, update_all) -> None:
         "do_not_print_when_invoked_by", []
     ):
         click.secho(
-            "Checking for 'doh_server' image and compiling if necessary. "
-            "This may last a bit.",
-            fg="cyan",
+            "Checking for 'doh_server' image. ", fg="cyan",
         )
     #: Create config dir if non exists
     ctx.obj["invoked_internally_by"] = "images"
@@ -90,7 +88,9 @@ def images(ctx, recompile, update, update_all) -> None:
     version = ctx.obj.get("doh_version")
     if version is not None:
         click.secho(
-            f"Compiling image for 'doh_server' for version {version}.", fg="cyan"
+            f"Compiling image for 'doh_server' for version {version}. "
+            "This may last a bit.",
+            fg="cyan",
         )
         doh_compile(version)
 
