@@ -28,6 +28,7 @@
     :license: GPLv3, see LICENSE for more details
 """
 import shutil
+import sys
 
 from pathlib import Path
 from typing import Dict, Tuple
@@ -75,12 +76,29 @@ def create_config_dir(*, creation_level: int = 0) -> Tuple[bool, bool, Dict[str,
 
     #: Copy new config dir
     try:
-        shutil.copytree(
-            Path(__file__).parents[2].joinpath("container_configs"),
-            ABS_PATH_HOME_REPO_DIR,
-            ignore=shutil.ignore_patterns("__pycache__"),
-            dirs_exist_ok=True,
-        )
+        if sys.version_info < (3, 8):
+            if creation_level == 1:
+                return (
+                    True,
+                    True,
+                    {
+                        "message": "ERROR: '-f' option is only supported by python "
+                        ">= 3.8. Use '-F' instead and safe custom files before.",
+                        "fg": "red",
+                    },
+                )
+            shutil.copytree(
+                Path(__file__).parents[2].joinpath("container_configs"),
+                ABS_PATH_HOME_REPO_DIR,
+                ignore=shutil.ignore_patterns("__pycache__"),
+            )
+        else:
+            shutil.copytree(
+                Path(__file__).parents[2].joinpath("container_configs"),
+                ABS_PATH_HOME_REPO_DIR,
+                ignore=shutil.ignore_patterns("__pycache__"),
+                dirs_exist_ok=True,
+            )
     except Exception as exc:  #: pylint: disable=W0703
         return (
             True,

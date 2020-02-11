@@ -50,7 +50,8 @@ from .utils import create_config_dir
     "--overwrite",
     "creation_level",
     flag_value=1,
-    help="Overwrite existing config dir, additional files are not touched.",
+    help="Overwrite existing config dir, additional files are not touched. "
+    "Only supported with python >= 3.8.",
 )
 @click.option(
     "-F",
