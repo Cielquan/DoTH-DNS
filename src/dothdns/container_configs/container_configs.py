@@ -166,9 +166,13 @@ class PiholeConfig(ContainerBaseConfig):
             "bind": "/etc/",
             "mode": "rw",
         },
-        f"{USER_CONFIG_DIR.joinpath('pihole-docker/s6_scripts/')}": {
-            "bind": "/etc/",
-            "mode": "rw",
+        f"{USER_CONFIG_DIR.joinpath('pihole-docker/s6_scripts/cont-init.d/')}": {
+            "bind": "/etc/cont-init.d/",
+            "mode": "ro",
+        },
+        f"{USER_CONFIG_DIR.joinpath('pihole-docker/s6_scripts/fix-attrs.d/')}": {
+            "bind": "/etc/fix-attrs.d/",
+            "mode": "ro",
         },
     }
     _http_mdw = "traefik.http.middlewares"
