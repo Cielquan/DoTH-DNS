@@ -32,6 +32,7 @@ from .down import down
 from .images import images
 from .init import init
 from .run import run
+from .update import update
 
 
 __all__ = (
@@ -40,4 +41,5 @@ __all__ = (
     "images",
     "init",
     "run",
+    "update",
 )
