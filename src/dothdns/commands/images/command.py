@@ -32,6 +32,7 @@ import docker  # type: ignore
 
 from docker import errors as docker_exc
 
+from ...config import CONTAINER_NAMES
 from ...helpers import echo_wr
 from ...utils import load_container_configs_file
 from ..init import init
@@ -51,7 +52,7 @@ from .utils import check_doh_image, doh_compile
     "--update",
     multiple=True,
     help="Update given image. Can be set multiple times. "
-    "Accepted values: ['doh_server', 'unbound', 'pihole', 'traefik']",
+    f"Accepted values: {CONTAINER_NAMES}",
 )
 @click.option(
     "-U",
