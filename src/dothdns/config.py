@@ -31,7 +31,7 @@ from pathlib import Path
 
 
 #: DO NOT CHANGE NAMES .. order is start up order and my be changed
-CONTAINER_NAMES = ("doh_server", "unbound", "pihole", "traefik")
+CONTAINER_NAMES = ("traefik", "doh_server", "pihole", "unbound")
 
 
 #: Choices for `dothdns config -a`
