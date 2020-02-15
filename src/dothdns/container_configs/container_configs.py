@@ -136,6 +136,10 @@ class UnboundConfig(ContainerBaseConfig):
             "bind": "/opt/unbound/etc/unbound/var/log/unbound/unbound.log",
             "mode": "rw",
         },
+        f"{USER_CONFIG_DIR.joinpath('unbound-docker/unbound.sh')}": {
+            "bind": "/unbound.sh",
+            "mode": "ro",
+        },
     }
     labels = {"traefik.enable": "false"}
 
@@ -160,19 +164,32 @@ class PiholeConfig(ContainerBaseConfig):
         "53/tcp": "53",
         "53/udp": "53",
     }
+    _s6_dir = USER_CONFIG_DIR.joinpath("pihole-docker/s6_scripts/")
     volumes = {
         **ContainerBaseConfig.volumes,
-        f"{USER_CONFIG_DIR.joinpath('pihole-docker/configs/')}": {
-            "bind": "/etc/",
+        f"{USER_CONFIG_DIR.joinpath('pihole-docker/configs/pihole')}": {
+            "bind": "/etc/pihole",
             "mode": "rw",
         },
-        f"{USER_CONFIG_DIR.joinpath('pihole-docker/s6_scripts/cont-init.d/')}": {
-            "bind": "/etc/cont-init.d/",
+        f"{USER_CONFIG_DIR.joinpath('pihole-docker/configs/dnsmasq.d/')}": {
+            "bind": "/etc/dnsmasq.d/",
+            "mode": "rw",
+        },
+        f"{USER_CONFIG_DIR.joinpath('pihole-docker/configs/resolv.conf')}": {
+            "bind": "/etc/resolv.conf",
             "mode": "ro",
         },
-        f"{USER_CONFIG_DIR.joinpath('pihole-docker/s6_scripts/fix-attrs.d/')}": {
-            "bind": "/etc/fix-attrs.d/",
-            "mode": "ro",
+        f"{_s6_dir.joinpath('cont-init.d/01-conf-dnsmasq.sh')}": {
+            "bind": "/etc/cont-init.d/01-conf-dnsmasq.sh",
+            "mode": "rw",  #: Must be 'rw' for s6 to work
+        },
+        f"{_s6_dir.joinpath('cont-init.d/21-conf-dns.sh')}": {
+            "bind": "/etc/cont-init.d/21-conf-dns.sh",
+            "mode": "rw",  #: Must be 'rw' for s6 to work
+        },
+        f"{_s6_dir.joinpath('fix-attrs.d/02-chown-pihole-configs')}": {
+            "bind": "/etc/fix-attrs.d/02-chown-pihole-configs",
+            "mode": "rw",  #: Must be 'rw' for s6 to work
         },
     }
     _http_mdw = "traefik.http.middlewares"
