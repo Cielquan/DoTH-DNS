@@ -224,7 +224,7 @@ class TraefikConfig(ContainerBaseConfig):
     """Config for traefik container"""
 
     name = "traefik"  #: DO NOT CHANGE
-    image = "traefik:v2.0"
+    image = "traefik:v2.1"
     ports: Dict[str, Union[str, List[Optional[str]]]] = {
         "80": "80",
         "443": "443",
