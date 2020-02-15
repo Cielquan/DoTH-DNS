@@ -27,12 +27,8 @@
     :copyright: (c) 2019-2020 Christian Riedel
     :license: GPLv3, see LICENSE for more details
 """
-from datetime import datetime
-
 import click
-import requests
 
-from ...config import ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE
 from .utils import create_config_dir
 
 
@@ -60,45 +56,10 @@ from .utils import create_config_dir
     flag_value=2,
     help="Overwrite existing config dir totally. No files will be kept.",
 )
-@click.option(
-    "-d",
-    "--new-download",
-    is_flag=True,
-    default=False,
-    help="Force new download of 'root.hints' file.",
-)
 @click.help_option("-h", "--help")
 @click.pass_context
-def init(ctx, creation_level, new_download) -> None:
+def init(ctx, creation_level) -> None:
     """Create DoTH-DNS configuration directory"""
     #: Create config dir
     ctx.obj["do_not_print_when_invoked_by"] = ["config", "images"]
     create_config_dir(creation_level=creation_level)
-
-    #: Check age of `root.hints` file
-    if ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE.is_file() and not new_download:
-        file_time_stamp = datetime.fromtimestamp(
-            ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE.stat().st_ctime
-        )
-        if (datetime.now() - file_time_stamp).days > 30:
-            new_download = True
-    else:
-        new_download = True
-
-    #: Download `root.hints` file
-    if new_download:
-        try:
-            root_hints = requests.get("https://www.internic.net/domain/named.root")
-        except requests.exceptions.ConnectionError:
-            click.secho(
-                "ERROR: `root.hints` file download failed. "
-                "Please check your connection.",
-                err=True,
-                fg="red",
-            )
-            ctx.abort()
-
-        with open(ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE, "w") as file:
-            file.write(root_hints.text)
-
-        click.secho("Successfully downloaded `root.hints` file.", fg="green")
