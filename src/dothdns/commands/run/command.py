@@ -64,6 +64,9 @@ def run(ctx, proxy) -> None:
     if proxy is None:
         proxy = True
 
+    ctx.obj["invoked_internally_by"] = "run"
+    ctx.invoke(config)
+
     #: Check for cert.crt and key.key
     missing = []
     if not ABS_PATH_HOME_REPO_DIR_CERT_DIR.joinpath("cert.crt").is_file():
@@ -80,9 +83,6 @@ def run(ctx, proxy) -> None:
                 "cat": "warning",
             }
         )
-
-    ctx.obj["invoked_internally_by"] = "run"
-    ctx.invoke(config)
 
     #: Load configs
     configs = load_container_configs_file()
