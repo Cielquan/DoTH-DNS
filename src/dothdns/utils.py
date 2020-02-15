@@ -92,25 +92,4 @@ def load_container_configs_file() -> Optional[Dict[str, Dict[str, Any]]]:
         key: getattr(network_class, key) for key in network_class_attr_list
     }
 
-    #: Load ipv4 addresses from network config
-    prefix = "_ipv4_address_"
-    network_class_ip_attr_list = [
-        attr for attr in dir(network_class) if attr.startswith(prefix)
-    ]
-    #: Append ipv4 addresses as dict to rv dict
-    configs["ipv4_addresses"] = {
-        config[len(prefix) :]: getattr(network_class, config)
-        for config in network_class_ip_attr_list
-        if config[len(prefix) :] in CONTAINER_NAMES
-    }
-    #: Check if all 4 ipv4 addresses are caught
-    diff = 4 - len(configs["ipv4_addresses"])
-    if diff != 0:
-        print(
-            f"ERROR: {diff} "
-            f"{'IPv4 addresses are' if diff > 1 else 'IPv4 address is'} "
-            "missing in 'container_configs.py'. Please correct the error and try again."
-        )
-        sys.exit(1)
-
     return configs
