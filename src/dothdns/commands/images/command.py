@@ -75,7 +75,7 @@ def images(ctx, recompile, update, update_all) -> None:
         )
     #: Create config dir if non exists
     ctx.obj["invoked_internally_by"] = "images"
-    ctx.invoke(init, creation_level=0, new_download=False)
+    ctx.invoke(init, creation_level=0)
     ctx.obj["invoked_internally_by"] = called_by
     ctx.obj["do_not_print_when_invoked_by"] = ["run", "up"]
 
