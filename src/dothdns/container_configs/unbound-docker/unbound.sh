@@ -158,7 +158,6 @@ cat << EOF > /opt/unbound/etc/unbound/unbound.conf.d/access-control.conf
 
 server:
     access-control: ${SUBNETMASK_CIDR} allow
-
 EOF
 
 
