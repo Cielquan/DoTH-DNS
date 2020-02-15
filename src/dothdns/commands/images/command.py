@@ -51,8 +51,8 @@ from .utils import check_doh_image, doh_compile
     "-u",
     "--update",
     multiple=True,
-    help="Update given image. Can be set multiple times. "
-    f"Accepted values: {CONTAINER_NAMES}",
+    type=click.Choice(CONTAINER_NAMES, case_sensitive=True),
+    help="Update given image. Can be set multiple times. [case-sensitive]",
 )
 @click.option(
     "-U",
