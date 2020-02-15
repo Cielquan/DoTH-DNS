@@ -33,8 +33,6 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 
-import docker.types  # type: ignore
-
 
 #: Load environment variables from `.env` file
 EVARS = {}
@@ -58,17 +56,10 @@ USER_CONFIG_DIR = Path(Path.home(), "DoTH-DNS")
 class NetworkConfig:
     """Config for the internal network"""
 
-    #: Container IPv4 addresses
-    _ipv4_address_doh_server = "172.16.1.3"
-    _ipv4_address_unbound = "172.16.1.5"
-    _ipv4_address_pihole = "172.16.1.4"
-    _ipv4_address_traefik = "172.16.1.250"
     #: Network config
     name = "doth_dns_network"
     driver = "bridge"
     options = {"encrypted": "true"}
-    _ipam_pool = docker.types.IPAMPool(subnet="172.16.1.0/24")
-    ipam = docker.types.IPAMConfig(pool_configs=[_ipam_pool])
     attachable = False
 
 
@@ -85,6 +76,7 @@ class ContainerBaseConfig:
     }
     volumes = {"/etc/localtime": {"bind": "/etc/localtime", "mode": "ro"}}
     _domain = EVARS.get("DOMAIN", EVARS.get("HOST_NAME", "doth") + ".dns")
+    network = NetworkConfig.name
 
 
 class DohServerConfig(ContainerBaseConfig):
@@ -153,16 +145,15 @@ class PiholeConfig(ContainerBaseConfig):
     environment = {
         **ContainerBaseConfig.environment,
         "ServerID": EVARS["HOST_IP"],
-        "DNS1": f"{NetworkConfig._ipv4_address_pihole}#53",
+        "DNS1": "208.67.222.222#53",  #: OpenDNS, only for initial boot3
         "DNS2": "no",
         "DOMAIN": f"{ContainerBaseConfig._domain}",
         "HOST_IP": EVARS["HOST_IP"],
     }
-    dns = ["127.0.0.1"]
     ports: Dict[str, Union[str, List[Optional[str]]]] = {
-        "80": [],
         "53/tcp": "53",
         "53/udp": "53",
+        "80": [],
     }
     _s6_dir = USER_CONFIG_DIR.joinpath("pihole-docker/s6_scripts/")
     volumes = {
