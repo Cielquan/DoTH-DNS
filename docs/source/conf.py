@@ -32,8 +32,9 @@ import sys
 
 from datetime import datetime
 from pathlib import Path
+from typing import List
 
-import sphinx_rtd_theme
+import sphinx_rtd_theme  # type: ignore
 
 from dothdns import __version__
 
@@ -84,7 +85,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 #: Files to exclude for source of doc
-exclude_patterns = []
+exclude_patterns: List[str] = []
 
 #: Folder for static files, if folder exists
 html_static_path = []
