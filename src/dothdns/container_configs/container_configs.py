@@ -155,7 +155,7 @@ class PiholeConfig(ContainerBaseConfig):
         "ServerID": EVARS["HOST_IP"],
         "DNS1": f"{NetworkConfig._ipv4_address_pihole}#53",
         "DNS2": "no",
-        "DOMAIN": f"{EVARS.get('DOMAIN', 'doth.dns')}",
+        "DOMAIN": f"{ContainerBaseConfig._domain}",
         "HOST_IP": EVARS["HOST_IP"],
     }
     dns = ["127.0.0.1"]
@@ -203,10 +203,10 @@ class PiholeConfig(ContainerBaseConfig):
         f"{_http_mdw_redirect_regex}.permanent": "true",
         f"{_http_mdw_redirect_regex}.regex": r"^.*pi\.hole(.*)",
         f"{_http_mdw_redirect_regex}.replacement": ""
-        f"https://pihole.{EVARS.get('DOMAIN', 'doth.dns')}$$1",
+        f"https://pihole.{ContainerBaseConfig._domain}$1",
         #: Middleware to make sure `/admin` is there
         f"{_http_mdw_admin_replace}.regex": r"^/((?i:(admin)/{0,1}|.{0})(.*))",
-        f"{_http_mdw_admin_replace}.replacement": "/admin/$$3",
+        f"{_http_mdw_admin_replace}.replacement": "/admin/$3",
         #: Middleware chain
         f"{_http_mdw}.mdw_PiholeChain.chain.middlewares": ""
         "mdw_RedirectPihole,mdw_AddAdminPath,mdw_SecureHeaders@file",
