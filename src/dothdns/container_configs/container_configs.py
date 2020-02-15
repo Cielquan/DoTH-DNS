@@ -119,15 +119,6 @@ class UnboundConfig(ContainerBaseConfig):
             "bind": "/opt/unbound/etc/unbound/",
             "mode": "rw",
         },
-        f"{USER_CONFIG_DIR.joinpath('unbound-docker/var_dir')}": {
-            "bind": "/opt/unbound/etc/unbound/var/",
-            "mode": "rw",
-        },
-        # TODO 08.02.2020: check for necessity of log file # pylint: disable=W0511
-        f"{USER_CONFIG_DIR.joinpath('unbound-docker/logs/unbound.log')}": {
-            "bind": "/opt/unbound/etc/unbound/var/log/unbound/unbound.log",
-            "mode": "rw",
-        },
         f"{USER_CONFIG_DIR.joinpath('unbound-docker/unbound.sh')}": {
             "bind": "/unbound.sh",
             "mode": "ro",
