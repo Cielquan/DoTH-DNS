@@ -69,7 +69,7 @@ from .utils import add_to_dotenv
     "--architecture",
     envvar="ARCHITECTURE",
     type=click.Choice(CHOICES_ARCHITECTURE, case_sensitive=False),
-    help="ARCHITECTURE of the system's processor.",
+    help="ARCHITECTURE of the system's processor. [case-insensitive]",
 )
 @click.option(
     "-i",
