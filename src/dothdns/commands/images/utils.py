@@ -30,7 +30,7 @@
 import re
 
 from datetime import datetime, timezone
-from typing import Dict, Tuple
+from typing import Dict, Union
 
 import click
 import docker  # type: ignore
@@ -46,14 +46,14 @@ from ...helpers import process_func_output
 @click.pass_context
 def check_doh_image(
     ctx, force: bool = False, update: bool = False
-) -> Tuple[bool, bool, Dict[str, str]]:
+) -> Dict[str, Union[str, bool]]:
     """Check for doh image
 
     Set click context var 'doh_version' with version if it should be compiled.
 
     :param force: Force recreation if already exists
     :param update: Update if newer version is available
-    :returns: If error, if print always and output for click.secho
+    :returns: If error, if print always and output for 'helpers.echo_wr'
     """
     #: Get latest version from github for doh server
     tag = requests.get(
@@ -63,15 +63,12 @@ def check_doh_image(
     if extract:
         version = extract.group(0)
     else:
-        return (
-            True,
-            True,
-            {
-                "message": "ERROR: Current version for 'm13253/dns-over-https' "
-                "could not be catched.",
-                "fg": "red",
-            },
-        )
+        return {
+            "txt": "Current version for 'm13253/dns-over-https' could not be catched.",
+            "cat": "error",
+            "err": True,
+            "always_print": True,
+        }
 
     client = docker.from_env()
     if not force:
@@ -79,52 +76,50 @@ def check_doh_image(
             image = client.images.get("cielquan/doh_server")
             #: Exit if no newer version is available
             if version == image.labels["org.label-schema.version"]:
-                return (
-                    False,
-                    False,
-                    {
-                        "message": f"Latest 'doh_server' image found: {image.short_id}",
-                        "fg": "cyan",
-                    },
-                )
+                return {
+                    "txt": f"Latest 'doh_server' image found: {image.short_id}",
+                    "cat": "info",
+                    "err": False,
+                    "always_print": False,
+                }
+
             #: Exit if 'update' is False
             if not update:
-                return (
-                    False,
-                    False,
-                    {
-                        "message": "New version for 'doh_server' image available: "
-                        f"{version}.",
-                        "fg": "cyan",
-                    },
-                )
+                return {
+                    "txt": f"New version for 'doh_server' image available: {version}.",
+                    "cat": "info",
+                    "err": False,
+                    "always_print": False,
+                }
+
         except docker_exc.ImageNotFound:
             ctx.obj["doh_version"] = version
-            return (
-                False,
-                True,
-                {"message": "Image for 'doh_server' not found.", "fg": "cyan"},
-            )
+            return {
+                "txt": "Image for 'doh_server' not found.",
+                "cat": "info",
+                "err": False,
+                "always_print": True,
+            }
+
         except docker_exc.APIError as exc:
-            return (
-                True,
-                True,
-                {
-                    "message": f"ERROR: While searching the 'doh_server' image "
-                    f"an API error occurred: {str(exc)}",
-                    "fg": "red",
-                },
-            )
+            return {
+                "txt": "While searching the 'doh_server' image an API error occurred: "
+                f"{str(exc)}",
+                "cat": "error",
+                "err": True,
+                "always_print": True,
+            }
+
     ctx.obj["doh_version"] = version
-    return False, False, {"message": "", "fg": "cyan"}
+    return {"txt": "", "always_print": False}  #: Return empty msg to print nothing
 
 
 @process_func_output
-def doh_compile(version: str) -> Tuple[bool, bool, Dict[str, str]]:
+def doh_compile(version: str) -> Dict[str, Union[str, bool]]:
     """Compile doh_server docker image
 
     :param version: Version to compile
-    :returns: If error, if print always and output for click.secho
+    :returns: If error, if print always and output for 'helpers.echo_wr'
     """
     client = docker.from_env()
 
@@ -140,18 +135,16 @@ def doh_compile(version: str) -> Tuple[bool, bool, Dict[str, str]]:
             quiet=False,
         )
     except (docker_exc.BuildError, docker_exc.APIError) as exc:
-        return (
-            True,
-            True,
-            {
-                "message": f"ERROR: The build of 'doh_server' image raised "
-                f"an error: {str(exc)}",
-                "fg": "red",
-            },
-        )
+        return {
+            "txt": f"The build of 'doh_server' image raised " f"an error: {str(exc)}",
+            "cat": "error",
+            "err": True,
+            "always_print": True,
+        }
 
-    return (
-        False,
-        True,
-        {"message": f"New 'doh_server' image was build: {str(image)}", "fg": "green"},
-    )
+    return {
+        "txt": f"New 'doh_server' image was build: {str(image)}",
+        "cat": "success",
+        "err": False,
+        "always_print": True,
+    }

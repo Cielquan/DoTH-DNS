@@ -28,7 +28,7 @@
     :license: GPLv3, see LICENSE for more details
 """
 from pathlib import Path
-from typing import Dict, Iterable, Optional, Union
+from typing import Callable, Dict, Iterable, Optional, Union
 
 import click
 
@@ -101,43 +101,45 @@ def get_env_file_data(env_file: Union[str, Path]) -> Dict[str, str]:
     return env_file_dict
 
 
-# TODO 09.02.2020: type annotations #: pylint: disable=W0511
-def process_func_output(function):
+def echo_wr(msg: Dict[str, Union[str, bool]]) -> None:
+    """Echo given message"""
+    # Categories for click.echo
+    echo_cat = {
+        "attention": click.style("ATTENTION: ", fg="bright_yellow"),
+        "warning": click.style("WARNING:   ", fg="yellow"),
+        "error": click.style("ERROR:     ", fg="red"),
+        "success": click.style("SUCCESS:   ", fg="green"),
+        "info": click.style("INFO:      ", fg="cyan"),
+    }
+
+    #: Get data needed for printing
+    msg_cat = str(msg.get("cat"))
+    msg_txt = str(msg.get("txt"))
+    msg_err = bool(msg.get("err", False))
+    msg_fg = str(msg.get("fg"))
+
+    if msg_txt:
+        click.echo(echo_cat.get(msg_cat, ""), err=msg_err, nl=False)
+        click.secho(msg_txt, err=msg_err, fg=msg_fg)
+
+
+def process_func_output(
+    function: Callable[..., Dict[str, Union[str, bool]]]
+) -> Callable[..., None]:
     """Handle feedback from sub functions called in cmd functions"""
 
     @click.pass_context
-    def wrapper(ctx: Context, *args, **kwargs):
-        """Work withs given function"""
+    def wrapper(ctx: Context, *args, **kwargs) -> None:
+        """Work with given function"""
 
-        class DecoratorArgumentError(Exception):
-            """Exception to call for wrong arguments on decorator"""
+        msg = function(*args, **kwargs)
 
-        res = function(*args, **kwargs)
+        if msg.get("always_print", True) or ctx.obj.get(
+            "invoked_internally_by"
+        ) not in ctx.obj.get("do_not_print_when_invoked_by", []):
+            echo_wr(msg)
 
-        err: bool
-        always_print: bool
-        msg: Dict[str, str]
-
-        if len(res) == 2:
-            err = res[0]
-            msg = res[1]
-            click.secho(msg["message"], err=err, fg=msg.get("fg"))
-
-        elif len(res) == 3:
-            err = res[0]
-            always_print = res[1]
-            msg = res[2]
-
-            if ctx is None:
-                raise DecoratorArgumentError(
-                    "Function with 3 return values was decorated and "
-                    "no 'ctx' was given to the decorator."
-                )
-            if always_print or ctx.obj.get("invoked_internally_by") not in ctx.obj.get(
-                "do_not_print_when_invoked_by", []
-            ):
-                click.secho(msg["message"], err=err, fg=msg.get("fg"))
-            if err:
-                ctx.abort()
+        if msg.get("err"):
+            ctx.abort()
 
     return wrapper

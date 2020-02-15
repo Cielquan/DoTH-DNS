@@ -32,6 +32,7 @@ import docker  # type: ignore
 
 from docker import errors as docker_exc
 
+from ...helpers import echo_wr
 from ...utils import load_container_configs_file
 from ..init import init
 from .utils import check_doh_image, doh_compile
@@ -70,9 +71,7 @@ def images(ctx, recompile, update, update_all) -> None:
     if ctx.obj.get("invoked_internally_by") not in ctx.obj.get(
         "do_not_print_when_invoked_by", []
     ):
-        click.secho(
-            "Checking for 'doh_server' image. ", fg="cyan",
-        )
+        echo_wr({"txt": "Checking for 'doh_server' image. ", "cat": "info"})
     #: Create config dir if non exists
     ctx.obj["invoked_internally_by"] = "images"
     ctx.invoke(init, creation_level=0)
@@ -87,10 +86,12 @@ def images(ctx, recompile, update, update_all) -> None:
     #: Compile doh image
     version = ctx.obj.get("doh_version")
     if version is not None:
-        click.secho(
-            f"Compiling image for 'doh_server' for version {version}. "
-            "This may last a bit.",
-            fg="cyan",
+        echo_wr(
+            {
+                "txt": f"Compiling image for 'doh_server' for version {version}. "
+                "This may last a bit.",
+                "cat": "info",
+            }
         )
         doh_compile(version)
 
@@ -98,13 +99,14 @@ def images(ctx, recompile, update, update_all) -> None:
     container_config = load_container_configs_file()
 
     if container_config is None:
-        click.secho(
-            "ERROR: Could not load configs from `container_configs.py` file. "
-            "Please run `dothdns init` to create a config directory",
-            err=True,
-            fg="red",
+        echo_wr(
+            {
+                "txt": "Could not load configs from `container_configs.py` file. "
+                "Please run `dothdns init` to create a config directory.",
+                "err": True,
+                "cat": "error",
+            }
         )
-        ctx.abort()
 
     image_dict = {
         "unbound": container_config["unbound"]["image"],  # type: ignore
@@ -122,25 +124,32 @@ def images(ctx, recompile, update, update_all) -> None:
         except docker_exc.ImageNotFound:
             img = None
         except docker_exc.APIError as exc:
-            click.secho(
-                f"ERROR: While searching the '{image}' image an API error "
-                f"occurred: {str(exc)}",
-                err=True,
-                fg="red",
+            echo_wr(
+                {
+                    "txt": f"While searching the '{image}' image an API error "
+                    f"occurred: {str(exc)}",
+                    "err": True,
+                    "cat": "error",
+                }
             )
-            ctx.abort()
 
         #: Pull images
         if img is None or key in update or update_all:
-            click.secho(f"Pulling image for '{image}'. This may last a bit.", fg="cyan")
+            echo_wr(
+                {
+                    "txt": f"Pulling image for '{image}'. This may last a bit.",
+                    "cat": "info",
+                }
+            )
             try:
                 client.images.pull(image, tag=tag)
             except docker_exc.APIError as exc:
-                click.secho(
-                    f"ERROR: While pulling the '{image}' image an API error "
-                    f"occurred: {str(exc)}",
-                    err=True,
-                    fg="red",
+                echo_wr(
+                    {
+                        "txt": f"While pulling the '{image}' image an API error "
+                        f"occurred: {str(exc)}",
+                        "err": True,
+                        "cat": "error",
+                    }
                 )
-                ctx.abort()
-            click.secho(f"Successfully pulled image for '{image}'.", fg="green")
+            echo_wr({"txt": f"Pulled image for '{image}'.", "cat": "success"})

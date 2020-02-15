@@ -40,6 +40,7 @@ from ...config import (
     ABS_PATH_HOME_REPO_DIR_TRAEFIK_HTPASSWD_FILE,
     CHOICES_ARCHITECTURE,
 )
+from ...helpers import echo_wr
 from ..cmd_class import CommandWithConfigFile
 from ..init import init
 from .utils import add_to_dotenv
@@ -122,14 +123,15 @@ def config(  #: pylint: disable=C0330,R0912,R0913
     if host_ip:
         env_dict.update(HOST_IP=host_ip)
     else:
-        click.secho(
-            "ERROR: HOST_IP was not set and could not be guessed. "
-            "Please set HOST_IP via `-i` option or in `dothdns.ini` to avoid"
-            "future problems and recall this command.",
-            err=True,
-            fg="red",
+        echo_wr(
+            {
+                "txt": "HOST_IP was not set and could not be guessed. "
+                "Please set HOST_IP via `-i` option or in `dothdns.ini` to avoid"
+                "future problems and recall this command.",
+                "err": True,
+                "cat": "error",
+            }
         )
-        ctx.abort()
 
     #: HOST_NAME
     if hostname is None:
@@ -143,12 +145,14 @@ def config(  #: pylint: disable=C0330,R0912,R0913
         architecture = platform.machine()
 
     if not architecture:
-        click.secho(
-            "WARNING: ARCHITECTURE was not set and could not be guessed. "
-            "Falling back to 'x86' architecture. To avoid this warning or if "
-            "you use 'arm' architecture please set ARCHITECTURE in "
-            "`dothdns.ini`.",
-            fg="yellow",
+        echo_wr(
+            {
+                "txt": "ARCHITECTURE was not set and could not be guessed. "
+                "Falling back to 'x86' architecture. To avoid this warning or if "
+                "you use 'arm' architecture please set ARCHITECTURE in "
+                "`dothdns.ini`.",
+                "cat": "warning",
+            }
         )
     elif "arm" in architecture:
         env_dict.update(UNBOUND_VARIANT="unbound-rpi")
@@ -184,6 +188,4 @@ def config(  #: pylint: disable=C0330,R0912,R0913
 
     #: Add env vars to `.env`
     if add_to_dotenv(env_dict, overwrite=fresh) is not None:
-        click.secho(
-            "Successfully set environment variables in `.env` file.", fg="green"
-        )
+        echo_wr({"txt": "Set environment variables in `.env` file.", "cat": "success"})
