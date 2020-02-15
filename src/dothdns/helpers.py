@@ -28,7 +28,7 @@
     :license: GPLv3, see LICENSE for more details
 """
 from pathlib import Path
-from typing import Callable, Dict, Iterable, Optional, Union
+from typing import Callable, Dict, Iterable, Optional, Union, cast
 
 import click
 
@@ -113,10 +113,10 @@ def echo_wr(msg: Dict[str, Union[str, bool]]) -> None:
     }
 
     #: Get data needed for printing
-    msg_cat = str(msg.get("cat"))
-    msg_txt = str(msg.get("txt"))
-    msg_err = bool(msg.get("err", False))
-    msg_fg = str(msg.get("fg"))
+    msg_cat = cast(str, msg.get("cat", ""))
+    msg_txt = cast(Optional[str], msg.get("txt"))
+    msg_err = cast(bool, msg.get("err", False))
+    msg_fg = cast(Optional[str], msg.get("fg"))
 
     if msg_txt:
         click.echo(echo_cat.get(msg_cat, ""), err=msg_err, nl=False)
