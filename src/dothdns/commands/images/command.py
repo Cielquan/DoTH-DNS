@@ -67,7 +67,7 @@ def images(ctx, recompile, update, update_all) -> None:
     #: pylint: disable=R0914
     called_by = ctx.obj["invoked_internally_by"]
     #: Compile doh image message
-    ctx.obj["do_not_print_when_invoked_by"] = ["run", "up"]
+    ctx.obj["do_not_print_when_invoked_by"] = ["run", "run"]
     if ctx.obj.get("invoked_internally_by") not in ctx.obj.get(
         "do_not_print_when_invoked_by", []
     ):
@@ -76,7 +76,7 @@ def images(ctx, recompile, update, update_all) -> None:
     ctx.obj["invoked_internally_by"] = "images"
     ctx.invoke(init, creation_level=0)
     ctx.obj["invoked_internally_by"] = called_by
-    ctx.obj["do_not_print_when_invoked_by"] = ["run", "up"]
+    ctx.obj["do_not_print_when_invoked_by"] = ["run", "run"]
 
     #: Check doh image
     check_doh_image(  #: pylint: disable=E1120,E1123

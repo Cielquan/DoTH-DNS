@@ -29,7 +29,7 @@
 """
 import click
 
-from ..commands import config, images, init
+from ..commands import config, images, init, run
 from ..version import __version__
 
 
@@ -45,3 +45,4 @@ def main(ctx) -> None:
 main.add_command(config)
 main.add_command(images)
 main.add_command(init)
+main.add_command(run)

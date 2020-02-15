@@ -1,7 +1,7 @@
 # ======================================================================================
 # Copyright (c) 2019-2020 Christian Riedel
 #
-# This file '__init__.py' created 2020-01-26
+# This file '__init__.py' created 2020-02-08
 # is part of the project/program 'DoTH-DNS'.
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,23 +19,15 @@
 # Github: https://github.com/Cielquan/
 # ======================================================================================
 """
-    dothdns.commands
-    ~~~~~~~~~~~~~~~~
+    dothdns.commands.run
+    ~~~~~~~~~~~~~~~~~~~
 
-    Commands for DoTH-DNS.
+    `run` subcommand for `dothdns` command.
 
     :copyright: (c) 2019-2020 Christian Riedel
     :license: GPLv3, see LICENSE for more details
 """
-from .config import config
-from .images import images
-from .init import init
-from .up import run
+from .command import run
 
 
-__all__ = (
-    "config",
-    "images",
-    "init",
-    "run",
-)
+__all__ = ("run",)
