@@ -120,7 +120,7 @@ def run(ctx, proxy) -> None:
         else:
             echo_wr(
                 {
-                    "txt": f"Container '{container_name}' is already running",
+                    "txt": f"Container '{container_name}' is already running/existing.",
                     "cat": "info",
                 }
             )
