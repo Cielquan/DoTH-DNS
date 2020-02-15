@@ -11,6 +11,25 @@ DoTH-DNS Change Log
 .. _changelog:
 
 
+.. _changelog_700:
+
+Release 7.0.0
+-------------
+*Unreleased*
+
+- Added CLI written in python with click
+- Revised container configs
+    - Custom start script for unbound adding additional config files (access protection and PTR entries)
+    - Removed unused log file stuff from unbound
+    - Added s6 script to pihole to grab unbound's IP and write to config
+    - Improved s6 script for pihole adding host wildcard entry
+    - Activated logging for doh_server by default
+- Added Dockerfile for doh_server based on `goofball's Dockerfile <https://github.com/goofball222/dns-over-https/blob/master/stable/Dockerfile>`__
+- Updated traefik to v2.1 (incl. config)
+- Removed Bash scripts
+- Removed docker-compose files
+
+
 .. _changelog_603:
 
 Release 6.0.3
