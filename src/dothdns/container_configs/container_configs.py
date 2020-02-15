@@ -144,7 +144,7 @@ class PiholeConfig(ContainerBaseConfig):
     image = "pihole/pihole:latest"
     environment = {
         **ContainerBaseConfig.environment,
-        "ServerID": EVARS["HOST_IP"],
+        "ServerIP": EVARS["HOST_IP"],
         "DNS1": "208.67.222.222#53",  #: OpenDNS, only for initial boot3
         "DNS2": "no",
         "DOMAIN": f"{ContainerBaseConfig._domain}",
