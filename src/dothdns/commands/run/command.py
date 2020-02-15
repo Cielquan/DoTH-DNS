@@ -33,7 +33,11 @@ import docker  # type: ignore
 import docker.errors  # type: ignore
 
 from ...commands import config, images
-from ...config import ABS_PATH_HOME_REPO_DIR_DOTENV_FILE, CONTAINER_NAMES
+from ...config import (
+    ABS_PATH_HOME_REPO_DIR_CERT_DIR,
+    ABS_PATH_HOME_REPO_DIR_DOTENV_FILE,
+    CONTAINER_NAMES,
+)
 from ...helpers import echo_wr, get_env_file_data
 from ...utils import load_container_configs_file
 from ..cmd_class import CommandWithConfigFile
@@ -59,6 +63,23 @@ def run(ctx, proxy) -> None:
     #: If proxy not set, set default
     if proxy is None:
         proxy = True
+
+    #: Check for cert.crt and key.key
+    missing = []
+    if not ABS_PATH_HOME_REPO_DIR_CERT_DIR.joinpath("cert.crt").is_file():
+        missing.append("cert.crt")
+    if not ABS_PATH_HOME_REPO_DIR_CERT_DIR.joinpath("key.key").is_file():
+        missing.append("key.key")
+    if missing:
+        echo_wr(
+            {
+                "txt": f"No {missing} file{'s' if len(missing) == 2 else ''} found. "
+                "Dashboards, DoH and DoT need both a 'certificate' and a corresponding "
+                "'key'. If you have not set those files up on another way encryption "
+                "will not work properly.",
+                "cat": "warning",
+            }
+        )
 
     ctx.obj["invoked_internally_by"] = "run"
     ctx.invoke(config)

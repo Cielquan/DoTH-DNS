@@ -42,10 +42,8 @@ CHOICES_ARCHITECTURE = ("x86", "arm")
 ABS_PATH_HOME = Path.home()
 #: DoTH-DNS dir
 ABS_PATH_HOME_REPO_DIR = Path(ABS_PATH_HOME, "DoTH-DNS")
-#: unbound-docker `root.hints` file
-ABS_PATH_HOME_REPO_DIR_UNBOUND_ROOT_HINTS_FILE = Path(
-    ABS_PATH_HOME_REPO_DIR, "unbound-docker/var_dir/root.hints"
-)
+#: certificates dir
+ABS_PATH_HOME_REPO_DIR_CERT_DIR = Path(ABS_PATH_HOME_REPO_DIR, "certificates")
 #: traefik-docker `.htpasswd` file
 ABS_PATH_HOME_REPO_DIR_TRAEFIK_HTPASSWD_FILE = Path(
     ABS_PATH_HOME_REPO_DIR, "traefik-docker", "shared", ".htpasswd"
