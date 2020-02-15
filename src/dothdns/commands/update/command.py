@@ -45,6 +45,7 @@ from ...helpers import echo_wr
 @click.option(
     "--proxy/--no-proxy",
     default=None,
+    envvar="PROXY",
     help="If predefined instance of traefik should be used as reverse proxy. "
     "[default: True]",
 )
