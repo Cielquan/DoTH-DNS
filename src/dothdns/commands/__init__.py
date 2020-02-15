@@ -31,7 +31,7 @@ from .config import config
 from .down import down
 from .images import images
 from .init import init
-from .up import run
+from .run import run
 
 
 __all__ = (
