@@ -2,5 +2,6 @@
 exclude .gitignore .gitattributes .editorconfig
 exclude .pre-commit-config.yaml tox.ini
 exclude azure-pipelines.yml .travis.yml appveyor.yml codecov.yml
-exclude .readthedocs.yaml
+exclude .readthedocs.yaml .readthedocs.yml
 exclude MANIFEST.in
+prune .github
