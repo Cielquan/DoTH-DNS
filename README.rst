@@ -11,10 +11,14 @@ DoTH-DNS
 | |stars| |forks| |contributors|
 |
 
-Utilizes the power of `pi-hole <https://pi-hole.net>`_ and `unbound <https://www.nlnetlabs.nl/projects/unbound/about>`_
-to create a DNS server under your own authority but with the ability to use
-DoH (`DNS over HTTPS <https://en.wikipedia.org/wiki/DNS_over_HTTPS>`_) and
-DoT (`DNS over TLS <https://en.wikipedia.org/wiki/DNS_over_TLS>`_).
+Utilizes the power of the DNS sinkhole `pi-hole`_ and `unbound`_
+to create a DNS server under your own authority but with the ability to connect via
+Do53 (default, unencrypted), DoH (`DNS over HTTPS`__) and DoT (`DNS over TLS`__).
+
+__ https://en.wikipedia.org/wiki/DNS_over_HTTPS
+__ https://en.wikipedia.org/wiki/DNS_over_TLS
+.. _pi-hole: https://pi-hole.net
+.. _unbound: https://www.nlnetlabs.nl/projects/unbound/about
 
 
 Documentation
@@ -27,10 +31,22 @@ Disclaimer
 Use at own risk see the License.rst file for more details.
 
 
-Acknowledgments
----------------
+Acknowledgements
+----------------
 
-Dockerfile for doh_server is based on https://github.com/goofball222/dns-over-https
+Thanks to the creators, maintainers and developers of the software used in this project.
+
+Special thanks to:
+
+- the `dns-over-https`__ project and its `docker version`__ as a base for my Dockerfile.
+- the `docker-pihole-unbound`__ project for the inspiration.
+- this `blog post`__ and this `blog post`__ being the first foundation of this project.
+
+__ https://github.com/m13253/dns-over-https
+__ https://github.com/goofball222/dns-over-https
+__ https://github.com/chriscrowe/docker-pihole-unbound
+__ https://www.aaflalo.me/2018/10/tutorial-setup-dns-over-https-server
+__ https://www.bentasker.co.uk/documentation/linux/407-building-and-running-your-own-dns-over-https-server
 
 
 .. .############################### LINKS ###############################

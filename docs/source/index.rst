@@ -57,7 +57,7 @@ Thanks to the creators, maintainers and developers of the software used in this 
 
 Special thanks to:
 
-- the `dns-over-https`__ project and its `docker version`__.
+- the `dns-over-https`__ project and its `docker version`__ as a base for my Dockerfile.
 - the `docker-pihole-unbound`__ project for the inspiration.
 - this `blog post`__ and this `blog post`__ being the first foundation of this project.
 
