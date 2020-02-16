@@ -70,7 +70,7 @@ release_date = f"{TODAY}"  #: CHANGEME
 extensions = [
     "sphinx_rtd_theme",
     "sphinx.ext.intersphinx",
-    "sphinx.ext.autodoc",
+    "sphinx_click.ext",
 ]
 
 intersphinx_mapping = {"python": ("https://docs.python.org/3/", None)}

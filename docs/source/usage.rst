@@ -8,72 +8,125 @@
 Usage
 =====
 
-Quick setup
+
+Very Quick setup
+----------------
+DoTH-DNS can be setup very quick by just running one command ::
+
+        $ dothdns run
+
+How ever it is not recommended. Because the important encryption part will not work properly.
+Better is to take some time and configure your local copy a bit.
+
+
+Quick Setup
 -----------
-Here I show my way of setting the server (RasPi) up via SSH. Your mileage may vary.
-Given paths are relative to this repositories root.
+A quick but secure setup.
 
-1. First see :ref:`installation` and setup your copy on your server
+1. Initialize config directory
 
-2. Optionally add ``.htpasswd`` file
+  Create a local copy of the configuration files. The directory will be created in your home directory. ::
 
-  To secure your traefik dashboard add a `.htpasswd`__ file to 'traefik-docker/shared/'
-  containing a user-password-string following htpasswd standard. This is optional. ::
+    $ dothdns config
 
-    $ htpasswd -c traefik-docker/shared/.htpasswd <YOUR USERNAME>
+2. Add TLS certificate
 
-3. Run the start_doth_dns.bash script
+  To use proper encryption you need to add a certificate and corresponding key to '~/DoTH-DNS/certificates/'.
+  The certificate needs to be named ``cert.crt`` and the key ``key.key`` unless you modify the configs.
 
-  Call the start_doth_dns.bash script.
-  Depending on the settings of your server you may need to start the script with sudo
-  because for docker root privileges are needed. For supported options for the script see :ref:`api`. ::
+  Alternatively you can setup `Let's Encrypt`_ with traefik.
 
-    $ ./start_doth_dns.bash
+3. Add ``.htpasswd`` file [optional/recommended]
 
-4. Secure your pihole dashboard
+  To secure your traefik dashboard add a `.htpasswd`_ file to '~/DoTH-DNS/traefik-docker/shared/'
+  containing a user-password-string following htpasswd standard. ::
 
-  If you have not set the WEBPASSWORD environment variable you should now set a secure password
-  for your pihole dashboard (or deactivate it). The script also reminds you if a random password
-  was generated from pihole. ::
+    $ htpasswd -c ~/DoTH-DNS/traefik-docker/shared/.htpasswd <YOUR USERNAME>
 
-    $ docker exec pihole -a -p <PASSWORD>
+4. Start DoTH-DNS
 
-5. Use the new DNS server
+  Now you are ready to start the stack and call ::
 
-  Now you can setup your other devices to use the new DNS server. You should also install your
-  CA certificate on your other devices, if you use self signed certificates.
+    $ dothdns run
+
+5. Secure your pihole dashboard
+
+  If you have not set the WEBPASSWORD environment variable for the pi-hole docker it will generate
+  a random password for you which will be shown in the output of ``dothdns run``.
+  You should now set a secure password for your pihole dashboard (or deactivate it). ::
+
+    $ docker exec pihole pihole -a -p <PASSWORD>
+
+6. Activate DNSSEC [optional/recommended]
+
+  Now you can log into your pihole dashboard and activate DNSSEC to validate DNS results.
+  If DNSSEC runs you can check `here <https://www.cloudflare.com/ssl/encrypted-sni/>`__
+  or more verbose `here <https://www.rootcanary.org/test.html>`__.
 
 
-Menu script
+After setup
 -----------
-Instead of calling the setup script directly you can use the menu script as a wrapper.
-This requires whiptail to be installed. ::
-
-  $ ./menu_start_doth_dns.bash
-
-But the menu only provides very basic options:
-
-* Starting DoTH-DNS
-* Restarting DoTH-DNS
-* Updating DoTH-DNS
-* Shutting down DoTH-DNS
+After setting DoTH-DNS up you need to setup your clients to use the new DNS server.
+If you use self-signed certificates you should install the root CA certificate on your devices.
 
 
 Configuration
 -------------
-Configuration is guessed by the script automatically. Alternatively you can set options when
-running the script. You can also set them in a '.env' file or the shell environment.
-When setting them in the shell environment add ``DOTH_`` before the actual variable.
-Else the .env file will overwrite them or if not set in .env file take the .env file as source.
-You can set the following Variables:
+Configuration is guessed by DoTH-DNS if not set by the user.
+For setting configuration parameters you have three options.
+The shown order is also their ranking:
 
-* ARCHITECTURE
-* INTERFACE
-* HOST_IP
-* HOST_NAME
-* TIMEZONE
-* DOMAIN
+    #. commandline options / flags
+    #. environment variables
+    #. configuration file (dothdns.ini)
+
+1. Commandline options / flags
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+There are several options and flag you can set when interacting with DoTH-DNS on the commandline.
+See :ref:`api` for more information.
+
+2. Environment variables
+^^^^^^^^^^^^^^^^^^^^^^^^
+The following configuration you can set via EnvVars:
+
+* ``TRAEFIK_AUTH``  [true|false]
+* ``TRAEFIK_NETWORK`` <CUSTOM NETWORK>
+* ``ARCHITECTURE`` [x86|arm]
+* ``HOST_IP``  <IP ADDRESS>
+* ``HOST_NAME``  <HOST NAME>
+* ``TIMEZONE``  <TZ IN OLSON FORMAT>
+* ``DOMAIN``  <CUSTOM DOMAIN>
+* ``PROXY``  [true|false]
+
+See :ref:`api` for more information to single options.
+
+3. Configuration file
+^^^^^^^^^^^^^^^^^^^^^
+You can also write the EnvVars to a 'dothdns.ini' or '.dothdns.ini' file.
+The file must be either in your home directory or inside the 'DoTH-DNS' directory.
+
+
+Additional Configuration
+------------------------
+You are free to change configuration files in the DoTH-DNS directory. But beware that
+this can mess up the whole configuration. To reset the configs you can use the
+``dothdns init`` command (see :ref:`api`).
+
+
+Logging
+-------
+All containers are logging by default. Pihole's logs are accessible via the dashboard.
+For the logs of the other containers call ::
+
+    $ docker logs <CONTAINER>
+
+But there are some handicaps with logging. The DoH-Server only shows Traefik as client
+because traefik terminates the TLS connection. Pihole has a similar problem.
+It shows the DoH-Server as client for all DNS queries incoming via DoH.
+
 
 .. highlight:: default
 
-__ https://en.wikipedia.org/wiki/.htpasswd
+
+.. _.htpasswd: https://en.wikipedia.org/wiki/.htpasswd
+.. _Let's Encrypt: https://letsencrypt.org/

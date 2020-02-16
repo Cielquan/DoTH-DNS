@@ -10,33 +10,34 @@ Welcome to DoTH-DNS's documentation!
 
 .. include:: badges.rst
 
-Utilizes the power of `pi-hole <https://pi-hole.net>`_ and
-`unbound <https://www.nlnetlabs.nl/projects/unbound/about>`_
-to create a DNS server under your own authority but with the ability to use
-DoH (`DNS over HTTPS <https://en.wikipedia.org/wiki/DNS_over_HTTPS>`_) and
-DoT (`DNS over TLS <https://en.wikipedia.org/wiki/DNS_over_TLS>`_).
+Utilizes the power of the DNS sinkhole `pi-hole`_ and `unbound`_
+to create a DNS server under your own authority but with the ability to connect via
+Do53 (default, unencrypted), DoH (`DNS over HTTPS`__) and DoT (`DNS over TLS`__).
+
+__ https://en.wikipedia.org/wiki/DNS_over_HTTPS
+__ https://en.wikipedia.org/wiki/DNS_over_TLS
 
 
 Description
 -----------
-This project's goal is setup a DNS server inside docker with the option to connect via DoH or DoT.
-Therefor pi-hole, unbound, traefik and a `DoH-server <https://github.com/m13253/dns-over-https>`__ are utilized.
+This project's goal is setup a recursive DNS server inside docker with the option to also connect via DoH or DoT.
+Therefor `pi-hole`_, `unbound`_, `traefik`__ and a `DoH-server`__ are utilized.
 
 You may ask 'Why use DoH or DoT for an local DNS server?'. Good question! I set this up
-because firefox needs you to use DoH if you want to use `ESNI
-<https://en.wikipedia.org/wiki/Server_Name_Indication>`__. The DoT support was just some lines
+because firefox needs you to use DoH if you want to use `ESNI`__. The DoT support was just some lines
 of code more so I did it also.
 
-The docker-compose file creates a bridge network and the following containers:
-``pi-hole/pi-hole``, ``mvance/unbound``, ``traefik``, ``goofball222/dns-over-https``.
+You could also run the stack in a cloud (not tested) and connect there via DoH/DoT.
 
 Query forwarding:
 
-* Normal DNS query: port 53 -> pihole -> unbound
+* Do53 query: port 53 -> pihole -> unbound
 * DoT query: port 853 -> traefik -> pihole -> unbound
 * DoH query: port 443 -> traefik -> DoH-server -> pihole -> unbound
-* pihole dashboard query: port 80/443 -> traefik -> pihole
-* traefik dashboard query: port 80/443 -> traefik
+
+__ https://docs.traefik.io/
+__ https://github.com/m13253/dns-over-https
+__ https://en.wikipedia.org/wiki/Server_Name_Indication
 
 
 Project name origin
@@ -51,11 +52,24 @@ because it `does DNS` (see slogan at top).
 
 Acknowledgements
 ----------------
-Thanks to the creators of docker, pi-hole, unbound, traefik and 'dns-over-https' for their awesome software.
-Also thanks you to the maintainers of the images.
 
-Thanks to the creator of this `docker-pihole-unbound <https://github.com/chriscrowe/docker-pihole-unbound>`__
-project which inspired me.
+Thanks to the creators, maintainers and developers of the software used in this project.
+
+Special thanks to:
+
+- the `dns-over-https`__ project and its `docker version`__.
+- the `docker-pihole-unbound`__ project for the inspiration.
+- this `blog post`__ and this `blog post`__ being the first foundation of this project.
+
+__ https://github.com/m13253/dns-over-https
+__ https://github.com/goofball222/dns-over-https
+__ https://github.com/chriscrowe/docker-pihole-unbound
+__ https://www.aaflalo.me/2018/10/tutorial-setup-dns-over-https-server
+__ https://www.bentasker.co.uk/documentation/linux/407-building-and-running-your-own-dns-over-https-server
+
+
+.. _pi-hole: https://pi-hole.net
+.. _unbound: https://www.nlnetlabs.nl/projects/unbound/about
 
 
 .. toctree::

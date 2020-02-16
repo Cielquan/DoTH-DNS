@@ -13,24 +13,30 @@ Prerequisites
 Your machine needs to match the following conditions:
 
 * Have a static IP
-* Have git, docker and docker-compose installed
+* Have python >= 3.6 + pip and docker installed
 * Have valid SSL certificate (cert.crt) and matching key (key.key)
 
 
-Installation
-------------
-A true installation is not directly supported yet.
-
-You just need to download the `Git repository`__.
-Then put your SSL certificate files
-Afterwards you can just call ``start_doth_dns.bash`` script::
+Installation from source
+------------------------
+DoTH-DNS can be install directly from a clone of the `Git repository`__. You can either
+clone the repo and install the local clone::
 
    $ git clone https://github.com/Cielquan/DoTH-DNS.git
    $ cd DoTH-DNS
-   $ chmod +x start_doth_dns.bash menu_start_doth_dns.bash
-   $ ./start_doth_dns.bash
+   $ pip install .
+
+or install it directly via :command:`git`::
+
+   $ pip install git+https://github.com/Cielquan/DoTH-DNS.git
+
+You can also grab the repo in either `tar.gz`__ or `zip`__ format.
+After downloading and extracting you can install it with :command:`pip` like above.
 
 
 .. highlight:: default
 
+
 __ https://github.com/Cielquan/DoTH-DNS
+__ https://github.com/Cielquan/DoTH-DNS/archive/master.tar.gz
+__ https://github.com/Cielquan/DoTH-DNS/archive/master.zip
