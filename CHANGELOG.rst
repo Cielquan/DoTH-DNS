@@ -15,7 +15,9 @@ DoTH-DNS Change Log
 
 Release 7.0.0
 -------------
-*Unreleased*
+*Released: 16.02.2020*
+
+This release is also published on PyPI.
 
 - Added CLI written in python with click
 - Revised container configs:
