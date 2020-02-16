@@ -18,16 +18,19 @@ Release 7.0.0
 *Unreleased*
 
 - Added CLI written in python with click
-- Revised container configs
-    - Custom start script for unbound adding additional config files (access protection and PTR entries)
-    - Removed unused log file stuff from unbound
-    - Added s6 script to pihole to grab unbound's IP and write to config
-    - Improved s6 script for pihole adding host wildcard entry
-    - Activated logging for doh_server by default
-- Added Dockerfile for doh_server based on `goofball's Dockerfile <https://github.com/goofball222/dns-over-https/blob/master/stable/Dockerfile>`__
-- Updated traefik to v2.1 (incl. config)
-- Removed Bash scripts
-- Removed docker-compose files
+- Revised container configs:
+
+    - Custom start script for unbound adding additional config files (access protection and PTR entries) (`commit <https://github.com/Cielquan/DoTH-DNS/commit/d51b67c29cc4c6f916011f961603c0eaecb050ee>`__)
+    - Removed unused log file stuff from unbound (`commit <https://github.com/Cielquan/DoTH-DNS/commit/e4f6795b0a037c47902ad432f0c15be87c196837>`__)
+    - Added s6 script to pihole to grab unbound's IP and write to config (`commit <https://github.com/Cielquan/DoTH-DNS/commit/d2d90c75f340241618a02847199f20f77fd55abe>`__)
+    - Improved s6 script for pihole adding host wildcard entry (`commit <https://github.com/Cielquan/DoTH-DNS/commit/d2d90c75f340241618a02847199f20f77fd55abe>`__)
+    - Activated logging for doh_server by default (`commit <https://github.com/Cielquan/DoTH-DNS/commit/ff21b0b233dc702ebe44454fd386dc3ba6c62ab7>`__)
+
+- Added Dockerfile for doh_server based on `goofball's Dockerfile <https://github.com/goofball222/dns-over-https/blob/master/stable/Dockerfile>`__ (`commit <https://github.com/Cielquan/DoTH-DNS/commit/fd4edc168f1492fa86bc9a80a6c7cff98a450f92>`__)
+- Updated traefik to v2.1 (incl. config) (`commit <https://github.com/Cielquan/DoTH-DNS/commit/5aaa77f66a7a4884c799bfcac3b68ffc936b6b33>`__)
+- Removed Bash scripts (`commit <https://github.com/Cielquan/DoTH-DNS/commit/abe398e29cc01e9d1794b1e13f17c68b34bcabeb>`__)
+- Removed docker-compose files (`commit <https://github.com/Cielquan/DoTH-DNS/commit/a53b556ba38174fd707cc5c13bff6175f1234b07>`__)
+- Updated documentation (`commit <https://github.com/Cielquan/DoTH-DNS/commit/43a47cdee23cadabd6fb26bba259bec97f8f9495>`__)
 
 
 .. _changelog_603:
