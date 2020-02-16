@@ -81,7 +81,7 @@ from .utils import add_to_dotenv
 @click.option(
     "-t",
     "--timezone",
-    envvar=["TIMEZONE"],
+    envvar="TIMEZONE",
     help="TIMEZONE of the system in 'olson' format. See docs for more info.",
 )
 @click.option(
