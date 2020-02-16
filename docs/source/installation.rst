@@ -17,6 +17,15 @@ Your machine needs to match the following conditions:
 * Have valid SSL certificate (cert.crt) and matching key (key.key)
 
 
+Installation from PyPI
+----------------------
+DoTH-DNS is published on PyPI so you can simply install it with ::
+
+    $ pip install doth-dns
+
+But it is recommended to install it in a virtual environment.
+
+
 Installation from source
 ------------------------
 DoTH-DNS can be install directly from a clone of the `Git repository`__. You can either
