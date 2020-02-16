@@ -11,6 +11,15 @@ DoTH-DNS Change Log
 .. _changelog:
 
 
+.. _changelog_701:
+
+Release 7.0.1
+-------------
+*Released: 16.02.2020*
+
+- Added PyPI & TravisCI badges (`commit <https://github.com/Cielquan/DoTH-DNS/commit/1f927d8a211d05611302f3f40dc0b8a07b1e4ec9>`__)
+
+
 .. _changelog_700:
 
 Release 7.0.0
