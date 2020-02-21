@@ -18,6 +18,11 @@ __ https://en.wikipedia.org/wiki/DNS_over_HTTPS
 __ https://en.wikipedia.org/wiki/DNS_over_TLS
 
 
+.. warning::
+    This project was created for use in a local network. If you want to use it on a VPS or in
+    an cloud environment be sure to properly secure your environment and know what you do.
+
+
 Description
 -----------
 This project's goal is setup a recursive DNS server inside docker with the option to also connect via DoH or DoT.

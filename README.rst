@@ -34,6 +34,10 @@ Disclaimer
 ----------
 Use at own risk see the License.rst file for more details.
 
+.. warning::
+    This project was created for use in a local network. If you want to use it on a VPS or in
+    an cloud environment be sure to properly secure your environment and know what you do.
+
 
 Acknowledgements
 ----------------
