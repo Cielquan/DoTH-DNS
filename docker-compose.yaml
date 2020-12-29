@@ -1,0 +1,170 @@
+# Based on:
+#https://www.aaflalo.me/2018/10/tutorial-setup-dns-over-https-server/
+#https://www.bentasker.co.uk/documentation/linux/407-building-and-running-your-own-dns-over-https-server
+
+version: '3.5'
+
+
+networks:
+  dns_network:
+    name: dns_network
+    driver: bridge
+    driver_opts:
+      encrypted: "true"
+    ipam:
+      config:
+        - subnet: 172.16.1.0/24
+    attachable: false
+
+
+services:
+  # DoH server container
+  doh_server:
+    container_name: doh_server
+    hostname: guenther
+    image: cielquan/doh_server:latest
+    environment:
+      - TZ=Europe/Berlin
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./doh-docker/configs/doh-server.conf:/opt/dns-over-https/conf/doh-server.conf
+    expose:
+      - "8053"
+    networks:
+      - dns_network
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=dns_network
+
+      # DoH handling
+      - traefik.http.services.svc_DohServer.loadbalancer.server.port=8053
+
+      - traefik.http.routers.rou_DohServer.entrypoints=https
+      - traefik.http.routers.rou_DohServer.rule=Host(`doh.${DOMAIN}`) && Path(`/dns-query`)
+      - traefik.http.routers.rou_DohServer.tls=true
+      - traefik.http.routers.rou_DohServer.tls.certresolver=letsencrypt
+      - traefik.http.routers.rou_DohServer.middlewares=mdw_SecureHeaders@file
+      - traefik.http.routers.rou_DohServer.service=svc_DohServer
+
+
+  # pihole container
+  pihole:
+    container_name: pihole
+    hostname: guenther
+    depends_on:
+      - unbound
+    image: pihole/pihole:latest
+    environment:
+      - TZ=Europe/Berlin
+      - ServerIP=${HOST_IP}
+      - DNS1=208.67.222.222#53  #: OpenDNS, only for initial boot3
+      - DNS2=no
+      - DOMAIN=${DOMAIN}
+      - HOST_IP=${HOST_IP}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./pihole-docker/configs/resolv.conf:/etc/resolv.conf:ro
+      - ./pihole-docker/configs/pihole/:/etc/pihole/
+      - ./pihole-docker/configs/dnsmasq.d/:/etc/dnsmasq.d/
+      #: s6 scripts
+      - ./pihole-docker/s6_scripts/cont-init.d/01-conf-dnsmasq.sh:/etc/cont-init.d/01-conf-dnsmasq.sh
+      - ./pihole-docker/s6_scripts/cont-init.d/21-conf-dns.sh:/etc/cont-init.d/21-conf-dns.sh
+      - ./pihole-docker/s6_scripts/fix-attrs.d/02-chown-pihole-configs:/etc/fix-attrs.d/02-chown-pihole-configs
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    expose:
+      - "80"
+    networks:
+      - dns_network
+    dns:
+      - 127.0.0.1
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=dns_network
+
+      # pihole dashboard
+      - traefik.http.services.svc_PiholeGui.loadbalancer.server.port=80
+
+        # make sure `/admin` is there
+      - traefik.http.middlewares.mdw_AddAdminPath.replacepathregex.regex=^/((?i:(admin)/{0,1}|.{0})(.*))
+      - traefik.http.middlewares.mdw_AddAdminPath.replacepathregex.replacement=/admin/$$3
+      - traefik.http.middlewares.mdw_PiholeChain.chain.middlewares=mdw_AddAdminPath,mdw_SecureHeaders@file
+
+      - traefik.http.routers.rou_PiholeGui.entrypoints=https
+      - traefik.http.routers.rou_PiholeGui.rule=Host(`pihole.${DOMAIN}`)
+      - traefik.http.routers.rou_PiholeGui.tls=true
+      - traefik.http.routers.rou_PiholeGui.tls.certresolver=letsencrypt
+      - traefik.http.routers.rou_PiholeGui.middlewares=mdw_PiholeChain
+      - traefik.http.routers.rou_PiholeGui.service=svc_PiholeGui
+
+      # DoT forward
+      - traefik.tcp.services.svc_PiholeDns.loadbalancer.server.port=53
+
+      - traefik.tcp.routers.rou_PiholeDot.entrypoints=dot
+      - traefik.tcp.routers.rou_PiholeDot.rule=HostSNI(`dot.${DOMAIN}`)
+      - traefik.tcp.routers.rou_PiholeDot.tls=true
+      - traefik.tcp.routers.rou_PiholeDot.tls.certresolver=letsencrypt
+      - traefik.tcp.routers.rou_PiholeDot.service=svc_PiholeDns
+
+
+  # unbound container
+  unbound:
+    container_name: unbound
+    hostname: guenther
+    image: mvance/unbound:latest
+    environment:
+      - TZ=Europe/Berlin
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./unbound-docker/configs:/opt/unbound/etc/unbound/
+      - ./unbound-docker/unbound.sh:/unbound.sh:ro
+    expose:
+      - "53"
+    networks:
+      - dns_network
+    restart: always
+    labels:
+      - traefik.enable=false
+
+
+  # træfik container
+  traefik:
+    container_name: traefik
+    hostname: guenther
+    image: traefik:v2.3
+    environment:
+      - TZ=Europe/Berlin
+      - NAMECOM_API_TOKEN=${NAMECOM_API_TOKEN}
+      - NAMECOM_USERNAME=${NAMECOM_USERNAME}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik-docker/configs/:/etc/traefik/
+      - ./traefik-docker/shared/:/shared/:ro
+    ports:
+      - "80:80"
+      - "443:443"
+      - "853:853"
+      - "8080:8080"
+    networks:
+      - dns_network
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=dns_network
+
+      # traefik dashboard
+      - traefik.http.middlewares.mdw_TraefikAuth.basicauth.usersfile=/shared/.htpasswd
+
+      - traefik.http.middlewares.mdw_TraefikChainNoAuth.chain.middlewares=mdw_SecureHeaders@file
+      - traefik.http.middlewares.mdw_TraefikChainAuth.chain.middlewares=mdw_SecureHeaders@file,mdw_TraefikAuth
+
+      - traefik.http.routers.rou_Traefik.entrypoints=https
+      - traefik.http.routers.rou_Traefik.rule=Host(`traefik.${DOMAIN}`)
+      - traefik.http.routers.rou_Traefik.tls=true
+      - traefik.http.routers.rou_Traefik.tls.certresolver=letsencrypt
+      - traefik.http.routers.rou_Traefik.middlewares=mdw_TraefikChain${TRAEFIK_AUTH:-Auth}
+      - traefik.http.routers.rou_Traefik.service=api@internal

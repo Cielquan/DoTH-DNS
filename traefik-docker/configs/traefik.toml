@@ -1,0 +1,49 @@
+[global]
+  checkNewVersion = true
+  sendAnonymousUsage = false
+
+[log]
+  level = "INFO" #DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+  format = "common"
+
+[accessLog]
+  format = "common" #json
+
+
+[entryPoints]
+  [entryPoints.http]
+    address = ":80"
+
+  [entryPoints.https]
+    address = ":443"
+
+  [entryPoints.dot]
+    address = ":853"
+
+
+[api]
+  dashboard = true
+  insecure = false
+  debug = false
+
+[ping]
+  entryPoint = "http"
+
+
+# LetsEncrypt renewal server IP: 172.65.32.248/32
+[certificatesResolvers.letsencrypt.acme]
+  email = "info@krys.codes"
+
+  [certificatesResolvers.letsencrypt.acme.dnsChallenge]
+    provider = "namedotcom"
+
+
+[providers]
+  [providers.file]
+    watch = true
+    directory = "/etc/traefik/traefik.conf.d/"
+
+  [providers.docker]
+    watch = true
+    endpoint = "unix:///var/run/docker.sock"
+    exposedByDefault = false

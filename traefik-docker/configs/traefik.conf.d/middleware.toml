@@ -1,0 +1,10 @@
+[http.middlewares]
+  [http.middlewares.mdw_SecureHeaders.headers]
+    sslRedirect=true
+    forceSTSHeader=true
+    STSIncludeSubdomains=true
+    STSSeconds=63072000
+    STSPreload=true
+    browserXSSFilter=true
+    contentTypeNosniff=true
+    frameDeny=true

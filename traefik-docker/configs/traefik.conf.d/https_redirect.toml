@@ -1,0 +1,17 @@
+[http.middlewares]
+  [http.middlewares.mdw_HttpsRedirect.redirectscheme]
+    permanent = true
+    scheme = "https"
+
+[http.services]
+  [http.services.svc_DummyService.loadBalancer]
+    [[http.services.svc_DummyService.loadBalancer.servers]]
+      url = "dummy.service"
+
+[http.routers]
+  [http.routers.rou_GlobalHttps]
+    entryPoints = ["http"]
+    rule = "HostRegexp(`{host:.+}`)"
+    priority = 1
+    middlewares =  ["mdw_HttpsRedirect"]
+    service = "svc_DummyService"
