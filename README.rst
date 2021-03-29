@@ -1,3 +1,15 @@
+INFO
+====
+
+- This project is **not** actively maintained.
+- Therefore it currently still only supports pihole 4. If you wish to have DoTH-DNS support pihole 5 feel free to file a PR.
+- You can leave an issue or PR but do not expect fast responses.
+- There is an issue with ``alpine linux 1.13`` which breaks the build of the ``doh_server`` container on presumably arm hardware (e.g. Raspberry Pi).
+  See `issue #8`__
+
+__ https://github.com/Cielquan/DoTH-DNS/issues/8
+
+
 DoTH-DNS
 ========
 
