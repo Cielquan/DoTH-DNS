@@ -167,11 +167,11 @@ services:
         target: /var/run/docker.sock
         read_only: true
       - type: bind
-        source: ./traefik-docker/data/
+        source: ./traefik-docker/data/traefik/
         target: /etc/traefik/
       - type: bind
-        source: ./traefik-docker/shared/
-        target: /shared/
+        source: ./traefik-docker/data/auth/
+        target: /var/run/traefik-auth/
         read_only: true
     ports:
       - "80:80"
@@ -191,7 +191,7 @@ services:
       - traefik.http.routers.Traefik.rule=Host(`traefik.${DOMAIN}`)
       - traefik.http.routers.Traefik.entrypoints=websecure
       # Manipulate with middleware
-      - traefik.http.middlewares.TraefikAuth.basicauth.usersfile=/shared/.htpasswd
+      - traefik.http.middlewares.TraefikAuth.basicauth.usersfile=/var/run/traefik-auth/.htpasswd
       - traefik.http.middlewares.TraefikChainAuth.chain.middlewares=TraefikAuth
       - traefik.http.routers.Traefik.middlewares=TraefikChain${TRAEFIK_AUTH:-Auth}
       # Forward to service
