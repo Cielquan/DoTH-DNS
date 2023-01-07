@@ -4,9 +4,6 @@
 # Creates dnsmasq config file adding `lan.list` file and wildcard DNS entry for
 # DOMAIN on HOST_IP
 
-YEAR=$(date +"%Y")
-ISODATE=$(date +"%Y-%m-%d")
-
 cat << EOF > /etc/dnsmasq.d/02-doth.conf
 ########################################################################################
 #          THIS FILE IS AUTOMATICALLY POPULATED BY A SCRIPT ON CONTAINER BOOT          #
