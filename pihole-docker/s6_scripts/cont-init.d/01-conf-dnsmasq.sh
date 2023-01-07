@@ -14,6 +14,15 @@ cat << EOF > /etc/dnsmasq.d/02-doth.conf
 #               DoTH-DNS/pihole-docker/configs/dnsmasq.d/<filename.conf>               #
 ########################################################################################
 
+# List with DNS entries in LAN
 addn-hosts=/etc/pihole/lan.list
+
+# Map used domain with host IP
 address=/${DOMAIN}/${HOST_IP}
+
+# CNAME entries for all used subdomains
+cname=doh.${DOMAIN},${DOMAIN}
+cname=dot.${DOMAIN},${DOMAIN}
+cname=pihole.${DOMAIN},${DOMAIN}
+cname=traefik.${DOMAIN},${DOMAIN}
 EOF
