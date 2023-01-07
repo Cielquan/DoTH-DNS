@@ -27,15 +27,11 @@
 
     [entryPoints.websecure.http]
       middlewares = ["SecureHeaders@file"]
-
       [entryPoints.websecure.http.tls]
-        options = "default"
 
   [entryPoints.dot]
     address = ":853"
-
-      [entryPoints.dot.http.tls]
-        options = "default"
+    [entryPoints.dot.http.tls]
 
 
 [api]
