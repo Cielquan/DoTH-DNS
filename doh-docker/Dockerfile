@@ -24,8 +24,8 @@ COPY ./doh-server.conf doh-server.conf
 
 RUN \
     set -x \
-    && addgroup -g 8053 doh \
-    && adduser -D -G doh -u 8053 doh \
+    && addgroup --gid 8053 doh \
+    && adduser --gecos "" --no-create-home --disabled-password --gid 8053 doh \
     && apt update -q \
     && apt install -q ca-certificates su-exec
 
