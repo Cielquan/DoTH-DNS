@@ -54,9 +54,10 @@ services:
     image: pihole/pihole:latest
     environment:
       - TZ=${TIMEZONE:-Europe/Berlin}
-      - ServerIP=${HOST_IP}
-      - DNS1=208.67.222.222#53  # OpenDNS, only for initial boot
-      - DNS2=no
+      - FTLCONF_REPLY_ADDR4=${HOST_IP}
+      - PIHOLE_DNS_=172.16.1.4#53
+      - WEBTHEME=default-darker
+      - WEBPASSWORD=${PIHOLE_WEBPASSWORD}
       - DOMAIN=${DOMAIN}
       - HOST_IP=${HOST_IP}
     volumes:
@@ -78,12 +79,6 @@ services:
       - type: bind
         source: ./pihole-docker/s6_scripts/cont-init.d/01-conf-dnsmasq.sh
         target: /etc/cont-init.d/01-conf-dnsmasq.sh
-      - type: bind
-        source: ./pihole-docker/s6_scripts/cont-init.d/21-conf-dns.sh
-        target: /etc/cont-init.d/21-conf-dns.sh
-      - type: bind
-        source: ./pihole-docker/s6_scripts/fix-attrs.d/02-chown-pihole-configs
-        target: /etc/fix-attrs.d/02-chown-pihole-configs
     ports:
       - "53:53/tcp"
       - "53:53/udp"
