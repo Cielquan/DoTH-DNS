@@ -15,9 +15,9 @@ chown _unbound:_unbound /opt/unbound/etc/unbound/var && \
 /opt/unbound/sbin/unbound-anchor -a /opt/unbound/etc/unbound/var/root.key
 
 
-# Install curl and ipcalc
-printf "### Installing 'curl' and 'ipcalc'\n"
-apt-get -q update && printf "#####\n" && apt-get -q install -y curl ipcalc
+# Install curl
+printf "### Installing 'curl'\n"
+apt-get -q update && printf "#####\n" && apt-get -q install -y curl
 
 
 # Download root.hints file
@@ -72,12 +72,6 @@ server:
 EOF
 
 
-# Get IP with CIDR notation
-IP_CIDR=$(ip -o -f inet addr show | awk '/scope global/ {print $4}')
-# Get subnetmask with CIDR notation
-SUBNETMASK_CIDR=$(ipcalc "${IP_CIDR}" | grep '^Network:' | awk '{print $2}')
-
-
 # Add subnet to access-control conf file
 printf "### Adding 'access-control.conf' file\n"
 cat << EOF > /opt/unbound/etc/unbound/unbound.conf.d/access-control.conf
@@ -93,7 +87,7 @@ cat << EOF > /opt/unbound/etc/unbound/unbound.conf.d/access-control.conf
 # Restrict 'unbound' access to docker network (other containers)
 
 server:
-    access-control: ${SUBNETMASK_CIDR} allow
+    access-control: ${DNS_NETWORK} allow
 EOF
 
 
