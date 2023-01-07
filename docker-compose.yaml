@@ -177,7 +177,7 @@ services:
         target: /var/run/docker.sock
         read_only: true
       - type: bind
-        source: ./traefik-docker/configs/
+        source: ./traefik-docker/data/
         target: /etc/traefik/
       - type: bind
         source: ./traefik-docker/shared/
