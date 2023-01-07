@@ -30,14 +30,12 @@
 
       [entryPoints.websecure.http.tls]
         options = "default"
-        certResolver = "leresolver"
 
   [entryPoints.dot]
     address = ":853"
 
       [entryPoints.dot.http.tls]
         options = "default"
-        certResolver = "leresolver"
 
 
 [api]
