@@ -17,3 +17,6 @@ systemctl restart systemd-resolved
 # start docker on boot
 sudo systemctl enable --now docker
 
+Based on:
+# https://www.aaflalo.me/2018/10/tutorial-setup-dns-over-https-server/
+# https://www.bentasker.co.uk/documentation/linux/407-building-and-running-your-own-dns-over-https-server
