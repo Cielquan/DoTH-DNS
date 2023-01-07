@@ -30,14 +30,6 @@
   entryPoint = "http"
 
 
-# LetsEncrypt renewal server IP: 172.65.32.248/32
-[certificatesResolvers.letsencrypt.acme]
-  email = "info@krys.codes"
-
-  [certificatesResolvers.letsencrypt.acme.dnsChallenge]
-    provider = "namedotcom"
-
-
 [providers]
   [providers.file]
     watch = true
