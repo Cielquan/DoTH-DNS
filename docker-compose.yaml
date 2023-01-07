@@ -39,16 +39,16 @@ services:
       - traefik.enable=true
       - traefik.docker.network=dns_network
 
-      # DoH handling
-      - traefik.http.services.DohServer.loadbalancer.server.port=8053
-
-      - traefik.http.routers.DohServer.entrypoints=https
+      # Filter incomming
       - traefik.http.routers.DohServer.rule=Host(`doh.${DOMAIN}`) && Path(`/dns-query`)
+      - traefik.http.routers.DohServer.entrypoints=https
       - traefik.http.routers.DohServer.tls=true
       - traefik.http.routers.DohServer.tls.certresolver=letsencrypt
+      # Manipulate with middleware
       - traefik.http.routers.DohServer.middlewares=SecureHeaders@file
+      # Forward to service
+      - traefik.http.services.DohServer.loadbalancer.server.port=8053
       - traefik.http.routers.DohServer.service=DohServer
-
 
   # pihole container
   pihole:
@@ -105,27 +105,31 @@ services:
       - traefik.docker.network=dns_network
 
       # pihole dashboard
-      - traefik.http.services.PiholeGui.loadbalancer.server.port=80
 
+      # Filter incomming
+      - traefik.http.routers.PiholeGui.rule=Host(`pihole.${DOMAIN}`)
+      - traefik.http.routers.PiholeGui.entrypoints=https
+      - traefik.http.routers.PiholeGui.tls=true
+      - traefik.http.routers.PiholeGui.tls.certresolver=letsencrypt
+      # Manipulate with middleware
         # make sure `/admin` is there
       - traefik.http.middlewares.AddAdminPath.replacepathregex.regex=^/((?i:(admin)/{0,1}|.{0})(.*))
       - traefik.http.middlewares.AddAdminPath.replacepathregex.replacement=/admin/$$3
       - traefik.http.middlewares.PiholeChain.chain.middlewares=AddAdminPath,SecureHeaders@file
-
-      - traefik.http.routers.PiholeGui.entrypoints=https
-      - traefik.http.routers.PiholeGui.rule=Host(`pihole.${DOMAIN}`)
-      - traefik.http.routers.PiholeGui.tls=true
-      - traefik.http.routers.PiholeGui.tls.certresolver=letsencrypt
       - traefik.http.routers.PiholeGui.middlewares=PiholeChain
+      # Forward to service
+      - traefik.http.services.PiholeGui.loadbalancer.server.port=80
       - traefik.http.routers.PiholeGui.service=PiholeGui
 
       # DoT forward
-      - traefik.tcp.services.PiholeDns.loadbalancer.server.port=53
 
-      - traefik.tcp.routers.PiholeDot.entrypoints=dot
+      # Filer incomming
       - traefik.tcp.routers.PiholeDot.rule=HostSNI(`dot.${DOMAIN}`)
+      - traefik.tcp.routers.PiholeDot.entrypoints=dot
       - traefik.tcp.routers.PiholeDot.tls=true
       - traefik.tcp.routers.PiholeDot.tls.certresolver=letsencrypt
+      # Forward to service
+      - traefik.tcp.services.PiholeDns.loadbalancer.server.port=53
       - traefik.tcp.routers.PiholeDot.service=PiholeDns
 
 
@@ -197,14 +201,16 @@ services:
       - traefik.docker.network=dns_network
 
       # traefik dashboard
-      - traefik.http.middlewares.TraefikAuth.basicauth.usersfile=/shared/.htpasswd
 
-      - traefik.http.middlewares.TraefikChainNoAuth.chain.middlewares=SecureHeaders@file
-      - traefik.http.middlewares.TraefikChainAuth.chain.middlewares=SecureHeaders@file,TraefikAuth
-
-      - traefik.http.routers.Traefik.entrypoints=https
+      # Filter incomming
       - traefik.http.routers.Traefik.rule=Host(`traefik.${DOMAIN}`)
+      - traefik.http.routers.Traefik.entrypoints=https
       - traefik.http.routers.Traefik.tls=true
       - traefik.http.routers.Traefik.tls.certresolver=letsencrypt
+      # Manipulate with middleware
+      - traefik.http.middlewares.TraefikAuth.basicauth.usersfile=/shared/.htpasswd
+      - traefik.http.middlewares.TraefikChainNoAuth.chain.middlewares=SecureHeaders@file
+      - traefik.http.middlewares.TraefikChainAuth.chain.middlewares=SecureHeaders@file,TraefikAuth
       - traefik.http.routers.Traefik.middlewares=TraefikChain${TRAEFIK_AUTH:-Auth}
+      # Forward to service
       - traefik.http.routers.Traefik.service=api@internal
