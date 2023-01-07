@@ -41,6 +41,7 @@ services:
       # Filter incomming
       - traefik.http.routers.DohServer.rule=Host(`doh.${DOMAIN}`) && Path(`/dns-query`)
       - traefik.http.routers.DohServer.entrypoints=websecure
+      - traefik.http.routers.DohServer.tls=true
       # Forward to service
       - traefik.http.services.DohServer.loadbalancer.server.port=8053
       - traefik.http.routers.DohServer.service=DohServer
@@ -98,6 +99,7 @@ services:
       # Filter incomming
       - traefik.http.routers.PiholeGui.rule=Host(`pihole.${DOMAIN}`)
       - traefik.http.routers.PiholeGui.entrypoints=websecure
+      - traefik.http.routers.PiholeGui.tls=true
       # Make sure /admin is at the start of the path
       - traefik.http.middlewares.AddAdminPath.replacepathregex.regex=^/((?i:(admin)/{0,1}|.{0})(.*))
       - traefik.http.middlewares.AddAdminPath.replacepathregex.replacement=/admin/$$3
@@ -111,6 +113,7 @@ services:
       # Filer incomming
       - traefik.tcp.routers.PiholeDot.rule=HostSNI(`dot.${DOMAIN}`)
       - traefik.tcp.routers.PiholeDot.entrypoints=dot
+      - traefik.tcp.routers.PiholeDot.tls=true
       # Forward to service
       - traefik.tcp.services.PiholeDns.loadbalancer.server.port=53
       - traefik.tcp.routers.PiholeDot.service=PiholeDns
@@ -186,6 +189,7 @@ services:
       # Filter incomming
       - traefik.http.routers.Traefik.rule=Host(`traefik.${DOMAIN}`)
       - traefik.http.routers.Traefik.entrypoints=websecure
+      - traefik.http.routers.Traefik.tls=true
       # Add basic auth to dashboard
       - traefik.http.middlewares.TraefikAuth.basicauth.usersfile=/var/run/traefik-auth/.htpasswd
       - traefik.http.routers.Traefik.middlewares=TraefikAuth
