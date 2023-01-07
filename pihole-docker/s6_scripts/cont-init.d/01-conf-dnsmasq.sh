@@ -20,4 +20,3 @@ cat << EOF > /etc/dnsmasq.d/02-doth.conf
 addn-hosts=/etc/pihole/lan.list
 address=/${DOMAIN}/${HOST_IP}
 EOF
-

@@ -33,4 +33,3 @@ RUN \
     && rm -rf /go /root/.cache/* /tmp/* /var/cache/apk/*
 
 ENTRYPOINT su-exec doh:doh doh-server -conf /opt/dns-over-https/conf/doh-server.conf
-

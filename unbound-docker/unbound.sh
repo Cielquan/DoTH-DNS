@@ -100,4 +100,3 @@ EOF
 
 #: Start unbound
 exec /opt/unbound/sbin/unbound -d -c /opt/unbound/etc/unbound/unbound.conf
-
