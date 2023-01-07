@@ -179,7 +179,6 @@ services:
       - "80:80"
       - "443:443"
       - "853:853"
-      - "8080:8080"
     networks:
       dns_network:
         ipv4_address: 172.16.1.5
