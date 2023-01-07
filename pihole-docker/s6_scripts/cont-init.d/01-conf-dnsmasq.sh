@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv bash
+#!/usr/bin/env bash
 
 # Script gets called by s6 overlay which setups pihole inside docker container.
 # Creates dnsmasq config file adding `lan.list` file and wildcard DNS entry for
