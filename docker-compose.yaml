@@ -190,5 +190,8 @@ services:
       # Filter incomming
       - traefik.http.routers.Traefik.rule=Host(`traefik.${DOMAIN}`)
       - traefik.http.routers.Traefik.entrypoints=websecure
+      # Add basic auth to dashboard
+      - traefik.http.middlewares.TraefikAuth.basicauth.usersfile=/var/run/traefik-auth/.htpasswd
+      - traefik.http.routers.Traefik.middlewares=TraefikAuth
       # Forward to service
       - traefik.http.routers.Traefik.service=api@internal
