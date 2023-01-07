@@ -39,3 +39,4 @@
     watch = true
     endpoint = "unix:///var/run/docker.sock"
     exposedByDefault = false
+    network = "dns_network"

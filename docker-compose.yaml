@@ -37,7 +37,6 @@ services:
     restart: always
     labels:
       - traefik.enable=true
-      - traefik.docker.network=dns_network
 
       # Filter incomming
       - traefik.http.routers.DohServer.rule=Host(`doh.${DOMAIN}`) && Path(`/dns-query`)
@@ -102,7 +101,6 @@ services:
     restart: always
     labels:
       - traefik.enable=true
-      - traefik.docker.network=dns_network
 
       # pihole dashboard
 
@@ -198,7 +196,6 @@ services:
     restart: always
     labels:
       - traefik.enable=true
-      - traefik.docker.network=dns_network
 
       # traefik dashboard
 
