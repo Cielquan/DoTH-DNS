@@ -1,1 +1,13 @@
-*.list
+# ignore content of dir but not dir itself
+data/dnsmasq.d/*
+!data/dnsmasq.d
+
+# keep these files
+!.gitkeep
+
+# ignore content of dir but not dir itself
+data/pihole/*
+!data/pihole
+
+# keep these files
+!pihole-FTL.conf
