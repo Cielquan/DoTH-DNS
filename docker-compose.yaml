@@ -70,14 +70,14 @@ services:
         target: /etc/localtime
         read_only: true
       - type: bind
-        source: ./pihole-docker/configs/resolv.conf
+        source: ./pihole-docker/data/resolv.conf
         target: /etc/resolv.conf
         read_only: true
       - type: bind
-        source: ./pihole-docker/configs/pihole/
+        source: ./pihole-docker/data/pihole/
         target: /etc/pihole/
       - type: bind
-        source: ./pihole-docker/configs/dnsmasq.d/
+        source: ./pihole-docker/data/dnsmasq.d/
         target: /etc/dnsmasq.d/
       # s6 scripts
       - type: bind
