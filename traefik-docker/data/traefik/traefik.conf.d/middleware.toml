@@ -7,3 +7,9 @@
     browserXSSFilter=true
     contentTypeNosniff=true
     frameDeny=true
+
+[entryPoints.web.http]
+  middlewares = ["SecureHeaders@file"]
+
+[entryPoints.websecure.http]
+  middlewares = ["SecureHeaders@file"]

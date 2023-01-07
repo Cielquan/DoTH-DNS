@@ -14,9 +14,6 @@
   [entryPoints.web]
     address = ":80"
 
-    [entryPoints.web.http]
-      middlewares = ["SecureHeaders@file"]
-
       [entryPoints.web.http.redirections.entryPoint]
         to = "websecure"
         scheme = "https"
@@ -24,10 +21,7 @@
 
   [entryPoints.websecure]
     address = ":443"
-
-    [entryPoints.websecure.http]
-      middlewares = ["SecureHeaders@file"]
-      [entryPoints.websecure.http.tls]
+    [entryPoints.websecure.http.tls]
 
   [entryPoints.dot]
     address = ":853"
