@@ -142,7 +142,7 @@ services:
         target: /etc/localtime
         read_only: true
       - type: bind
-        source: ./unbound-docker/configs
+        source: ./unbound-docker/data
         target: /opt/unbound/etc/unbound/
       - type: bind
         source: ./unbound-docker/unbound.sh
