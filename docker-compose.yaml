@@ -17,10 +17,10 @@ services:
   # DoH server container
   doh_server:
     container_name: doh_server
-    hostname: guenther
+    hostname: ${HOSTNAME:-dns_server}
     image: cielquan/doh_server:latest
     environment:
-      - TZ=Europe/Berlin
+      - TZ=${TIMEZONE:-Europe/Berlin}
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./doh-docker/configs/doh-server.conf:/opt/dns-over-https/conf/doh-server.conf
@@ -47,12 +47,12 @@ services:
   # pihole container
   pihole:
     container_name: pihole
-    hostname: guenther
+    hostname: ${HOSTNAME:-dns_server}
     depends_on:
       - unbound
     image: pihole/pihole:latest
     environment:
-      - TZ=Europe/Berlin
+      - TZ=${TIMEZONE:-Europe/Berlin}
       - ServerIP=${HOST_IP}
       - DNS1=208.67.222.222#53  # OpenDNS, only for initial boot
       - DNS2=no
@@ -109,10 +109,10 @@ services:
   # unbound container
   unbound:
     container_name: unbound
-    hostname: guenther
+    hostname: ${HOSTNAME:-dns_server}
     image: mvance/unbound:latest
     environment:
-      - TZ=Europe/Berlin
+      - TZ=${TIMEZONE:-Europe/Berlin}
       - DNS_NETWORK=${DNS_NETWORK:-172.16.1.0/24}
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -130,10 +130,10 @@ services:
   # træfik container
   traefik:
     container_name: traefik
-    hostname: guenther
+    hostname: ${HOSTNAME:-dns_server}
     image: traefik:v2.3
     environment:
-      - TZ=Europe/Berlin
+      - TZ=${TIMEZONE:-Europe/Berlin}
       - NAMECOM_API_TOKEN=${NAMECOM_API_TOKEN}
       - NAMECOM_USERNAME=${NAMECOM_USERNAME}
     volumes:
