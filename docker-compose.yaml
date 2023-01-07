@@ -40,8 +40,8 @@ services:
 
       # Filter incomming
       - traefik.http.routers.DohServer.rule=Host(`doh.${DOMAIN}`) && Path(`/dns-query`)
-      - traefik.http.routers.DohServer.entrypoints=websecure
-      - traefik.http.routers.DohServer.tls=true
+      # Add header
+      - traefik.http.routers.DohServer.middlewares=SecureHeaders
       # Forward to service
       - traefik.http.services.DohServer.loadbalancer.server.port=8053
       - traefik.http.routers.DohServer.service=DohServer
@@ -81,8 +81,8 @@ services:
         source: ./pihole-docker/s6_scripts/cont-init.d/01-conf-dnsmasq.sh
         target: /etc/cont-init.d/01-conf-dnsmasq.sh
     ports:
-      - "53:53/tcp"
-      - "53:53/udp"
+      - "53535:53/tcp"
+      - "53535:53/udp"
     expose:
       - "80"
     networks:
@@ -98,12 +98,10 @@ services:
 
       # Filter incomming
       - traefik.http.routers.PiholeGui.rule=Host(`pihole.${DOMAIN}`)
-      - traefik.http.routers.PiholeGui.entrypoints=websecure
-      - traefik.http.routers.PiholeGui.tls=true
-      # Make sure /admin is at the start of the path
+      # Make sure /admin is at the start of the path adn add header
       - traefik.http.middlewares.AddAdminPath.replacepathregex.regex=^/((?i:(admin)/{0,1}|.{0})(.*))
       - traefik.http.middlewares.AddAdminPath.replacepathregex.replacement=/admin/$$3
-      - traefik.http.routers.PiholeGui.middlewares=AddAdminPath
+      - traefik.http.routers.PiholeGui.middlewares=AddAdminPath,SecureHeaders
       # Forward to service
       - traefik.http.services.PiholeGui.loadbalancer.server.port=80
       - traefik.http.routers.PiholeGui.service=PiholeGui
@@ -114,6 +112,7 @@ services:
       - traefik.tcp.routers.PiholeDot.rule=HostSNI(`dot.${DOMAIN}`)
       - traefik.tcp.routers.PiholeDot.entrypoints=dot
       - traefik.tcp.routers.PiholeDot.tls=true
+      - traefik.tcp.routers.PiholeDot.tls.certresolver=leresolver
       # Forward to service
       - traefik.tcp.services.PiholeDns.loadbalancer.server.port=53
       - traefik.tcp.routers.PiholeDot.service=PiholeDns
@@ -167,11 +166,8 @@ services:
         target: /var/run/docker.sock
         read_only: true
       - type: bind
-        source: ./traefik-docker/data/traefik/
+        source: ./traefik-docker/data/
         target: /etc/traefik/
-      - type: bind
-        source: ./traefik-docker/data/auth/
-        target: /var/run/traefik-auth/
         read_only: true
     ports:
       - "80:80"
@@ -181,17 +177,57 @@ services:
       dns_network:
         ipv4_address: 172.16.1.5
     restart: always
+    command:
+      - "--global.checknewversion=true"
+      - "--global.sendanonymoususage=false"
+      - "--log=true"
+      - "--log.format=common"
+      - "--log.level=INFO" # DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+      - "--accesslog=true"
+      - "--accesslog.format=common"
+      - "--api=true"
+      - "--api.dashboard=true"
+      - "--api.debug=false"
+      - "--api.insecure=false"
+      - "--providers.docker=true"
+      - "--providers.docker.network=dns_network"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.websecure=true"
+      - "--entryPoints.websecure.address=:443"
+      - "--entrypoints.websecure.asdefault=true"
+      - "--entrypoints.websecure.http.tls=true"
+      - "--entrypoints.websecure.http.tls.certResolver=leresolver"
+      - "--entrypoints.dot=true"
+      - "--entrypoints.dot.address=:853"
+      - "--certificatesresolvers.leresolver.acme.email=${ACME_EMAIL}"
+      - "--certificatesresolvers.leresolver.acme.caserver=${ACME_CASERVER:-https://acme-v02.api.letsencrypt.org/directory}"
+      # Providers list: https://docs.traefik.io/https/acme/#providers
+      - "--certificatesresolvers.leresolver.acme.dnschallenge=true"
+      - "--certificatesresolvers.leresolver.acme.dnschallenge.provider=${ACME_DNSCHALLENGE_PROVIDER:-namedotcom}"
     labels:
       - traefik.enable=true
+
+      # General Header Middleware
+      - traefik.http.middlewares.SecHeadersSniff.headers.contenttypenosniff=true # buggy on traefik dashboard
+      - traefik.http.middlewares.SecHeaders.headers.browserxssfilter=true
+      - traefik.http.middlewares.SecHeaders.headers.framedeny=true
+      - traefik.http.middlewares.SecHeaders.headers.forcestsheader=true
+      - traefik.http.middlewares.SecHeaders.headers.stsincludesubdomains=true
+      - traefik.http.middlewares.SecHeaders.headers.stspreload=true
+      - traefik.http.middlewares.SecHeaders.headers.stsseconds=63072000
+      - traefik.http.middlewares.SecureHeaders.chain.middlewares=SecHeaders,SecHeadersSniff
+      - traefik.http.middlewares.SecureHeadersTraefik.chain.middlewares=SecHeaders
 
       # traefik dashboard
 
       # Filter incomming
       - traefik.http.routers.Traefik.rule=Host(`traefik.${DOMAIN}`)
-      - traefik.http.routers.Traefik.entrypoints=websecure
-      - traefik.http.routers.Traefik.tls=true
-      # Add basic auth to dashboard
-      - traefik.http.middlewares.TraefikAuth.basicauth.usersfile=/var/run/traefik-auth/.htpasswd
-      - traefik.http.routers.Traefik.middlewares=TraefikAuth
+      # Add basic auth to dashboard and header
+      - traefik.http.middlewares.TraefikAuth.basicauth.usersfile=/etc/traefik/.htpasswd
+      - traefik.http.routers.Traefik.middlewares=TraefikAuth,SecureHeadersTraefik
       # Forward to service
       - traefik.http.routers.Traefik.service=api@internal

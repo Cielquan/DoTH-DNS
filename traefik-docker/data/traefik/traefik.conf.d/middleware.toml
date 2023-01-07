@@ -1,9 +1,0 @@
-[http.middlewares]
-  [http.middlewares.SecureHeaders.headers]
-    forceSTSHeader=true
-    STSIncludeSubdomains=true
-    STSSeconds=63072000
-    STSPreload=true
-    browserXSSFilter=true
-    contentTypeNosniff=true
-    frameDeny=true
