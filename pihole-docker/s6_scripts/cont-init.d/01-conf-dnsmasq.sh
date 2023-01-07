@@ -24,5 +24,6 @@ address=/${DOMAIN}/${HOST_IP}
 cname=doh.${DOMAIN},${DOMAIN}
 cname=dot.${DOMAIN},${DOMAIN}
 cname=pihole.${DOMAIN},${DOMAIN}
+cname=pi.hole,pihole.${DOMAIN}
 cname=traefik.${DOMAIN},${DOMAIN}
 EOF
