@@ -152,7 +152,7 @@ services:
   traefik:
     container_name: traefik
     hostname: ${HOSTNAME:-dns_server}
-    image: traefik:v2.3
+    image: traefik:v3.0
     environment:
       - TZ=${TIMEZONE:-Europe/Berlin}
       - NAMECOM_API_TOKEN=${NAMECOM_API_TOKEN}
@@ -190,9 +190,5 @@ services:
       # Filter incomming
       - traefik.http.routers.Traefik.rule=Host(`traefik.${DOMAIN}`)
       - traefik.http.routers.Traefik.entrypoints=websecure
-      # Manipulate with middleware
-      - traefik.http.middlewares.TraefikAuth.basicauth.usersfile=/var/run/traefik-auth/.htpasswd
-      - traefik.http.middlewares.TraefikChainAuth.chain.middlewares=TraefikAuth
-      - traefik.http.routers.Traefik.middlewares=TraefikChain${TRAEFIK_AUTH:-Auth}
       # Forward to service
       - traefik.http.routers.Traefik.service=api@internal
