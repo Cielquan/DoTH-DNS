@@ -27,8 +27,8 @@ services:
         target: /etc/localtime
         read_only: true
       - type: bind
-        source: ./doh-docker/configs/doh-server.conf
-        target: /opt/dns-over-https/conf/doh-server.conf
+        source: ./doh-docker/doh-server.conf
+        target: /opt/dns-over-https/doh-server.conf
     expose:
       - "8053"
     networks:
