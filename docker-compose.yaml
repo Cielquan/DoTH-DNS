@@ -22,8 +22,13 @@ services:
     environment:
       - TZ=${TIMEZONE:-Europe/Berlin}
     volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ./doh-docker/configs/doh-server.conf:/opt/dns-over-https/conf/doh-server.conf
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime
+        read_only: true
+      - type: bind
+        source: ./doh-docker/configs/doh-server.conf
+        target: /opt/dns-over-https/conf/doh-server.conf
     expose:
       - "8053"
     networks:
@@ -59,14 +64,30 @@ services:
       - DOMAIN=${DOMAIN}
       - HOST_IP=${HOST_IP}
     volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ./pihole-docker/configs/resolv.conf:/etc/resolv.conf:ro
-      - ./pihole-docker/configs/pihole/:/etc/pihole/
-      - ./pihole-docker/configs/dnsmasq.d/:/etc/dnsmasq.d/
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime
+        read_only: true
+      - type: bind
+        source: ./pihole-docker/configs/resolv.conf
+        target: /etc/resolv.conf
+        read_only: true
+      - type: bind
+        source: ./pihole-docker/configs/pihole/
+        target: /etc/pihole/
+      - type: bind
+        source: ./pihole-docker/configs/dnsmasq.d/
+        target: /etc/dnsmasq.d/
       # s6 scripts
-      - ./pihole-docker/s6_scripts/cont-init.d/01-conf-dnsmasq.sh:/etc/cont-init.d/01-conf-dnsmasq.sh
-      - ./pihole-docker/s6_scripts/cont-init.d/21-conf-dns.sh:/etc/cont-init.d/21-conf-dns.sh
-      - ./pihole-docker/s6_scripts/fix-attrs.d/02-chown-pihole-configs:/etc/fix-attrs.d/02-chown-pihole-configs
+      - type: bind
+        source: ./pihole-docker/s6_scripts/cont-init.d/01-conf-dnsmasq.sh
+        target: /etc/cont-init.d/01-conf-dnsmasq.sh
+      - type: bind
+        source: ./pihole-docker/s6_scripts/cont-init.d/21-conf-dns.sh
+        target: /etc/cont-init.d/21-conf-dns.sh
+      - type: bind
+        source: ./pihole-docker/s6_scripts/fix-attrs.d/02-chown-pihole-configs
+        target: /etc/fix-attrs.d/02-chown-pihole-configs
     ports:
       - "53:53/tcp"
       - "53:53/udp"
@@ -115,9 +136,17 @@ services:
       - TZ=${TIMEZONE:-Europe/Berlin}
       - DNS_NETWORK=${DNS_NETWORK:-172.16.1.0/24}
     volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ./unbound-docker/configs:/opt/unbound/etc/unbound/
-      - ./unbound-docker/unbound.sh:/unbound.sh:ro
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime
+        read_only: true
+      - type: bind
+        source: ./unbound-docker/configs
+        target: /opt/unbound/etc/unbound/
+      - type: bind
+        source: ./unbound-docker/unbound.sh
+        target: /unbound.sh
+        read_only: true
     expose:
       - "53"
     networks:
@@ -137,10 +166,21 @@ services:
       - NAMECOM_API_TOKEN=${NAMECOM_API_TOKEN}
       - NAMECOM_USERNAME=${NAMECOM_USERNAME}
     volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik-docker/configs/:/etc/traefik/
-      - ./traefik-docker/shared/:/shared/:ro
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime
+        read_only: true
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+      - type: bind
+        source: ./traefik-docker/configs/
+        target: /etc/traefik/
+      - type: bind
+        source: ./traefik-docker/shared/
+        target: /shared/
+        read_only: true
     ports:
       - "80:80"
       - "443:443"
