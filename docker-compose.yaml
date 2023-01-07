@@ -40,7 +40,7 @@ services:
 
       # Filter incomming
       - traefik.http.routers.DohServer.rule=Host(`doh.${DOMAIN}`) && Path(`/dns-query`)
-      - traefik.http.routers.DohServer.entrypoints=https
+      - traefik.http.routers.DohServer.entrypoints=websecure
       - traefik.http.routers.DohServer.tls=true
       - traefik.http.routers.DohServer.tls.certresolver=letsencrypt
       # Manipulate with middleware
@@ -106,7 +106,7 @@ services:
 
       # Filter incomming
       - traefik.http.routers.PiholeGui.rule=Host(`pihole.${DOMAIN}`)
-      - traefik.http.routers.PiholeGui.entrypoints=https
+      - traefik.http.routers.PiholeGui.entrypoints=websecure
       - traefik.http.routers.PiholeGui.tls=true
       - traefik.http.routers.PiholeGui.tls.certresolver=letsencrypt
       # Manipulate with middleware
@@ -201,7 +201,7 @@ services:
 
       # Filter incomming
       - traefik.http.routers.Traefik.rule=Host(`traefik.${DOMAIN}`)
-      - traefik.http.routers.Traefik.entrypoints=https
+      - traefik.http.routers.Traefik.entrypoints=websecure
       - traefik.http.routers.Traefik.tls=true
       - traefik.http.routers.Traefik.tls.certresolver=letsencrypt
       # Manipulate with middleware

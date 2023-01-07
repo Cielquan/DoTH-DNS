@@ -11,10 +11,15 @@
 
 
 [entryPoints]
-  [entryPoints.http]
+  [entryPoints.web]
     address = ":80"
+    [entryPoints.web.http.redirections.entryPoint]
+      to = "websecure"
+      scheme = "https"
+      permanent = true
+      priority = 1
 
-  [entryPoints.https]
+  [entryPoints.websecure]
     address = ":443"
 
   [entryPoints.dot]
