@@ -24,3 +24,6 @@
 # Unbound files
 root.hints
 root.key
+
+# Traefik files
+acme.toml
