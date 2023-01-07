@@ -2,10 +2,6 @@
 
 # Starting script for unbound container
 
-YEAR=$(date +"%Y")
-ISODATE=$(date +"%Y-%m-%d")
-
-
 mkdir -p /opt/unbound/etc/unbound/dev && \
 cp -a /dev/random /dev/urandom /opt/unbound/etc/unbound/dev/
 
