@@ -13,8 +13,8 @@ cat << EOF > /etc/dnsmasq.d/02-doth.conf
 #       ANY CHANGES MADE TO THIS FILE AFTER BOOT WILL BE LOST ON THE NEXT REBOOT       #
 #                                                                                      #
 #                                                                                      #
-#                ANY CHANGES SHOULD BE MADE IN A SEPARATE CONFIG FILE:                 #
-#              ~/DoTH-DNS/pihole-docker/configs/dnsmasq.d/<filename.conf>              #
+#    ANY CHANGES SHOULD BE MADE IN A SEPARATE CONFIG FILE IN THE CONFIG DIRECTORY:     #
+#               DoTH-DNS/pihole-docker/configs/dnsmasq.d/<filename.conf>               #
 ########################################################################################
 
 addn-hosts=/etc/pihole/lan.list

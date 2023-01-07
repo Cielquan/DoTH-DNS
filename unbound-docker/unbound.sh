@@ -48,8 +48,8 @@ cat << EOF > /opt/unbound/etc/unbound/unbound.conf.d/container-dns.conf
 #       ANY CHANGES MADE TO THIS FILE AFTER BOOT WILL BE LOST ON THE NEXT REBOOT       #
 #                                                                                      #
 #                                                                                      #
-#                ANY CHANGES SHOULD BE MADE IN A SEPARATE CONFIG FILE:                 #
-#           ~/DoTH-DNS/unbound-docker/configs/unbound.conf.d/<filename.conf>           #
+#    ANY CHANGES SHOULD BE MADE IN A SEPARATE CONFIG FILE IN THE CONFIG DIRECTORY:     #
+#            DoTH-DNS/unbound-docker/configs/unbound.conf.d/<filename.conf>            #
 ########################################################################################
 
 #: DNS entries for container stack
@@ -87,8 +87,8 @@ cat << EOF > /opt/unbound/etc/unbound/unbound.conf.d/access-control.conf
 #       ANY CHANGES MADE TO THIS FILE AFTER BOOT WILL BE LOST ON THE NEXT REBOOT       #
 #                                                                                      #
 #                                                                                      #
-#                ANY CHANGES SHOULD BE MADE IN A SEPARATE CONFIG FILE:                 #
-#           ~/DoTH-DNS/unbound-docker/configs/unbound.conf.d/<filename.conf>           #
+#    ANY CHANGES SHOULD BE MADE IN A SEPARATE CONFIG FILE IN THE CONFIG DIRECTORY:     #
+#            DoTH-DNS/unbound-docker/configs/unbound.conf.d/<filename.conf>            #
 ########################################################################################
 
 #: Restrict 'unbound' access to docker network (other containers)
