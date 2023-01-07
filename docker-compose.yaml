@@ -43,8 +43,6 @@ services:
       - traefik.http.routers.DohServer.entrypoints=websecure
       - traefik.http.routers.DohServer.tls=true
       - traefik.http.routers.DohServer.tls.certresolver=letsencrypt
-      # Manipulate with middleware
-      - traefik.http.routers.DohServer.middlewares=SecureHeaders@file
       # Forward to service
       - traefik.http.services.DohServer.loadbalancer.server.port=8053
       - traefik.http.routers.DohServer.service=DohServer
@@ -113,8 +111,7 @@ services:
         # make sure `/admin` is there
       - traefik.http.middlewares.AddAdminPath.replacepathregex.regex=^/((?i:(admin)/{0,1}|.{0})(.*))
       - traefik.http.middlewares.AddAdminPath.replacepathregex.replacement=/admin/$$3
-      - traefik.http.middlewares.PiholeChain.chain.middlewares=AddAdminPath,SecureHeaders@file
-      - traefik.http.routers.PiholeGui.middlewares=PiholeChain
+      - traefik.http.routers.PiholeGui.middlewares=AddAdminPath
       # Forward to service
       - traefik.http.services.PiholeGui.loadbalancer.server.port=80
       - traefik.http.routers.PiholeGui.service=PiholeGui
@@ -206,8 +203,7 @@ services:
       - traefik.http.routers.Traefik.tls.certresolver=letsencrypt
       # Manipulate with middleware
       - traefik.http.middlewares.TraefikAuth.basicauth.usersfile=/shared/.htpasswd
-      - traefik.http.middlewares.TraefikChainNoAuth.chain.middlewares=SecureHeaders@file
-      - traefik.http.middlewares.TraefikChainAuth.chain.middlewares=SecureHeaders@file,TraefikAuth
+      - traefik.http.middlewares.TraefikChainAuth.chain.middlewares=TraefikAuth
       - traefik.http.routers.Traefik.middlewares=TraefikChain${TRAEFIK_AUTH:-Auth}
       # Forward to service
       - traefik.http.routers.Traefik.service=api@internal

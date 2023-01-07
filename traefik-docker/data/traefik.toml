@@ -21,6 +21,8 @@
 
   [entryPoints.websecure]
     address = ":443"
+    [entryPoints.websecure.http]
+      middlewares = ["SecureHeaders@file"]
 
   [entryPoints.dot]
     address = ":853"
