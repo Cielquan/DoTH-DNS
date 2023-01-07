@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Based on 'unbound.sh' from https://github.com/MatthewVance/unbound-docker-rpi
 # Starting script for unbound container
 
 YEAR=$(date +"%Y")
@@ -16,17 +15,17 @@ chown _unbound:_unbound /opt/unbound/etc/unbound/var && \
 /opt/unbound/sbin/unbound-anchor -a /opt/unbound/etc/unbound/var/root.key
 
 
-#: Install curl and ipcalc
+# Install curl and ipcalc
 printf "### Installing 'curl' and 'ipcalc'\n"
 apt-get -q update && printf "#####\n" && apt-get -q install -y curl ipcalc
 
 
-#: Download root.hints file
+# Download root.hints file
 printf "### Downloading 'root.hints' file\n"
 curl -o /opt/unbound/etc/unbound/var/root.hints https://www.internic.net/domain/named.root
 
 
-#: Get IPs for containers from docker DNS
+# Get IPs for containers from docker DNS
 DOH_SERVER_IP=$(drill @127.0.0.11 doh_server | sed 's/127.0.0.11//g' |
         grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | awk '{print $5}')
 printf "### doh_server IP: %s\n" "${DOH_SERVER_IP}"
@@ -52,7 +51,7 @@ cat << EOF > /opt/unbound/etc/unbound/unbound.conf.d/container-dns.conf
 #            DoTH-DNS/unbound-docker/configs/unbound.conf.d/<filename.conf>            #
 ########################################################################################
 
-#: DNS entries for container stack
+# DNS entries for container stack
 
 server:
     # DNS entry for container 'doh_server'
@@ -73,13 +72,13 @@ server:
 EOF
 
 
-#: Get IP with CIDR notation
+# Get IP with CIDR notation
 IP_CIDR=$(ip -o -f inet addr show | awk '/scope global/ {print $4}')
-#: Get subnetmask with CIDR notation
+# Get subnetmask with CIDR notation
 SUBNETMASK_CIDR=$(ipcalc "${IP_CIDR}" | grep '^Network:' | awk '{print $2}')
 
 
-#: Add subnet to access-control conf file
+# Add subnet to access-control conf file
 printf "### Adding 'access-control.conf' file\n"
 cat << EOF > /opt/unbound/etc/unbound/unbound.conf.d/access-control.conf
 ########################################################################################
@@ -91,12 +90,12 @@ cat << EOF > /opt/unbound/etc/unbound/unbound.conf.d/access-control.conf
 #            DoTH-DNS/unbound-docker/configs/unbound.conf.d/<filename.conf>            #
 ########################################################################################
 
-#: Restrict 'unbound' access to docker network (other containers)
+# Restrict 'unbound' access to docker network (other containers)
 
 server:
     access-control: ${SUBNETMASK_CIDR} allow
 EOF
 
 
-#: Start unbound
+# Start unbound
 exec /opt/unbound/sbin/unbound -d -c /opt/unbound/etc/unbound/unbound.conf

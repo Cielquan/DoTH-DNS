@@ -58,7 +58,7 @@ services:
     environment:
       - TZ=Europe/Berlin
       - ServerIP=${HOST_IP}
-      - DNS1=208.67.222.222#53  #: OpenDNS, only for initial boot3
+      - DNS1=208.67.222.222#53  # OpenDNS, only for initial boot
       - DNS2=no
       - DOMAIN=${DOMAIN}
       - HOST_IP=${HOST_IP}
@@ -67,7 +67,7 @@ services:
       - ./pihole-docker/configs/resolv.conf:/etc/resolv.conf:ro
       - ./pihole-docker/configs/pihole/:/etc/pihole/
       - ./pihole-docker/configs/dnsmasq.d/:/etc/dnsmasq.d/
-      #: s6 scripts
+      # s6 scripts
       - ./pihole-docker/s6_scripts/cont-init.d/01-conf-dnsmasq.sh:/etc/cont-init.d/01-conf-dnsmasq.sh
       - ./pihole-docker/s6_scripts/cont-init.d/21-conf-dns.sh:/etc/cont-init.d/21-conf-dns.sh
       - ./pihole-docker/s6_scripts/fix-attrs.d/02-chown-pihole-configs:/etc/fix-attrs.d/02-chown-pihole-configs
