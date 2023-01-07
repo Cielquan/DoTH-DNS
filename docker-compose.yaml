@@ -104,10 +104,7 @@ services:
       - traefik.http.routers.PiholeGui.rule=Host(`pihole.${DOMAIN}`)
       - traefik.http.routers.PiholeGui.entrypoints=websecure
       # Manipulate with middleware
-        # make sure `/admin` is there
-      - traefik.http.middlewares.AddAdminPath.replacepathregex.regex=^/((?i:(admin)/{0,1}|.{0})(.*))
-      - traefik.http.middlewares.AddAdminPath.replacepathregex.replacement=/admin/$$3
-      - traefik.http.routers.PiholeGui.middlewares=AddAdminPath
+      - traefik.http.routers.PiholeGui.middlewares=AddAdminPath@file
       # Forward to service
       - traefik.http.services.PiholeGui.loadbalancer.server.port=80
       - traefik.http.routers.PiholeGui.service=PiholeGui
