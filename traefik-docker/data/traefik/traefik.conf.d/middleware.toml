@@ -1,6 +1,5 @@
 [http.middlewares]
   [http.middlewares.SecureHeaders.headers]
-    sslRedirect=true
     forceSTSHeader=true
     STSIncludeSubdomains=true
     STSSeconds=63072000
