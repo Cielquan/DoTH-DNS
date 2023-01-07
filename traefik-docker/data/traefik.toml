@@ -23,9 +23,15 @@
     address = ":443"
     [entryPoints.websecure.http]
       middlewares = ["SecureHeaders@file"]
+      [entryPoints.websecure.http.tls]
+        options = "default"
+        certResolver = "leresolver"
 
   [entryPoints.dot]
     address = ":853"
+      [entryPoints.dot.http.tls]
+        options = "default"
+        certResolver = "leresolver"
 
 
 [api]
