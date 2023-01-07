@@ -21,5 +21,9 @@ printf "### Downloading 'root.hints' file\n"
 curl -o /opt/unbound/etc/unbound/var/root.hints https://www.internic.net/domain/named.root
 
 
+printf "### Creating a clean log file\n"
+touch /opt/unbound/etc/unbound/var/log/unbound.log && \
+    printf "" > /opt/unbound/etc/unbound/var/log/unbound.log
+
 # Start unbound
 exec /opt/unbound/sbin/unbound -d -c /opt/unbound/etc/unbound/unbound.conf

@@ -22,6 +22,8 @@
 *.srl
 
 # Unbound files
+unbound.log
+unbound.pid
 root.hints
 root.key
 
