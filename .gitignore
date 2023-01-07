@@ -9,8 +9,6 @@
 .backupfiles
 
 # Configs
-*.list
-.htpasswd
 .env
 
 # Certificate files
@@ -20,14 +18,3 @@
 *.ext
 *.key
 *.srl
-
-# Unbound files
-unbound.log
-unbound.pid
-root.hints
-root.key
-
-# Traefik files
-.htpasswd
-acme.toml
-acme.json
