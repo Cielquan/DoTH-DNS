@@ -17,7 +17,6 @@
       to = "websecure"
       scheme = "https"
       permanent = true
-      priority = 1
 
   [entryPoints.websecure]
     address = ":443"
