@@ -3,11 +3,11 @@
   sendAnonymousUsage = false
 
 [log]
-  level = "INFO" #DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+  level = "INFO" # DEBUG, INFO, WARN, ERROR, FATAL, PANIC
   format = "common"
 
 [accessLog]
-  format = "common" #json
+  format = "common" # json
 
 
 [entryPoints]
