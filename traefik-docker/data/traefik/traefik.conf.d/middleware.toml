@@ -8,8 +8,3 @@
     browserXSSFilter=true
     contentTypeNosniff=true
     frameDeny=true
-
-  [http.middlewares.AddAdminPath.replacepathregex]
-    # make sure /admin is at the start of the path
-    regex='^/((?i:(admin)/{0,1}|.{0})(.*))'
-    replacement='/admin/$$3'
