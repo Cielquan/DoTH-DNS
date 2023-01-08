@@ -2,6 +2,7 @@
 
 **Your server _doth_ DNS the safe way if you use DoTH-DNS.**
 
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Cielquan/DoTH-DNS/main.svg)](https://results.pre-commit.ci/latest/github/Cielquan/DoTH-DNS/main)
 ![GitHub License](https://img.shields.io/github/license/Cielquan/DoTH-DNS?style=flat-square)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/Cielquan/DoTH-DNS?logo=github&style=flat-square)
 ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/Cielquan/DoTH-DNS/latest?logo=github&style=flat-square)
