@@ -1,0 +1,164 @@
+---
+minimum_pre_commit_version: "2.17"
+default_stages: [commit]
+
+repos:
+  # ----------------------------------------------
+  # Meta hooks
+  # ----------------------------------------------
+
+  - repo: meta
+    hooks:
+      - id: identity
+        stages: [commit, manual]
+      - id: check-hooks-apply
+        stages: [manual]
+      - id: check-useless-excludes
+        stages: [manual]
+
+  # ----------------------------------------------
+  # File hooks
+  # ----------------------------------------------
+
+  # file checking out-of-the-box hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: f71fa2c1f9cf5cb705f73dffe4b21f7c61470ba9 # frozen: v4.4.0
+    hooks:
+      - id: check-case-conflict
+      - id: check-shebang-scripts-are-executable
+        exclude: '^.*\.rs$'
+      - id: check-symlinks
+      - id: destroyed-symlinks
+      - id: forbid-new-submodules
+
+  # ####################################################################################
+  #
+  #       FORMATTING
+  #
+  # ####################################################################################
+
+  # ----------------------------------------------
+  # JS / TS / HTML / CSS / MD / JSON / YAML
+  # ----------------------------------------------
+
+  # prettier - multi formatter
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    # https://github.com/prettier/prettier
+    rev: cafd5506f18eea191804850dacc0a4264772d59d # frozen: v3.0.0-alpha.4
+    hooks:
+      - id: prettier
+        additional_dependencies:
+          - "prettier@^2.5.1"
+          - "@trivago/prettier-plugin-sort-imports@^3.2.0"
+
+  # ----------------------------------------------
+  # Spelling dict
+  # ----------------------------------------------
+
+  # Custom hook as python command
+  - repo: local
+    hooks:
+      - id: sort-spelling-dicts
+        name: Sort spelling_dict.txt files
+        description: Sort spelling_dict.txt files
+        language: python
+        entry: python
+        args:
+          - "-c"
+          - |
+            import pathlib;
+            import sys;
+            p = pathlib.Path(sys.argv[1]);
+            p.write_text("\n".join(sorted(set(p.read_text("utf-8").splitlines()))) + "\n", "utf-8")
+        files: "spelling_dict.txt"
+
+  # ----------------------------------------------
+  # General (code unspecific)
+  # ----------------------------------------------
+
+  # code unspecific out-of-the-box hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: f71fa2c1f9cf5cb705f73dffe4b21f7c61470ba9 # frozen: v4.4.0
+    hooks:
+      - id: end-of-file-fixer
+        stages: [commit]
+      - id: trailing-whitespace
+        stages: [commit]
+
+  # ####################################################################################
+  #
+  #       LINTING
+  #
+  # ####################################################################################
+
+  # ----------------------------------------------
+  # General (code unspecific)
+  # ----------------------------------------------
+
+  - repo: local
+    hooks:
+      # Find TODO:|FIXME:|BUG: comments in all files
+      # Inline skip: `#i#` directly after the colon after the tag-word
+      - id: find-todos
+        name: "Find TODO:|FIXME:|BUG: comments"
+        description: "Check for TODO:|FIXME:|BUG: comments in all files"
+        language: pygrep
+        entry: '(^|//!?|#|<!--|;|/\*(\*|!)?|\.\.)\s*(TODO:|FIXME:|BUG:)(?!#i#)'
+        exclude: TODO
+
+  # code unspecific out-of-the-box hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: f71fa2c1f9cf5cb705f73dffe4b21f7c61470ba9 # frozen: v4.4.0
+    hooks:
+      - id: check-merge-conflict
+      - id: detect-private-key
+
+  # ----------------------------------------------
+  # Shell script
+  # ----------------------------------------------
+
+  # shellscript (via PyPI package)
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: 4bb61ddc1b4175565f8f975fd20d657f00f2bd53 # frozen: v0.9.0.2
+    hooks:
+      - id: shellcheck
+
+  # ----------------------------------------------
+  # Markdown
+  # ----------------------------------------------
+
+  # markdownlint - md file checker
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: e3c981ce9ab04c82884e2bb074e13f0ad755a63d # frozen: v0.6.0
+    # Inline config:
+    # Disable all rules: <!-- markdownlint-disable -->
+    # Enable all rules: <!-- markdownlint-enable -->
+    # Disable all rules for the next line only: <!-- markdownlint-disable-next-line -->
+    # Disable rules by name: <!-- markdownlint-disable MD001 MD005 -->
+    # Enable rules by name: <!-- markdownlint-enable MD001 MD005 -->
+    # Disable rules by name for next line only: <!-- markdownlint-disable-next-line MD001 MD005 -->
+    # Capture the current rule configuration: <!-- markdownlint-capture -->
+    # Restore the captured rule configuration: <!-- markdownlint-restore -->
+    hooks:
+      - id: markdownlint-cli2
+
+  # ----------------------------------------------
+  # JSON / TOML / YAML
+  # ----------------------------------------------
+
+  # JSON specific out-of-the-box hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: f71fa2c1f9cf5cb705f73dffe4b21f7c61470ba9 # frozen: v4.4.0
+    hooks:
+      - id: check-json
+      - id: check-toml
+      - id: check-yaml
+
+  # yamllint - yaml linter
+  - repo: https://github.com/adrienverge/yamllint
+    rev: 9cce2940414e9560ae4c8518ddaee2ac1863a4d2 # frozen: v1.28.0
+    hooks:
+      # Inline skip: `# yamllint disable-line[ rule:<RULE>]`
+      # Block skip: `# yamllint disable[ rule:<RULE>]`
+      # Block skip end: `# yamllint enable`
+      - id: yamllint
