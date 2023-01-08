@@ -38,13 +38,12 @@ services:
     labels:
       - traefik.enable=true
 
-      # Filter incomming
+      # DoH request handling
       - traefik.http.routers.DohServer.rule=Host(`doh.${DOMAIN}`) && Path(`/dns-query`)
-      # Add header
       - traefik.http.routers.DohServer.middlewares=SecureHeaders
-      # Forward to service
-      - traefik.http.services.DohServer.loadbalancer.server.port=8053
       - traefik.http.routers.DohServer.service=DohServer
+      - traefik.http.services.DohServer.loadbalancer.server.port=8053
+
 
   # pihole container
   pihole:
@@ -94,28 +93,23 @@ services:
     labels:
       - traefik.enable=true
 
-      # pihole dashboard
-
-      # Filter incomming
-      - traefik.http.routers.PiholeGui.rule=Host(`pihole.${DOMAIN}`)
-      # Make sure /admin is at the start of the path adn add header
+      # Middleware to make sure /admin is at the start of the path for pihole dashboard
       - traefik.http.middlewares.AddAdminPath.replacepathregex.regex=^/((?i:(admin)/{0,1}|.{0})(.*))
       - traefik.http.middlewares.AddAdminPath.replacepathregex.replacement=/admin/$$3
+
+      # pihole dashboard
+      - traefik.http.routers.PiholeGui.rule=Host(`pihole.${DOMAIN}`)
       - traefik.http.routers.PiholeGui.middlewares=AddAdminPath,SecureHeaders
-      # Forward to service
-      - traefik.http.services.PiholeGui.loadbalancer.server.port=80
       - traefik.http.routers.PiholeGui.service=PiholeGui
+      - traefik.http.services.PiholeGui.loadbalancer.server.port=80
 
       # DoT forward
-
-      # Filer incomming
       - traefik.tcp.routers.PiholeDot.rule=HostSNI(`dot.${DOMAIN}`)
       - traefik.tcp.routers.PiholeDot.entrypoints=dot
       - traefik.tcp.routers.PiholeDot.tls=true
       - traefik.tcp.routers.PiholeDot.tls.certresolver=leresolver
-      # Forward to service
-      - traefik.tcp.services.PiholeDns.loadbalancer.server.port=53
       - traefik.tcp.routers.PiholeDot.service=PiholeDns
+      - traefik.tcp.services.PiholeDns.loadbalancer.server.port=53
 
 
   # unbound container
@@ -203,15 +197,21 @@ services:
       - "--entrypoints.websecure.http.tls.certResolver=leresolver"
       - "--entrypoints.dot=true"
       - "--entrypoints.dot.address=:853"
+      ##############################
+      # SSL CERTIFICATE CONFIG Start
+      ##############################
       - "--certificatesresolvers.leresolver.acme.email=${ACME_EMAIL}"
       - "--certificatesresolvers.leresolver.acme.caserver=${ACME_CASERVER:-https://acme-v02.api.letsencrypt.org/directory}"
-      # Providers list: https://docs.traefik.io/https/acme/#providers
       - "--certificatesresolvers.leresolver.acme.dnschallenge=true"
+      # Providers list: https://docs.traefik.io/https/acme/#providers
       - "--certificatesresolvers.leresolver.acme.dnschallenge.provider=${ACME_DNSCHALLENGE_PROVIDER:-namedotcom}"
+      ##############################
+      # SSL CERTIFICATE CONFIG End
+      ##############################
     labels:
       - traefik.enable=true
 
-      # General Header Middleware
+      # Middleware to add security related headers
       - traefik.http.middlewares.SecHeadersSniff.headers.contenttypenosniff=true # buggy on traefik dashboard
       - traefik.http.middlewares.SecHeaders.headers.browserxssfilter=true
       - traefik.http.middlewares.SecHeaders.headers.framedeny=true
@@ -222,12 +222,10 @@ services:
       - traefik.http.middlewares.SecureHeaders.chain.middlewares=SecHeaders,SecHeadersSniff
       - traefik.http.middlewares.SecureHeadersTraefik.chain.middlewares=SecHeaders
 
-      # traefik dashboard
-
-      # Filter incomming
-      - traefik.http.routers.Traefik.rule=Host(`traefik.${DOMAIN}`)
-      # Add basic auth to dashboard and header
+      # Middleware to add basic auth for traefik dashboard
       - traefik.http.middlewares.TraefikAuth.basicauth.usersfile=/etc/traefik/.htpasswd
+
+      # traefik dashboard
+      - traefik.http.routers.Traefik.rule=Host(`traefik.${DOMAIN}`)
       - traefik.http.routers.Traefik.middlewares=TraefikAuth,SecureHeadersTraefik
-      # Forward to service
       - traefik.http.routers.Traefik.service=api@internal
