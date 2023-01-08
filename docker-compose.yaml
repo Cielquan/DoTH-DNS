@@ -78,7 +78,7 @@ services:
         target: /etc/dnsmasq.d/
       # s6 scripts
       - type: bind
-        source: ./pihole-docker/s6_scripts/cont-init.d/01-conf-dnsmasq.sh
+        source: ./pihole-docker/scripts/s6_cont-init.d/01-conf-dnsmasq.sh
         target: /etc/cont-init.d/01-conf-dnsmasq.sh
     ports:
       - "53535:53/tcp"
@@ -134,7 +134,7 @@ services:
         source: ./unbound-docker/data
         target: /opt/unbound/etc/unbound/
       - type: bind
-        source: ./unbound-docker/unbound.sh
+        source: ./unbound-docker/scripts/unbound.sh
         target: /unbound.sh
         read_only: true
     expose:
