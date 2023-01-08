@@ -20,7 +20,7 @@ WORKDIR /opt/dns-over-https
 
 COPY --from=server-build-env /tmp/doh-repo/doh-server/doh-server doh-server
 
-COPY ./doh-server.conf doh-server.conf
+COPY ./data/doh-server.conf doh-server.conf
 
 RUN \
     set -x \
