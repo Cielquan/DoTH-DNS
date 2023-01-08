@@ -70,7 +70,7 @@ __ https://www.bentasker.co.uk/documentation/linux/407-building-and-running-your
 .. info block
 .. |license| image:: https://img.shields.io/github/license/Cielquan/DoTH-DNS.svg?style=for-the-badge
     :alt: License
-    :target: https://github.com/Cielquan/DoTH-DNS/blob/master/LICENSE.rst
+    :target: https://github.com/Cielquan/DoTH-DNS/blob/master/LICENSE
 
 
 .. Github block
