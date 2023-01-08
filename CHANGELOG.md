@@ -10,6 +10,13 @@ See the [tags on this repository](https://github.com/Cielquan/DoTH-DNS/tags) for
 **NOTE:**
 Not all commits are linked. Commits are only linked when they match the specific note.
 
+## Release 8.0.0
+
+_Released: 08.01.2023_
+
+- Turn back to docker-compose setup without CLI app or scripts
+- Merge docs into README
+
 ## Release 7.0.1
 
 _Released: 16.02.2020_
