@@ -201,17 +201,7 @@ If you need to modify the unbound boot script, what you most certainly not, you 
 unbound's config files can be found here: `unbound-docker/data/unbound.conf.d`. Here you most
 certainly only want to change things in the `default.conf` file or add another custom file.
 
-### Logs
-
-In `unbound-docker/data/var/log` you can find unbounds log file, which will be recreated each boot.
-
-All other container do not log to a file but stdout/stderr. You can see them by running
-
-```console
-docker-compose logs CONTAINERNAME
-```
-
-### Step by Step
+### Step by Step Setup
 
 All following steps are run from the command line:
 
@@ -263,6 +253,16 @@ All following steps are run from the command line:
    ```console
    docker-compose up -d
    ```
+
+### Logs
+
+In `unbound-docker/data/var/log` you can find unbounds log file, which will be recreated each boot.
+
+All other container do not log to a file but stdout/stderr. You can see them by running
+
+```console
+docker-compose logs CONTAINERNAME
+```
 
 ### How to use the DNS server stack
 
