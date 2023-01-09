@@ -78,8 +78,8 @@ services:
         source: ./pihole-docker/scripts/s6_cont-init.d/01-conf-dnsmasq.sh
         target: /etc/cont-init.d/01-conf-dnsmasq.sh
     ports:
-      - "53535:53/tcp"
-      - "53535:53/udp"
+      - "53:53/tcp"
+      - "53:53/udp"
     expose:
       - "80"
     networks:
