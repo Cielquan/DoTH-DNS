@@ -243,9 +243,9 @@ All following steps are run from the command line:
 
    - or when you created the user/password combi online, create the file and copy it there:
 
-   ```console
-   nano traefik-docker/data/.htpasswd
-   ```
+     ```console
+     nano traefik-docker/data/.htpasswd
+     ```
 
    - If you do not want or need password protection you need to remove `TraefikAuth` from the
      `traefik.http.routers.Traefik.middlewares` label for the traefik container in the
