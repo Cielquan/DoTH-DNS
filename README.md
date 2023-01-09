@@ -105,6 +105,14 @@ traefik proxy supports different setups for certificates:
 
 1. To get the source we use _git_. Alternatively you could download the zip archive and extract it.
 1. To run the stack we need _docker_ and _docker-compose_.
+
+   You need root permissions to work with docker. To remove the need of using sudo, you can add the
+   `docker` group to your user. After adding the group you need to log out and in again.
+
+   ```console
+   sudo usermod -aG docker USERNAME
+   ```
+
 1. To create a user/password combo for the [`.htpasswd`][htpasswd] file for password protection
    of the traefik dashboard we need the _htpasswd_ utility from the _apache2-utils_ package.
    Alternatively you can use e.g. this [online tool][htpasswd-gen].
@@ -207,19 +215,11 @@ docker-compose logs CONTAINERNAME
 
 All following steps are run from the command line:
 
-1. Git clone this repository via
+1. Git clone this repository via HTTPS:
 
-   - SSH:
-
-     ```console
-     git clone git@github.com:Cielquan/DoTH-DNS
-     ```
-
-   - or HTTPS:
-
-     ```console
-     git clone https://github.com/Cielquan/DoTH-DNS
-     ```
+   ```console
+   git clone https://github.com/Cielquan/DoTH-DNS
+   ```
 
 1. Open the directory:
 
