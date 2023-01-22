@@ -12,7 +12,7 @@ Not all commits are linked. Commits are only linked when they match the specific
 
 ## Release 8.0.0
 
-_Released: 08.01.2023_
+_Released: 22.01.2023_
 
 - Turn back to docker-compose setup without CLI app or scripts
 - Merge docs into README
