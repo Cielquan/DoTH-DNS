@@ -156,7 +156,7 @@ repos:
 
   # yamllint - yaml linter
   - repo: https://github.com/adrienverge/yamllint
-    rev: b9e1fd18c1acbaa4b0028196f8925ce4e91970d9 # frozen: v1.29.0
+    rev: 9d0f59876dc6882e263b2657ab42a1ced4c0207d  # frozen: v1.30.0
     hooks:
       # Inline skip: `# yamllint disable-line[ rule:<RULE>]`
       # Block skip: `# yamllint disable[ rule:<RULE>]`
