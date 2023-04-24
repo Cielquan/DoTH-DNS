@@ -44,7 +44,7 @@ repos:
   # prettier - multi formatter
   - repo: https://github.com/pre-commit/mirrors-prettier
     # https://github.com/prettier/prettier
-    rev: 6fd1ced85fc139abd7f5ab4f3d78dab37592cd5e  # frozen: v3.0.0-alpha.9-for-vscode
+    rev: 6fd1ced85fc139abd7f5ab4f3d78dab37592cd5e # frozen: v3.0.0-alpha.9-for-vscode
     hooks:
       - id: prettier
         additional_dependencies:
@@ -129,7 +129,7 @@ repos:
 
   # markdownlint - md file checker
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: e54fbe250d287fd6f09363395343887a999963c5  # frozen: v0.7.0
+    rev: e54fbe250d287fd6f09363395343887a999963c5 # frozen: v0.7.0
     # Inline config:
     # Disable all rules: <!-- markdownlint-disable -->
     # Enable all rules: <!-- markdownlint-enable -->
@@ -156,7 +156,7 @@ repos:
 
   # yamllint - yaml linter
   - repo: https://github.com/adrienverge/yamllint
-    rev: 98f2281f56be5503f3851e74556e1122fc18b2a8  # frozen: v1.31.0
+    rev: 98f2281f56be5503f3851e74556e1122fc18b2a8 # frozen: v1.31.0
     hooks:
       # Inline skip: `# yamllint disable-line[ rule:<RULE>]`
       # Block skip: `# yamllint disable[ rule:<RULE>]`
