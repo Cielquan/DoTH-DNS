@@ -119,7 +119,7 @@ repos:
 
   # shellscript (via PyPI package)
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: 375289a39f5708101b1f916eb729e8d6da96993f  # frozen: v0.9.0.5
+    rev: 375289a39f5708101b1f916eb729e8d6da96993f # frozen: v0.9.0.5
     hooks:
       - id: shellcheck
 
@@ -129,7 +129,7 @@ repos:
 
   # markdownlint - md file checker
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: 50b923d7df0876a24adca18cbbca57ddfa7369ad  # frozen: v0.8.1
+    rev: 50b923d7df0876a24adca18cbbca57ddfa7369ad # frozen: v0.8.1
     # Inline config:
     # Disable all rules: <!-- markdownlint-disable -->
     # Enable all rules: <!-- markdownlint-enable -->
@@ -156,7 +156,7 @@ repos:
 
   # yamllint - yaml linter
   - repo: https://github.com/adrienverge/yamllint
-    rev: b05e028c5881819161d11cb543fd96a30c06cceb  # frozen: v1.32.0
+    rev: b05e028c5881819161d11cb543fd96a30c06cceb # frozen: v1.32.0
     hooks:
       # Inline skip: `# yamllint disable-line[ rule:<RULE>]`
       # Block skip: `# yamllint disable[ rule:<RULE>]`
