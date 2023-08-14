@@ -44,7 +44,7 @@ repos:
   # prettier - multi formatter
   - repo: https://github.com/pre-commit/mirrors-prettier
     # https://github.com/prettier/prettier
-    rev: efd8b1e16f05132acf6edcf2827eeab21e0e00db # frozen: v3.0.0
+    rev: 39f806769667765a1d55ea736d62bb8f72993e01  # frozen: v3.0.1
     hooks:
       - id: prettier
         additional_dependencies:
