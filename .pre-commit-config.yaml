@@ -119,7 +119,7 @@ repos:
 
   # shellscript (via PyPI package)
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: 375289a39f5708101b1f916eb729e8d6da96993f # frozen: v0.9.0.5
+    rev: 4de1378e4cd853bfc2b111b05fff35e2dbf809a3  # frozen: v0.9.0.6
     hooks:
       - id: shellcheck
 
