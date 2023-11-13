@@ -44,7 +44,7 @@ repos:
   # prettier - multi formatter
   - repo: https://github.com/pre-commit/mirrors-prettier
     # https://github.com/prettier/prettier
-    rev: ffb6a759a979008c0e6dff86e39f4745a2d9eac4  # frozen: v3.1.0
+    rev: ffb6a759a979008c0e6dff86e39f4745a2d9eac4 # frozen: v3.1.0
     hooks:
       - id: prettier
         additional_dependencies:
@@ -156,7 +156,7 @@ repos:
 
   # yamllint - yaml linter
   - repo: https://github.com/adrienverge/yamllint
-    rev: 8713140e99914c0cb6e07364daedfb140847c3c5  # frozen: v1.33.0
+    rev: 8713140e99914c0cb6e07364daedfb140847c3c5 # frozen: v1.33.0
     hooks:
       # Inline skip: `# yamllint disable-line[ rule:<RULE>]`
       # Block skip: `# yamllint disable[ rule:<RULE>]`
