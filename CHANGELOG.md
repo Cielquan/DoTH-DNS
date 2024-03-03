@@ -1,4 +1,4 @@
-<!-- markdownlint-disable no-emphasis-as-header -->
+<!-- markdownlint-disable no-emphasis-as-heading -->
 
 # DoTH-DNS Change Log
 
