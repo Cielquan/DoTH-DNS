@@ -1,6 +1,6 @@
 ---
 minimum_pre_commit_version: "2.17"
-default_stages: [commit]
+default_stages: [pre-commit]
 
 repos:
   # ----------------------------------------------
@@ -10,7 +10,7 @@ repos:
   - repo: meta
     hooks:
       - id: identity
-        stages: [commit, manual]
+        stages: [pre-commit, manual]
       - id: check-hooks-apply
         stages: [manual]
       - id: check-useless-excludes
@@ -22,7 +22,7 @@ repos:
 
   # file checking out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: 2c9f875913ee60ca25ce70243dc24d5b6415598c # frozen: v4.6.0
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b # frozen: v5.0.0
     hooks:
       - id: check-case-conflict
       - id: check-shebang-scripts-are-executable
@@ -78,12 +78,12 @@ repos:
 
   # code unspecific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: 2c9f875913ee60ca25ce70243dc24d5b6415598c # frozen: v4.6.0
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b # frozen: v5.0.0
     hooks:
       - id: end-of-file-fixer
-        stages: [commit]
+        stages: [pre-commit]
       - id: trailing-whitespace
-        stages: [commit]
+        stages: [pre-commit]
 
   # ####################################################################################
   #
@@ -108,7 +108,7 @@ repos:
 
   # code unspecific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: 2c9f875913ee60ca25ce70243dc24d5b6415598c # frozen: v4.6.0
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b # frozen: v5.0.0
     hooks:
       - id: check-merge-conflict
       - id: detect-private-key
@@ -148,7 +148,7 @@ repos:
 
   # JSON specific out-of-the-box hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: 2c9f875913ee60ca25ce70243dc24d5b6415598c # frozen: v4.6.0
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b # frozen: v5.0.0
     hooks:
       - id: check-json
       - id: check-toml
