@@ -129,7 +129,7 @@ repos:
 
   # markdownlint - md file checker
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: e8d3f68e991c21cd60aeabefdbb429e5b5ba11b3  # frozen: v0.18.0
+    rev: e8d3f68e991c21cd60aeabefdbb429e5b5ba11b3 # frozen: v0.18.0
     # Inline config:
     # Disable all rules: <!-- markdownlint-disable -->
     # Enable all rules: <!-- markdownlint-enable -->
